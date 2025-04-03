@@ -1,0 +1,20 @@
+\doxysection{Null\+Compressor.\+hpp}
+\hypertarget{NullCompressor_8hpp_source}{}\label{NullCompressor_8hpp_source}\index{include/compression/NullCompressor.hpp@{include/compression/NullCompressor.hpp}}
+\mbox{\hyperlink{NullCompressor_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ICompressor_8hpp}{ICompressor.hpp}}"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacecompression}{compression}}\ \{}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1NullCompressor}{NullCompressor}}\ final\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classcompression_1_1ICompressor}{ICompressor}}\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00022\ \ \ \ \ std::vector<std::byte>\ \mbox{\hyperlink{classcompression_1_1NullCompressor_a5c34873802b47ab77ea67dfbb034e427}{compress}}(\textcolor{keyword}{const}\ std::vector<std::byte>\&\ data)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00030\ \ \ \ \ std::vector<std::byte>\ \mbox{\hyperlink{classcompression_1_1NullCompressor_aad42dcf1624f3d863df78314fe971571}{decompress}}(\textcolor{keyword}{const}\ std::vector<std::byte>\&\ data)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \}\ \textcolor{comment}{//\ namespace\ compression\ }}
+
+\end{DoxyCode}

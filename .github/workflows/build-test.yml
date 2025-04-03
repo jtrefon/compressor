@@ -1,0 +1,38 @@
+# .github/workflows/build-test.yml
+name: Build and Test Compression Library
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Use a standard Linux environment
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive' # Ensure submodules like GoogleTest are checked out
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake
+
+    - name: Configure CMake
+      run: |
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
+      # -S . specifies the source directory
+      # -B build specifies the build directory
+      # CMAKE_BUILD_TYPE=Release for optimized build
+      # BUILD_SHARED_LIBS=ON (optional, adjust as needed)
+
+    - name: Build project
+      run: cmake --build build --config Release
+
+    - name: Run tests
+      working-directory: ./build # Run tests from the build directory
+      run: ctest --output-on-failure --verbose 

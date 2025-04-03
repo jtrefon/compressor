@@ -1,0 +1,10 @@
+@PACKAGE_INIT@
+
+# Find dependencies (if any in the future)
+# find_dependency(Threads REQUIRED)
+
+# Include the targets file
+include("${CMAKE_CURRENT_LIST_DIR}/CompressionLibTargets.cmake")
+
+# Check dependencies (if any)
+# check_required_components(CompressionLib) 

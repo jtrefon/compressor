@@ -1,0 +1,87 @@
+\doxysection{compression\+::Null\+Compressor Class Reference}
+\hypertarget{classcompression_1_1NullCompressor}{}\label{classcompression_1_1NullCompressor}\index{compression::NullCompressor@{compression::NullCompressor}}
+
+
+A Null Object implementation of \doxylink{classcompression_1_1ICompressor}{ICompressor}.  
+
+
+
+
+{\ttfamily \#include $<$Null\+Compressor.\+hpp$>$}
+
+Inheritance diagram for compression\+::Null\+Compressor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classcompression_1_1NullCompressor}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1NullCompressor_a5c34873802b47ab77ea67dfbb034e427}{compress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
+\begin{DoxyCompactList}\small\item\em Returns the input data without modification. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1NullCompressor_aad42dcf1624f3d863df78314fe971571}{decompress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
+\begin{DoxyCompactList}\small\item\em Returns the input data without modification. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classcompression_1_1ICompressor}{compression\+::\+ICompressor}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classcompression_1_1ICompressor_a3a2142d5686b5959e7a1a3d4c0eec8b8}{\texorpdfstring{$\sim$}{\string~}\+ICompressor}} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor. Essential for polymorphic behavior. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A Null Object implementation of \doxylink{classcompression_1_1ICompressor}{ICompressor}. 
+
+This class implements the \doxylink{classcompression_1_1ICompressor}{ICompressor} interface but performs no actual compression or decompression. It simply returns the input data unchanged. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1NullCompressor_a5c34873802b47ab77ea67dfbb034e427}\index{compression::NullCompressor@{compression::NullCompressor}!compress@{compress}}
+\index{compress@{compress}!compression::NullCompressor@{compression::NullCompressor}}
+\doxysubsubsection{\texorpdfstring{compress()}{compress()}}
+{\footnotesize\ttfamily \label{classcompression_1_1NullCompressor_a5c34873802b47ab77ea67dfbb034e427} 
+std\+::vector$<$ std\+::byte $>$ compression\+::\+Null\+Compressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Returns the input data without modification. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & The data to "{}compress"{}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$std\+::byte$>$ The unchanged input data. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_ac7412ce2b69c6a8aefbb4cec257e2a00}{compression\+::\+ICompressor}}.
+
+\Hypertarget{classcompression_1_1NullCompressor_aad42dcf1624f3d863df78314fe971571}\index{compression::NullCompressor@{compression::NullCompressor}!decompress@{decompress}}
+\index{decompress@{decompress}!compression::NullCompressor@{compression::NullCompressor}}
+\doxysubsubsection{\texorpdfstring{decompress()}{decompress()}}
+{\footnotesize\ttfamily \label{classcompression_1_1NullCompressor_aad42dcf1624f3d863df78314fe971571} 
+std\+::vector$<$ std\+::byte $>$ compression\+::\+Null\+Compressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Returns the input data without modification. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & The data to "{}decompress"{}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$std\+::byte$>$ The unchanged input data. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a0ca109c56d7c86bc66b5d984d0d65042}{compression\+::\+ICompressor}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{NullCompressor_8hpp}{Null\+Compressor.\+hpp}}\item 
+src/\mbox{\hyperlink{NullCompressor_8cpp}{Null\+Compressor.\+cpp}}\end{DoxyCompactItemize}

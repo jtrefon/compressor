@@ -1,0 +1,41 @@
+\chapter{Compression Library}
+\hypertarget{md_README}{}\label{md_README}\index{Compression Library@{Compression Library}}
+\label{md_README_autotoc_md0}%
+\Hypertarget{md_README_autotoc_md0}%
+
+
+This project aims to develop a cutting-\/edge file compression library focused on achieving high compression ratios for files at rest.\hypertarget{md_README_autotoc_md1}{}\doxysection{\texorpdfstring{Project Structure}{Project Structure}}\label{md_README_autotoc_md1}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{compression/}
+\DoxyCodeLine{├──\ CMakeLists.txt\ \ \ \ \ \ \ \ \ \#\ Main\ CMake\ configuration}
+\DoxyCodeLine{├──\ README.md\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Project\ overview\ (this\ file)}
+\DoxyCodeLine{├──\ .gitignore\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Git\ ignore\ rules}
+\DoxyCodeLine{├──\ include/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Public\ header\ files\ for\ the\ library}
+\DoxyCodeLine{│\ \ \ └──\ compression/}
+\DoxyCodeLine{│\ \ \ \ \ \ \ └──\ dummy.hpp\ \ \ \ \ \ \#\ Placeholder\ header}
+\DoxyCodeLine{├──\ src/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Source\ files\ for\ the\ library}
+\DoxyCodeLine{│\ \ \ └──\ CMakeLists.txt\ \ \ \ \ \#\ Library\ CMake\ configuration}
+\DoxyCodeLine{│\ \ \ \#\ *.cpp\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Library\ implementation\ files\ will\ go\ here}
+\DoxyCodeLine{├──\ app/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Source\ files\ for\ the\ example\ application}
+\DoxyCodeLine{│\ \ \ ├──\ CMakeLists.txt\ \ \ \ \ \#\ Application\ CMake\ configuration}
+\DoxyCodeLine{│\ \ \ └──\ main.cpp\ \ \ \ \ \ \ \ \ \ \ \#\ Application\ entry\ point}
+\DoxyCodeLine{├──\ tests/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Unit\ and\ integration\ tests}
+\DoxyCodeLine{│\ \ \ ├──\ CMakeLists.txt\ \ \ \ \ \#\ Tests\ CMake\ configuration\ (includes\ GoogleTest)}
+\DoxyCodeLine{│\ \ \ └──\ main.cpp\ \ \ \ \ \ \ \ \ \ \ \#\ Test\ runner\ entry\ point}
+\DoxyCodeLine{├──\ docs/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Documentation\ files\ (e.g.,\ Doxygen\ config,\ Markdown)}
+\DoxyCodeLine{└──\ external/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Directory\ for\ external\ dependencies\ (if\ not\ managed\ by\ CMake)}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md2}{}\doxysection{\texorpdfstring{Building the Project}{Building the Project}}\label{md_README_autotoc_md2}
+This project uses CMake for building.
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Configure\+:}} Create a build directory and run CMake\+: {\ttfamily bash mkdir build cd build cmake .. }
+\item {\bfseries{Build\+:}} Compile the library, application, and tests\+: {\ttfamily bash cmake -\/-\/build . }
+\item {\bfseries{Run Tests\+:}} Execute the tests\+: {\ttfamily bash ctest }
+\item {\bfseries{Run Application\+:}} The application executable will be in the {\ttfamily build/app} directory\+: {\ttfamily bash ./app/compress\+\_\+app }
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md3}{}\doxysection{\texorpdfstring{Contributing}{Contributing}}\label{md_README_autotoc_md3}
+(Details on contributing guidelines will go here)\hypertarget{md_README_autotoc_md4}{}\doxysection{\texorpdfstring{License}{License}}\label{md_README_autotoc_md4}
+(License information will go here) 

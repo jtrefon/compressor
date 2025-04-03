@@ -1,0 +1,24 @@
+\doxysection{ICompressor.\+hpp}
+\hypertarget{ICompressor_8hpp_source}{}\label{ICompressor_8hpp_source}\index{include/compression/ICompressor.hpp@{include/compression/ICompressor.hpp}}
+\mbox{\hyperlink{ICompressor_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstddef>}\ \textcolor{comment}{//\ For\ std::byte}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdexcept>}\ \textcolor{comment}{//\ For\ potential\ exceptions}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacecompression}{compression}}\ \{}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1ICompressor}{ICompressor}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classcompression_1_1ICompressor_a3a2142d5686b5959e7a1a3d4c0eec8b8}{\string~ICompressor}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<std::byte>\ \mbox{\hyperlink{classcompression_1_1ICompressor_ac7412ce2b69c6a8aefbb4cec257e2a00}{compress}}(\textcolor{keyword}{const}\ std::vector<std::byte>\&\ data)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<std::byte>\ \mbox{\hyperlink{classcompression_1_1ICompressor_a0ca109c56d7c86bc66b5d984d0d65042}{decompress}}(\textcolor{keyword}{const}\ std::vector<std::byte>\&\ data)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00043\ \};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \}\ \textcolor{comment}{//\ namespace\ compression\ }}
+
+\end{DoxyCode}

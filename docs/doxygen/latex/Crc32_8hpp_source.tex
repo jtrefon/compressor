@@ -1,0 +1,58 @@
+\doxysection{Crc32.\+hpp}
+\hypertarget{Crc32_8hpp_source}{}\label{Crc32_8hpp_source}\index{include/compression/Crc32.hpp@{include/compression/Crc32.hpp}}
+\mbox{\hyperlink{Crc32_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstddef>}\ \textcolor{comment}{//\ std::byte}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacecompression}{compression}}\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacecompression_1_1utils}{utils}}\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_aea71ca2d8532b0bd0b7e6d49a1fca440}{Crc32}}\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00016\ \ \ \ \ std::array<uint32\_t,\ 256>\ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a6d51011f10173ebe76d45e1714ccddc1}{crc\_table}};}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a8bc1cbb4d0d49a33b5d80cdbb33acbf3}{POLYNOMIAL}}\ =\ 0xEDB88320;\ \textcolor{comment}{//\ Standard\ CRC32\ polynomial\ (reversed)}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a755211e39df7779b1ead8050402b1ce5}{generateTable}}()\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (uint32\_t\ i\ =\ 0;\ i\ <\ 256;\ ++i)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ c\ =\ i;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ j\ =\ 0;\ j\ <\ 8;\ ++j)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ \&\ 1)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c\ =\ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a8bc1cbb4d0d49a33b5d80cdbb33acbf3}{POLYNOMIAL}}\ \string^\ (c\ >>\ 1);}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c\ >>=\ 1;}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a6d51011f10173ebe76d45e1714ccddc1}{crc\_table}}[i]\ =\ c;}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_aea71ca2d8532b0bd0b7e6d49a1fca440}{Crc32}}()\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a755211e39df7779b1ead8050402b1ce5}{generateTable}}();}
+\DoxyCodeLine{00036\ \ \ \ \ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00045\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_aa762e902b9a39a2fb2b72ebfe70ead3f}{calculate}}(\textcolor{keyword}{const}\ std::byte*\ data,\ \textcolor{keywordtype}{size\_t}\ size)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ uint32\_t\ crc\ =\ 0xFFFFFFFF;\ \textcolor{comment}{//\ Initial\ value}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ size;\ ++i)\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ crc\ =\ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a6d51011f10173ebe76d45e1714ccddc1}{crc\_table}}[(crc\ \string^\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}(data[i]))\ \&\ 0xFF]\ \string^\ (crc\ >>\ 8);}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ crc\ \string^\ 0xFFFFFFFF;\ \textcolor{comment}{//\ Final\ XOR\ value}}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00059\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a4a3f94a141230fe83a11148e4291c9fa}{calculate}}(\textcolor{keyword}{const}\ std::vector<std::byte>\&\ data)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_aa762e902b9a39a2fb2b72ebfe70ead3f}{calculate}}(data.data(),\ data.size());}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ Static\ instance\ for\ easy\ use}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32}{Crc32}}\ \mbox{\hyperlink{namespacecompression_1_1utils_a6e7c2c743b912267eb941e512c5e659e}{crc32Calculator}};\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \}\ \textcolor{comment}{//\ namespace\ utils}}
+\DoxyCodeLine{00068\ \}\ \textcolor{comment}{//\ namespace\ compression\ }}
+
+\end{DoxyCode}

@@ -1,0 +1,92 @@
+\doxysection{compression\+::Rle\+Compressor Class Reference}
+\hypertarget{classcompression_1_1RleCompressor}{}\label{classcompression_1_1RleCompressor}\index{compression::RleCompressor@{compression::RleCompressor}}
+
+
+Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} using Run-\/\+Length Encoding (RLE).  
+
+
+
+
+{\ttfamily \#include $<$Rle\+Compressor.\+hpp$>$}
+
+Inheritance diagram for compression\+::Rle\+Compressor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classcompression_1_1RleCompressor}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1RleCompressor_a02589a2b6cb906b7bb1e68825b55d020}{compress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
+\begin{DoxyCompactList}\small\item\em Compresses data using RLE. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1RleCompressor_acd4958ea7d5299428c5333c9bde79c64}{decompress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
+\begin{DoxyCompactList}\small\item\em Decompresses RLE encoded data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classcompression_1_1ICompressor}{compression\+::\+ICompressor}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classcompression_1_1ICompressor_a3a2142d5686b5959e7a1a3d4c0eec8b8}{\texorpdfstring{$\sim$}{\string~}\+ICompressor}} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor. Essential for polymorphic behavior. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} using Run-\/\+Length Encoding (RLE). 
+
+A simple RLE implementation. Note\+: This basic version might increase size for non-\/repetitive data. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1RleCompressor_a02589a2b6cb906b7bb1e68825b55d020}\index{compression::RleCompressor@{compression::RleCompressor}!compress@{compress}}
+\index{compress@{compress}!compression::RleCompressor@{compression::RleCompressor}}
+\doxysubsubsection{\texorpdfstring{compress()}{compress()}}
+{\footnotesize\ttfamily \label{classcompression_1_1RleCompressor_a02589a2b6cb906b7bb1e68825b55d020} 
+std\+::vector$<$ std\+::byte $>$ compression\+::\+Rle\+Compressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Compresses data using RLE. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & The raw data to compress. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$std\+::byte$>$ The RLE compressed data. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_ac7412ce2b69c6a8aefbb4cec257e2a00}{compression\+::\+ICompressor}}.
+
+\Hypertarget{classcompression_1_1RleCompressor_acd4958ea7d5299428c5333c9bde79c64}\index{compression::RleCompressor@{compression::RleCompressor}!decompress@{decompress}}
+\index{decompress@{decompress}!compression::RleCompressor@{compression::RleCompressor}}
+\doxysubsubsection{\texorpdfstring{decompress()}{decompress()}}
+{\footnotesize\ttfamily \label{classcompression_1_1RleCompressor_acd4958ea7d5299428c5333c9bde79c64} 
+std\+::vector$<$ std\+::byte $>$ compression\+::\+Rle\+Compressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Decompresses RLE encoded data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & The RLE compressed data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$std\+::byte$>$ The original decompressed data. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & if the compressed data format is invalid. \\
+\hline
+\end{DoxyExceptions}
+
+
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a0ca109c56d7c86bc66b5d984d0d65042}{compression\+::\+ICompressor}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{RleCompressor_8hpp}{Rle\+Compressor.\+hpp}}\item 
+src/\mbox{\hyperlink{RleCompressor_8cpp}{Rle\+Compressor.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,40 @@
+# CMake
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+install_manifest.txt
+lib/
+bin/
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Compiled object files
+*.o
+*.obj
+
+# Doxygen output (often generated in build/ or separate dirs)
+# Assuming output is generated within build/, otherwise add specific output dirs
+# Example: docs/html/, docs/latex/
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*~
+*.bak
+
+# macOS specific
+.DS_Store
+
+# Test results
+Testing/
+
+# External dependencies fetched by CMake
+_deps/
+external/ 

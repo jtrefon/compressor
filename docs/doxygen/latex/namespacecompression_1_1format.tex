@@ -1,0 +1,180 @@
+\doxysection{compression\+::format Namespace Reference}
+\hypertarget{namespacecompression_1_1format}{}\label{namespacecompression_1_1format}\index{compression::format@{compression::format}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}} \+: uint8\+\_\+t \{ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca668cc0031f11143c29478bd8940938ec}{NULL\+\_\+\+COMPRESSOR}} = 0
+, \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a}{RLE\+\_\+\+COMPRESSOR}} = 1
+, \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e}{HUFFMAN\+\_\+\+COMPRESSOR}} = 2
+, \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}{UNKNOWN}} = 255
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{namespacecompression_1_1format_af2e5c379a1e2209b89aa43f378312fda}{serialize\+Header}} (const \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}} \&header)
+\begin{DoxyCompactList}\small\item\em Serializes the header data into a byte vector. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}} \mbox{\hyperlink{namespacecompression_1_1format_aa9249f407e0fb35b622faea563fcce88}{deserialize\+Header}} (const std\+::vector$<$ std\+::byte $>$ \&buffer)
+\begin{DoxyCompactList}\small\item\em Deserializes header data from a byte vector. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{namespacecompression_1_1format_a46dd00fcac1185f96800c379d67e1463}{algorithm\+Id\+To\+String}} (\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}} id)
+\begin{DoxyCompactList}\small\item\em Maps \doxylink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID} enum to a string representation. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}} \mbox{\hyperlink{namespacecompression_1_1format_a69529234368757ea5c5633aca84d07b3}{string\+To\+Algorithm\+Id}} (const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em Maps a string name to an \doxylink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr std\+::array$<$ std\+::byte, 4 $>$ \mbox{\hyperlink{namespacecompression_1_1format_aedd178bf1033c1d0612a578e00c227f1}{MAGIC\+\_\+\+NUMBER}}
+\item 
+constexpr uint8\+\_\+t \mbox{\hyperlink{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}{FORMAT\+\_\+\+VERSION}} = 1
+\item 
+constexpr size\+\_\+t \mbox{\hyperlink{namespacecompression_1_1format_aba5b49b42f55e79b68d089c9941c3a85}{HEADER\+\_\+\+SIZE}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}\index{compression::format@{compression::format}!AlgorithmID@{AlgorithmID}}
+\index{AlgorithmID@{AlgorithmID}!compression::format@{compression::format}}
+\doxysubsubsection{\texorpdfstring{AlgorithmID}{AlgorithmID}}
+{\footnotesize\ttfamily \label{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c} 
+enum class \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{compression\+::format\+::\+Algorithm\+ID}} \+: uint8\+\_\+t\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NULL\_COMPRESSOR@{NULL\_COMPRESSOR}!compression::format@{compression::format}}\index{compression::format@{compression::format}!NULL\_COMPRESSOR@{NULL\_COMPRESSOR}}}\Hypertarget{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca668cc0031f11143c29478bd8940938ec}\label{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca668cc0031f11143c29478bd8940938ec} 
+NULL\+\_\+\+COMPRESSOR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RLE\_COMPRESSOR@{RLE\_COMPRESSOR}!compression::format@{compression::format}}\index{compression::format@{compression::format}!RLE\_COMPRESSOR@{RLE\_COMPRESSOR}}}\Hypertarget{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a}\label{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a} 
+RLE\+\_\+\+COMPRESSOR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HUFFMAN\_COMPRESSOR@{HUFFMAN\_COMPRESSOR}!compression::format@{compression::format}}\index{compression::format@{compression::format}!HUFFMAN\_COMPRESSOR@{HUFFMAN\_COMPRESSOR}}}\Hypertarget{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e}\label{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e} 
+HUFFMAN\+\_\+\+COMPRESSOR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UNKNOWN@{UNKNOWN}!compression::format@{compression::format}}\index{compression::format@{compression::format}!UNKNOWN@{UNKNOWN}}}\Hypertarget{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}\label{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3} 
+UNKNOWN&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacecompression_1_1format_a46dd00fcac1185f96800c379d67e1463}\index{compression::format@{compression::format}!algorithmIdToString@{algorithmIdToString}}
+\index{algorithmIdToString@{algorithmIdToString}!compression::format@{compression::format}}
+\doxysubsubsection{\texorpdfstring{algorithmIdToString()}{algorithmIdToString()}}
+{\footnotesize\ttfamily \label{namespacecompression_1_1format_a46dd00fcac1185f96800c379d67e1463} 
+std\+::string compression\+::format\+::algorithm\+Id\+To\+String (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}}}]{id}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Maps \doxylink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID} enum to a string representation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & The \doxylink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+String name of the algorithm (e.\+g., "{}rle"{}, "{}null"{}). 
+\end{DoxyReturn}
+\Hypertarget{namespacecompression_1_1format_aa9249f407e0fb35b622faea563fcce88}\index{compression::format@{compression::format}!deserializeHeader@{deserializeHeader}}
+\index{deserializeHeader@{deserializeHeader}!compression::format@{compression::format}}
+\doxysubsubsection{\texorpdfstring{deserializeHeader()}{deserializeHeader()}}
+{\footnotesize\ttfamily \label{namespacecompression_1_1format_aa9249f407e0fb35b622faea563fcce88} 
+\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}} compression\+::format\+::deserialize\+Header (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{buffer}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Deserializes header data from a byte vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The byte vector containing the serialized header (must be at least HEADER\+\_\+\+SIZE bytes). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The deserialized \doxylink{structcompression_1_1format_1_1FileHeader}{File\+Header}. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & if magic number or version is incorrect, or buffer is too small. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{namespacecompression_1_1format_af2e5c379a1e2209b89aa43f378312fda}\index{compression::format@{compression::format}!serializeHeader@{serializeHeader}}
+\index{serializeHeader@{serializeHeader}!compression::format@{compression::format}}
+\doxysubsubsection{\texorpdfstring{serializeHeader()}{serializeHeader()}}
+{\footnotesize\ttfamily \label{namespacecompression_1_1format_af2e5c379a1e2209b89aa43f378312fda} 
+std\+::vector$<$ std\+::byte $>$ compression\+::format\+::serialize\+Header (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}} \&}]{header}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Serializes the header data into a byte vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em header} & The header data to serialize. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of bytes representing the serialized header. 
+\end{DoxyReturn}
+\Hypertarget{namespacecompression_1_1format_a69529234368757ea5c5633aca84d07b3}\index{compression::format@{compression::format}!stringToAlgorithmId@{stringToAlgorithmId}}
+\index{stringToAlgorithmId@{stringToAlgorithmId}!compression::format@{compression::format}}
+\doxysubsubsection{\texorpdfstring{stringToAlgorithmId()}{stringToAlgorithmId()}}
+{\footnotesize\ttfamily \label{namespacecompression_1_1format_a69529234368757ea5c5633aca84d07b3} 
+\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}} compression\+::format\+::string\+To\+Algorithm\+Id (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Maps a string name to an \doxylink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The string name (e.\+g., "{}rle"{}, "{}null"{}). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The corresponding \doxylink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}, or UNKNOWN if not found. 
+\end{DoxyReturn}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}\index{compression::format@{compression::format}!FORMAT\_VERSION@{FORMAT\_VERSION}}
+\index{FORMAT\_VERSION@{FORMAT\_VERSION}!compression::format@{compression::format}}
+\doxysubsubsection{\texorpdfstring{FORMAT\_VERSION}{FORMAT\_VERSION}}
+{\footnotesize\ttfamily \label{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c} 
+uint8\+\_\+t compression\+::format\+::\+FORMAT\+\_\+\+VERSION = 1\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{namespacecompression_1_1format_aba5b49b42f55e79b68d089c9941c3a85}\index{compression::format@{compression::format}!HEADER\_SIZE@{HEADER\_SIZE}}
+\index{HEADER\_SIZE@{HEADER\_SIZE}!compression::format@{compression::format}}
+\doxysubsubsection{\texorpdfstring{HEADER\_SIZE}{HEADER\_SIZE}}
+{\footnotesize\ttfamily \label{namespacecompression_1_1format_aba5b49b42f55e79b68d089c9941c3a85} 
+size\+\_\+t compression\+::format\+::\+HEADER\+\_\+\+SIZE\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \mbox{\hyperlink{namespacecompression_1_1format_aedd178bf1033c1d0612a578e00c227f1}{MAGIC\_NUMBER}}.size()\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}{FORMAT\_VERSION}})\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}})\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(uint64\_t)\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(uint32\_t)}
+
+\end{DoxyCode}
+\Hypertarget{namespacecompression_1_1format_aedd178bf1033c1d0612a578e00c227f1}\index{compression::format@{compression::format}!MAGIC\_NUMBER@{MAGIC\_NUMBER}}
+\index{MAGIC\_NUMBER@{MAGIC\_NUMBER}!compression::format@{compression::format}}
+\doxysubsubsection{\texorpdfstring{MAGIC\_NUMBER}{MAGIC\_NUMBER}}
+{\footnotesize\ttfamily \label{namespacecompression_1_1format_aedd178bf1033c1d0612a578e00c227f1} 
+std\+::array$<$std\+::byte, 4$>$ compression\+::format\+::\+MAGIC\+\_\+\+NUMBER\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{}
+\DoxyCodeLine{\ \ \ \ std::byte\{\textcolor{charliteral}{'C'}\},\ std::byte\{\textcolor{charliteral}{'P'}\},\ std::byte\{\textcolor{charliteral}{'R'}\},\ std::byte\{\textcolor{charliteral}{'O'}\}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

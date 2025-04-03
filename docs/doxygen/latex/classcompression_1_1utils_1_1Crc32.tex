@@ -1,0 +1,114 @@
+\doxysection{compression\+::utils\+::Crc32 Class Reference}
+\hypertarget{classcompression_1_1utils_1_1Crc32}{}\label{classcompression_1_1utils_1_1Crc32}\index{compression::utils::Crc32@{compression::utils::Crc32}}
+
+
+Simple table-\/based CRC32 implementation.  
+
+
+
+
+{\ttfamily \#include $<$Crc32.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_aea71ca2d8532b0bd0b7e6d49a1fca440}{Crc32}} ()
+\item 
+uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_aa762e902b9a39a2fb2b72ebfe70ead3f}{calculate}} (const std\+::byte \texorpdfstring{$\ast$}{*}data, size\+\_\+t size) const
+\begin{DoxyCompactList}\small\item\em Calculates the CRC32 checksum for a block of data. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a4a3f94a141230fe83a11148e4291c9fa}{calculate}} (const std\+::vector$<$ std\+::byte $>$ \&data) const
+\begin{DoxyCompactList}\small\item\em Calculates the CRC32 checksum for a vector of bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a755211e39df7779b1ead8050402b1ce5}{generate\+Table}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::array$<$ uint32\+\_\+t, 256 $>$ \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a6d51011f10173ebe76d45e1714ccddc1}{crc\+\_\+table}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1utils_1_1Crc32_a8bc1cbb4d0d49a33b5d80cdbb33acbf3}{POLYNOMIAL}} = 0x\+EDB88320
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Simple table-\/based CRC32 implementation. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcompression_1_1utils_1_1Crc32_aea71ca2d8532b0bd0b7e6d49a1fca440}\index{compression::utils::Crc32@{compression::utils::Crc32}!Crc32@{Crc32}}
+\index{Crc32@{Crc32}!compression::utils::Crc32@{compression::utils::Crc32}}
+\doxysubsubsection{\texorpdfstring{Crc32()}{Crc32()}}
+{\footnotesize\ttfamily \label{classcompression_1_1utils_1_1Crc32_aea71ca2d8532b0bd0b7e6d49a1fca440} 
+compression\+::utils\+::\+Crc32\+::\+Crc32 (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1utils_1_1Crc32_aa762e902b9a39a2fb2b72ebfe70ead3f}\index{compression::utils::Crc32@{compression::utils::Crc32}!calculate@{calculate}}
+\index{calculate@{calculate}!compression::utils::Crc32@{compression::utils::Crc32}}
+\doxysubsubsection{\texorpdfstring{calculate()}{calculate()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classcompression_1_1utils_1_1Crc32_aa762e902b9a39a2fb2b72ebfe70ead3f} 
+uint32\+\_\+t compression\+::utils\+::\+Crc32\+::calculate (\begin{DoxyParamCaption}\item[{const std\+::byte \texorpdfstring{$\ast$}{*}}]{data}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Calculates the CRC32 checksum for a block of data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & Pointer to the data buffer. \\
+\hline
+{\em size} & Size of the data buffer in bytes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The calculated CRC32 checksum. 
+\end{DoxyReturn}
+\Hypertarget{classcompression_1_1utils_1_1Crc32_a4a3f94a141230fe83a11148e4291c9fa}\index{compression::utils::Crc32@{compression::utils::Crc32}!calculate@{calculate}}
+\index{calculate@{calculate}!compression::utils::Crc32@{compression::utils::Crc32}}
+\doxysubsubsection{\texorpdfstring{calculate()}{calculate()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classcompression_1_1utils_1_1Crc32_a4a3f94a141230fe83a11148e4291c9fa} 
+uint32\+\_\+t compression\+::utils\+::\+Crc32\+::calculate (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Calculates the CRC32 checksum for a vector of bytes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & The vector of bytes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The calculated CRC32 checksum. 
+\end{DoxyReturn}
+\Hypertarget{classcompression_1_1utils_1_1Crc32_a755211e39df7779b1ead8050402b1ce5}\index{compression::utils::Crc32@{compression::utils::Crc32}!generateTable@{generateTable}}
+\index{generateTable@{generateTable}!compression::utils::Crc32@{compression::utils::Crc32}}
+\doxysubsubsection{\texorpdfstring{generateTable()}{generateTable()}}
+{\footnotesize\ttfamily \label{classcompression_1_1utils_1_1Crc32_a755211e39df7779b1ead8050402b1ce5} 
+void compression\+::utils\+::\+Crc32\+::generate\+Table (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classcompression_1_1utils_1_1Crc32_a6d51011f10173ebe76d45e1714ccddc1}\index{compression::utils::Crc32@{compression::utils::Crc32}!crc\_table@{crc\_table}}
+\index{crc\_table@{crc\_table}!compression::utils::Crc32@{compression::utils::Crc32}}
+\doxysubsubsection{\texorpdfstring{crc\_table}{crc\_table}}
+{\footnotesize\ttfamily \label{classcompression_1_1utils_1_1Crc32_a6d51011f10173ebe76d45e1714ccddc1} 
+std\+::array$<$uint32\+\_\+t, 256$>$ compression\+::utils\+::\+Crc32\+::crc\+\_\+table\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1utils_1_1Crc32_a8bc1cbb4d0d49a33b5d80cdbb33acbf3}\index{compression::utils::Crc32@{compression::utils::Crc32}!POLYNOMIAL@{POLYNOMIAL}}
+\index{POLYNOMIAL@{POLYNOMIAL}!compression::utils::Crc32@{compression::utils::Crc32}}
+\doxysubsubsection{\texorpdfstring{POLYNOMIAL}{POLYNOMIAL}}
+{\footnotesize\ttfamily \label{classcompression_1_1utils_1_1Crc32_a8bc1cbb4d0d49a33b5d80cdbb33acbf3} 
+uint32\+\_\+t compression\+::utils\+::\+Crc32\+::\+POLYNOMIAL = 0x\+EDB88320\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}, {\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{Crc32_8hpp}{Crc32.\+hpp}}\end{DoxyCompactItemize}
