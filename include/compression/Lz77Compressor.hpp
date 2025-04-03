@@ -6,6 +6,7 @@
 #include "ICompressor.hpp"
 #include <vector>
 #include <cstdint> // For uint types
+#include <unordered_map> // For hash table optimization
 
 namespace compression {
 
@@ -49,7 +50,7 @@ private:
      * @param searchBufferStart The starting index of the search buffer.
      * @return Match The best match found (distance > 0 if a match was found).
      */
-    Match findLongestMatch(const std::vector<std::byte>& data, size_t currentPosition, size_t searchBufferStart) const;
+    // Match findLongestMatch(const std::vector<std::byte>& data, size_t currentPosition, size_t searchBufferStart) const; // REMOVED - Integrated into compress
 
     // --- Encoding constants/helpers ---
     // We need a simple way to distinguish literals from (distance, length) pairs.
