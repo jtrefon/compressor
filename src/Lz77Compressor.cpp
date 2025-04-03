@@ -103,7 +103,6 @@ std::vector<std::byte> Lz77Compressor::compress(const std::vector<std::byte>& da
 
                     // Byte-by-byte comparison
                     while (currentMatchLength < maxPossibleLength &&
-                           potentialMatchPos + currentMatchLength < currentPosition && // Ensure we don't read past current pos from match source
                            data[potentialMatchPos + currentMatchLength] == data[currentPosition + currentMatchLength])
                     {
                         currentMatchLength++;
