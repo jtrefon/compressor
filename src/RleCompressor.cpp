@@ -1,4 +1,5 @@
 #include <compression/RleCompressor.hpp>
+#include <cstdint>
 #include <stdexcept>
 
 namespace compression {
