@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nullcompressor_0',['NullCompressor',['../classcompression_1_1NullCompressor.html',1,'compression']]]
+  ['lz77compressor_0',['Lz77Compressor',['../classcompression_1_1Lz77Compressor.html',1,'compression']]]
 ];

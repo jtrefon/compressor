@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['huffmannode_0',['HuffmanNode',['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a15bf4c7ef703de68eba1eb1feb4b24e3',1,'compression::HuffmanCompressor::HuffmanNode::HuffmanNode(std::byte d, uint64_t freq)'],['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a88fbe488c1559b8f68e1e5e619812d94',1,'compression::HuffmanCompressor::HuffmanNode::HuffmanNode(std::unique_ptr&lt; HuffmanNode &gt; l, std::unique_ptr&lt; HuffmanNode &gt; r)']]]
+  ['generatecodes_0',['generateCodes',['../classcompression_1_1HuffmanCompressor.html#a5929c73922985f30e48a03a5110ae75f',1,'compression::HuffmanCompressor']]],
+  ['generatetable_1',['generateTable',['../classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5',1,'compression::utils::Crc32']]]
 ];

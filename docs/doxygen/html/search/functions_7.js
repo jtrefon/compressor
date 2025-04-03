@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7eicompressor_0',['~ICompressor',['../classcompression_1_1ICompressor.html#a3a2142d5686b5959e7a1a3d4c0eec8b8',1,'compression::ICompressor']]]
+  ['lz77compressor_0',['Lz77Compressor',['../classcompression_1_1Lz77Compressor.html#afec82f656800362f3b89802e190d7729',1,'compression::Lz77Compressor']]]
 ];

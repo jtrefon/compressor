@@ -1,0 +1,5 @@
+if(EXISTS "/Users/jacektrefon/Projects/vibing/compression/tests/compression_tests[1]_tests.cmake")
+  include("/Users/jacektrefon/Projects/vibing/compression/tests/compression_tests[1]_tests.cmake")
+else()
+  add_test(compression_tests_NOT_BUILT compression_tests_NOT_BUILT)
+endif()

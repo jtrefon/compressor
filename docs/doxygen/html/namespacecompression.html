@@ -105,7 +105,8 @@ $(function(){initNavTree('namespacecompression.html',''); initResizable(true); }
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">compression Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -125,6 +126,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1ICompressor.html">ICompressor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for compression and decompression algorithms.  <a href="classcompression_1_1ICompressor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1Lz77Compressor.html">Lz77Compressor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the LZ77 compression algorithm.  <a href="classcompression_1_1Lz77Compressor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1NullCompressor.html">NullCompressor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Null Object implementation of <a class="el" href="classcompression_1_1ICompressor.html" title="Interface for compression and decompression algorithms.">ICompressor</a>.  <a href="classcompression_1_1NullCompressor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,6 +141,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a818c6efb6d2629007fe3521496d51c8f" id="r_a818c6efb6d2629007fe3521496d51c8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a818c6efb6d2629007fe3521496d51c8f">dummy_function</a> ()</td></tr>
 <tr class="memdesc:a818c6efb6d2629007fe3521496d51c8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dummy function for initial setup.  <br /></td></tr>
 <tr class="separator:a818c6efb6d2629007fe3521496d51c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:abe2725705560eab73f9408871ab4544d" id="r_abe2725705560eab73f9408871ab4544d"><td class="memItemLeft" align="right" valign="top">constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe2725705560eab73f9408871ab4544d">MIN_MATCH_LENGTH</a> = 3</td></tr>
+<tr class="separator:abe2725705560eab73f9408871ab4544d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24aa9f9d9d040d4619254438593ac96b" id="r_a24aa9f9d9d040d4619254438593ac96b"><td class="memItemLeft" align="right" valign="top">constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24aa9f9d9d040d4619254438593ac96b">MAX_DISTANCE</a> = 4096</td></tr>
+<tr class="separator:a24aa9f9d9d040d4619254438593ac96b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04c1225f48c1d3356a96d56ba319cfc2" id="r_a04c1225f48c1d3356a96d56ba319cfc2"><td class="memItemLeft" align="right" valign="top">constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04c1225f48c1d3356a96d56ba319cfc2">MAX_LENGTH</a> = 32</td></tr>
+<tr class="separator:a04c1225f48c1d3356a96d56ba319cfc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a818c6efb6d2629007fe3521496d51c8f" name="a818c6efb6d2629007fe3521496d51c8f"></a>
@@ -163,6 +176,73 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A dummy function for initial setup. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a24aa9f9d9d040d4619254438593ac96b" name="a24aa9f9d9d040d4619254438593ac96b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24aa9f9d9d040d4619254438593ac96b">&#9670;&#160;</a></span>MAX_DISTANCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t compression::MAX_DISTANCE = 4096</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a04c1225f48c1d3356a96d56ba319cfc2" name="a04c1225f48c1d3356a96d56ba319cfc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04c1225f48c1d3356a96d56ba319cfc2">&#9670;&#160;</a></span>MAX_LENGTH</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t compression::MAX_LENGTH = 32</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abe2725705560eab73f9408871ab4544d" name="abe2725705560eab73f9408871ab4544d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe2725705560eab73f9408871ab4544d">&#9670;&#160;</a></span>MIN_MATCH_LENGTH</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t compression::MIN_MATCH_LENGTH = 3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

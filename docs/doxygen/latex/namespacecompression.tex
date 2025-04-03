@@ -14,6 +14,8 @@ class \mbox{\hyperlink{classcompression_1_1HuffmanCompressor}{Huffman\+Compresso
 \begin{DoxyCompactList}\small\item\em Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} using Huffman coding. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1ICompressor}{ICompressor}}
 \begin{DoxyCompactList}\small\item\em Interface for compression and decompression algorithms. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcompression_1_1Lz77Compressor}{Lz77\+Compressor}}
+\begin{DoxyCompactList}\small\item\em Implements the LZ77 compression algorithm. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1NullCompressor}{Null\+Compressor}}
 \begin{DoxyCompactList}\small\item\em A Null Object implementation of \doxylink{classcompression_1_1ICompressor}{ICompressor}. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1RleCompressor}{Rle\+Compressor}}
@@ -23,6 +25,15 @@ class \mbox{\hyperlink{classcompression_1_1RleCompressor}{Rle\+Compressor}}
 \item 
 void \mbox{\hyperlink{namespacecompression_a818c6efb6d2629007fe3521496d51c8f}{dummy\+\_\+function}} ()
 \begin{DoxyCompactList}\small\item\em A dummy function for initial setup. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr size\+\_\+t \mbox{\hyperlink{namespacecompression_abe2725705560eab73f9408871ab4544d}{MIN\+\_\+\+MATCH\+\_\+\+LENGTH}} = 3
+\item 
+constexpr uint16\+\_\+t \mbox{\hyperlink{namespacecompression_a24aa9f9d9d040d4619254438593ac96b}{MAX\+\_\+\+DISTANCE}} = 4096
+\item 
+constexpr uint8\+\_\+t \mbox{\hyperlink{namespacecompression_a04c1225f48c1d3356a96d56ba319cfc2}{MAX\+\_\+\+LENGTH}} = 32
+\end{DoxyCompactItemize}
 
 
 \doxysubsection{Function Documentation}
@@ -35,4 +46,25 @@ void compression\+::dummy\+\_\+function (\begin{DoxyParamCaption}{}{}\end{DoxyPa
 
 
 A dummy function for initial setup. 
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacecompression_a24aa9f9d9d040d4619254438593ac96b}\index{compression@{compression}!MAX\_DISTANCE@{MAX\_DISTANCE}}
+\index{MAX\_DISTANCE@{MAX\_DISTANCE}!compression@{compression}}
+\doxysubsubsection{\texorpdfstring{MAX\_DISTANCE}{MAX\_DISTANCE}}
+{\footnotesize\ttfamily \label{namespacecompression_a24aa9f9d9d040d4619254438593ac96b} 
+uint16\+\_\+t compression\+::\+MAX\+\_\+\+DISTANCE = 4096\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{namespacecompression_a04c1225f48c1d3356a96d56ba319cfc2}\index{compression@{compression}!MAX\_LENGTH@{MAX\_LENGTH}}
+\index{MAX\_LENGTH@{MAX\_LENGTH}!compression@{compression}}
+\doxysubsubsection{\texorpdfstring{MAX\_LENGTH}{MAX\_LENGTH}}
+{\footnotesize\ttfamily \label{namespacecompression_a04c1225f48c1d3356a96d56ba319cfc2} 
+uint8\+\_\+t compression\+::\+MAX\+\_\+\+LENGTH = 32\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{namespacecompression_abe2725705560eab73f9408871ab4544d}\index{compression@{compression}!MIN\_MATCH\_LENGTH@{MIN\_MATCH\_LENGTH}}
+\index{MIN\_MATCH\_LENGTH@{MIN\_MATCH\_LENGTH}!compression@{compression}}
+\doxysubsubsection{\texorpdfstring{MIN\_MATCH\_LENGTH}{MIN\_MATCH\_LENGTH}}
+{\footnotesize\ttfamily \label{namespacecompression_abe2725705560eab73f9408871ab4544d} 
+size\+\_\+t compression\+::\+MIN\+\_\+\+MATCH\+\_\+\+LENGTH = 3\hspace{0.3cm}{\ttfamily [constexpr]}}
 

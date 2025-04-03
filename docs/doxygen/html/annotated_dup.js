@@ -9,6 +9,7 @@ var annotated_dup =
       ] ],
       [ "HuffmanCompressor", "classcompression_1_1HuffmanCompressor.html", "classcompression_1_1HuffmanCompressor" ],
       [ "ICompressor", "classcompression_1_1ICompressor.html", "classcompression_1_1ICompressor" ],
+      [ "Lz77Compressor", "classcompression_1_1Lz77Compressor.html", "classcompression_1_1Lz77Compressor" ],
       [ "NullCompressor", "classcompression_1_1NullCompressor.html", "classcompression_1_1NullCompressor" ],
       [ "RleCompressor", "classcompression_1_1RleCompressor.html", "classcompression_1_1RleCompressor" ]
     ] ]

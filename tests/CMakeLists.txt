@@ -12,7 +12,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 # Add the test executable
-add_executable(compression_tests main.cpp)
+add_executable(compression_tests 
+    main.cpp
+    Lz77CompressorTest.cpp # Add LZ77 tests
+)
 
 # Link the test executable against GoogleTest and the compression library
 target_link_libraries(compression_tests PRIVATE GTest::gtest_main compression)

@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['serializefrequencymap_0',['serializeFrequencyMap',['../classcompression_1_1HuffmanCompressor.html#aaf33ce47234d06fc372e9497bd2f2a7e',1,'compression::HuffmanCompressor']]],
-  ['serializeheader_1',['serializeHeader',['../namespacecompression_1_1format.html#af2e5c379a1e2209b89aa43f378312fda',1,'compression::format']]],
-  ['stringtoalgorithmid_2',['stringToAlgorithmId',['../namespacecompression_1_1format.html#a69529234368757ea5c5633aca84d07b3',1,'compression::format']]]
+  ['huffmannode_0',['HuffmanNode',['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a15bf4c7ef703de68eba1eb1feb4b24e3',1,'compression::HuffmanCompressor::HuffmanNode::HuffmanNode(std::byte d, uint64_t freq)'],['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a88fbe488c1559b8f68e1e5e619812d94',1,'compression::HuffmanCompressor::HuffmanNode::HuffmanNode(std::unique_ptr&lt; HuffmanNode &gt; l, std::unique_ptr&lt; HuffmanNode &gt; r)']]]
 ];

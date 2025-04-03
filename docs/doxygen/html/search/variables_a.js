@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['right_0',['right',['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#ad43cbfbc156570ad6051084c497058c0',1,'compression::HuffmanCompressor::HuffmanNode']]]
+  ['searchbuffersize_5f_0',['searchBufferSize_',['../classcompression_1_1Lz77Compressor.html#ab1b2015b3553e917279b49a5a29dcd50',1,'compression::Lz77Compressor']]]
 ];
