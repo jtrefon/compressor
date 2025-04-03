@@ -16,10 +16,6 @@
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/Lz77Compressor.hpp>
 
-// --- Helper to stringify preprocessor macros ---
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x)
-
 // --- Helper Functions ---
 
 // Reads a whole file into a byte vector
@@ -113,18 +109,20 @@ int main() {
 #ifndef BENCHMARK_DATA_DIR
     #error "BENCHMARK_DATA_DIR is not defined. Check app/CMakeLists.txt"
 #endif
-    std::filesystem::path dataDir = TOSTRING(BENCHMARK_DATA_DIR);
+    // Use the macro directly as it expands to a C string literal
+    std::filesystem::path dataDir = BENCHMARK_DATA_DIR;
     std::filesystem::path dataFilePath = dataDir / "test.txt";
 
     // Check if the constructed path exists
     if (!std::filesystem::exists(dataFilePath)) {
          std::cerr << "Error: Benchmark data file not found at expected location: " << dataFilePath << std::endl;
-         std::cerr << "(Derived from BENCHMARK_DATA_DIR macro)" << std::endl;
+         std::cerr << "(Derived from BENCHMARK_DATA_DIR macro: " << BENCHMARK_DATA_DIR << ")" << std::endl;
          return 1;
     }
 
     // Determine the path for the output MD file (relative to source dir)
-    std::filesystem::path benchmarkMdPath = dataDir / "../BENCHMARKS.md"; // Place BENCHMARKS.md in project root
+    // Use the compile-time path directly here too
+    std::filesystem::path benchmarkMdPath = std::filesystem::path(BENCHMARK_DATA_DIR) / "../BENCHMARKS.md"; 
 
     // --- Rest of main function --- 
     std::cout << "Starting benchmark using file: " << dataFilePath << std::endl;
