@@ -38,6 +38,7 @@ Lz77Compressor::Lz77Compressor(size_t searchBufferSize, size_t lookAheadBufferSi
 
 // Placeholder for findLongestMatch - implementation will follow
 Lz77Compressor::Match Lz77Compressor::findLongestMatch(const std::vector<std::byte>& data, size_t currentPosition, size_t searchBufferStart) const {
+    // Trivial comment added to trigger CI
     Match bestMatch;
     bestMatch.length = 0; // No match found yet
     bestMatch.distance = 0;
