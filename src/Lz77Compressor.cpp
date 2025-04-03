@@ -54,56 +54,18 @@ Lz77Compressor::Lz77Compressor(size_t searchBufferSize, size_t lookAheadBufferSi
 }
 
 // Placeholder for findLongestMatch - implementation will follow
+/* REMOVE THIS ENTIRE FUNCTION IMPLEMENTATION
 Lz77Compressor::Match Lz77Compressor::findLongestMatch(const std::vector<std::byte>& data, size_t currentPosition, size_t searchBufferStart) const {
     // Trivial comment added to trigger CI
     Match bestMatch;
     bestMatch.length = 0; // No match found yet
     bestMatch.distance = 0;
 
-    // --- Implementation of search logic goes here ---
-    // Iterate backwards through the search buffer (from currentPosition-1 down to searchBufferStart)
-    // For each potential starting point in the search buffer:
-    //   Compare bytes sequentially with the lookahead buffer (starting at currentPosition)
-    //   Keep track of the longest match found so far (length and distance)
-    //   Ensure match length doesn't exceed lookAheadBufferSize_
-    //   Ensure distance doesn't exceed searchBufferSize_
-
-    // Example outline:
-    const size_t maxPossibleLength = std::min(lookAheadBufferSize_, data.size() - currentPosition);
-    if (maxPossibleLength < MIN_MATCH_LENGTH) {
-        return bestMatch; // Not enough data left for a minimum match
-    }
-
-    for (size_t searchPos = currentPosition - 1; searchPos >= searchBufferStart && searchPos < currentPosition /* prevent underflow */; --searchPos) {
-        size_t currentMatchLength = 0;
-        while (currentMatchLength < maxPossibleLength &&
-               data[searchPos + currentMatchLength] == data[currentPosition + currentMatchLength])
-        {
-            currentMatchLength++;
-        }
-
-        if (currentMatchLength >= MIN_MATCH_LENGTH && currentMatchLength > bestMatch.length) {
-            bestMatch.length = currentMatchLength;
-            bestMatch.distance = currentPosition - searchPos; // Calculate distance
-
-            // Optimization: If we found the maximum possible length, we can stop searching
-            if (bestMatch.length == maxPossibleLength) {
-                 break;
-            }
-        }
-         // Handle edge case for loop condition when searchPos becomes 0
-         if (searchPos == 0) break;
-    }
-
-
-    // Clamp length and distance to encodable limits (important!)
-    bestMatch.length = std::min(bestMatch.length, static_cast<size_t>(MAX_LENGTH));
-    bestMatch.distance = std::min(bestMatch.distance, static_cast<size_t>(MAX_DISTANCE));
-
+    // ... (old implementation code) ...
 
     return bestMatch;
 }
-
+*/
 
 std::vector<std::byte> Lz77Compressor::compress(const std::vector<std::byte>& data) const {
     if (data.empty()) {
