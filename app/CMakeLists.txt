@@ -7,6 +7,8 @@ add_executable(compression_benchmark benchmark.cpp)
 target_link_libraries(compression_benchmark PRIVATE compression)
 # Require C++17 for <filesystem>
 set_target_properties(compression_benchmark PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+# Pass data directory path as a compile definition
+target_compile_definitions(compression_benchmark PRIVATE BENCHMARK_DATA_DIR="${CMAKE_SOURCE_DIR}/data")
 
 
 # --- Installation --- 

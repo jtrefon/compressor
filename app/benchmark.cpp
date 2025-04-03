@@ -16,6 +16,10 @@
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/Lz77Compressor.hpp>
 
+// --- Helper to stringify preprocessor macros ---
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
 // --- Helper Functions ---
 
 // Reads a whole file into a byte vector
@@ -105,22 +109,24 @@ BenchmarkResult runBenchmark(
 // --- Main Function ---
 
 int main() {
-    // Determine the path to the data file relative to the executable location
-    // Assume executable is in 'build/app/', data is in 'data/'
-    std::filesystem::path executablePath = std::filesystem::current_path(); // Path where benchmark is run (usually build/app)
-    std::filesystem::path dataFilePath = executablePath / "../../data/test.txt"; // Go up two levels from build/app
+    // --- Get Data File Path using Compile Definition ---
+#ifndef BENCHMARK_DATA_DIR
+    #error "BENCHMARK_DATA_DIR is not defined. Check app/CMakeLists.txt"
+#endif
+    std::filesystem::path dataDir = TOSTRING(BENCHMARK_DATA_DIR);
+    std::filesystem::path dataFilePath = dataDir / "test.txt";
 
-     // Canonical path helps resolve relative paths robustly
-    try {
-         dataFilePath = std::filesystem::canonical(dataFilePath);
-    } catch(const std::filesystem::filesystem_error& e) {
-         std::cerr << "Error finding data file: " << e.what() << std::endl;
-         std::cerr << "Attempted path: " << dataFilePath << std::endl;
-         std::cerr << "Current directory: " << executablePath << std::endl;
+    // Check if the constructed path exists
+    if (!std::filesystem::exists(dataFilePath)) {
+         std::cerr << "Error: Benchmark data file not found at expected location: " << dataFilePath << std::endl;
+         std::cerr << "(Derived from BENCHMARK_DATA_DIR macro)" << std::endl;
          return 1;
     }
 
+    // Determine the path for the output MD file (relative to source dir)
+    std::filesystem::path benchmarkMdPath = dataDir / "../BENCHMARKS.md"; // Place BENCHMARKS.md in project root
 
+    // --- Rest of main function --- 
     std::cout << "Starting benchmark using file: " << dataFilePath << std::endl;
 
     std::vector<std::byte> originalData;
@@ -184,10 +190,10 @@ int main() {
                        << "| " << result.decompressionTimeMs << " |\n";
     }
 
-     // --- Write Markdown File ---
-     std::filesystem::path benchmarkMdPath = executablePath / "../../BENCHMARKS.md";
+     // --- Write Markdown File (Using path derived from compile definition) ---
      try {
-         benchmarkMdPath = std::filesystem::canonical(benchmarkMdPath.parent_path()) / benchmarkMdPath.filename();
+         // Ensure the path is clean (remove potential .. etc, though less critical now)
+         benchmarkMdPath = std::filesystem::weakly_canonical(benchmarkMdPath);
          std::ofstream mdFile(benchmarkMdPath);
          if (!mdFile) {
               std::cerr << "Warning: Could not open BENCHMARKS.md for writing at " << benchmarkMdPath << std::endl;
@@ -196,6 +202,7 @@ int main() {
               std::cout << "\nBenchmark results written to " << benchmarkMdPath << std::endl;
          }
      } catch(const std::filesystem::filesystem_error& e) {
+         // Use weakly_canonical to avoid issues if parent doesn't exist temporarily
          std::cerr << "Warning: Could not determine canonical path for BENCHMARKS.md: " << e.what() << std::endl;
          std::cerr << "Attempted path: " << benchmarkMdPath << std::endl;
      }
