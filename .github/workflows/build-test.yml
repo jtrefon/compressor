@@ -3,7 +3,9 @@ name: Build and Test Compression Library
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
+      - "feature/**" # Trigger on pushes to main and branches like feature/xxx
   pull_request:
     branches: [ "main" ]
 
