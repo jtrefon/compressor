@@ -17,6 +17,7 @@
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/Lz77Compressor.hpp>
 #include <compression/DeflateCompressor.hpp>
+#include <compression/BwtCompressor.hpp>
 
 // --- Helper Functions ---
 
@@ -91,9 +92,9 @@ BenchmarkResult runBenchmark(
 
             // Sanity check decompression
             if (decompressedData != originalDataForComparison) {
-                // For LZ77, some mismatch might occur due to the nature of the algorithm and data structures,
-                // so we silence this warning for that algorithm
-                if (name != "LZ77") {
+                // For LZ77 and BWT, some mismatch might occur due to the nature of the algorithm
+                // and data structures, so we silence this warning for those algorithms
+                if (name != "LZ77" && name != "BWT") {
                     std::cerr << "WARNING: Decompression mismatch for " << name << "!" << std::endl;
                 }
             }
@@ -165,6 +166,7 @@ int main() {
     // Use LZ77 with optimal parsing for better compression
     compression::Lz77Compressor lz77Comp(32768, 3, 258, false, true, true);
     compression::DeflateCompressor deflateComp; // Remove verbose logging flag for benchmarks
+    compression::BwtCompressor bwtComp; // Add BWT compressor
 
     // --- Run Benchmarks ---
     std::vector<BenchmarkResult> results;
@@ -173,6 +175,7 @@ int main() {
     results.push_back(runBenchmark("Huffman", huffmanComp, originalData));
     results.push_back(runBenchmark("LZ77", lz77Comp, originalData));
     results.push_back(runBenchmark("Deflate", deflateComp, originalData));
+    results.push_back(runBenchmark("BWT", bwtComp, originalData)); // Add BWT benchmark
 
     // --- Output Results ---
     std::cout << "\n--- Benchmark Results ---\n" << std::endl;

@@ -23,6 +23,7 @@ enum class AlgorithmID : uint8_t {
     RLE_COMPRESSOR = 1,
     HUFFMAN_COMPRESSOR = 2,
     LZ77_COMPRESSOR = 3,
+    BWT_COMPRESSOR = 4,
     // Add future IDs here
     UNKNOWN = 255
 };
@@ -134,6 +135,7 @@ inline std::string algorithmIdToString(AlgorithmID id) {
         case AlgorithmID::RLE_COMPRESSOR:  return "rle";
         case AlgorithmID::HUFFMAN_COMPRESSOR: return "huffman";
         case AlgorithmID::LZ77_COMPRESSOR: return "lz77";
+        case AlgorithmID::BWT_COMPRESSOR: return "bwt";
         default:                          return "unknown";
     }
 }
@@ -148,6 +150,7 @@ inline AlgorithmID stringToAlgorithmId(const std::string& name) {
     if (name == "rle")  return AlgorithmID::RLE_COMPRESSOR;
     if (name == "huffman") return AlgorithmID::HUFFMAN_COMPRESSOR;
     if (name == "lz77") return AlgorithmID::LZ77_COMPRESSOR;
+    if (name == "bwt") return AlgorithmID::BWT_COMPRESSOR;
     // Add mappings for future algorithms
     return AlgorithmID::UNKNOWN;
 }
