@@ -7,194 +7,143 @@
 #include <vector>
 #include <cstdint> // For uint types
 #include <unordered_map> // For hash table optimization
+#include <array>
 
 namespace compression {
 
 /**
- * @brief Implements the LZ77 compression algorithm.
- *
- * LZ77 works by finding repeated sequences of data and replacing them
- * with references (distance, length) to previous occurrences within a
- * sliding window.
+ * @class Lz77Compressor
+ * @brief Implements LZ77 compression algorithm with advanced optimizations
+ * 
+ * This implementation includes several optimizations:
+ * - Optimal parsing using dynamic programming (when enabled)
+ * - Enhanced hash function for better match distribution
+ * - Adaptive encoding for different match lengths and distances
+ * - Advanced match scoring that considers multiple factors
+ * - Aggressive match finding with multi-position lookahead
  */
 class Lz77Compressor : public ICompressor {
 public:
-    // Constants for LZ77 symbols (inspired by Deflate)
+    // Constants that need to be accessible by DeflateCompressor
+    static constexpr uint8_t LITERAL_FLAG = 0x00;
+    static constexpr uint8_t LENGTH_DISTANCE_FLAG = 0x01;
     static constexpr uint32_t EOB_SYMBOL = 256;
     static constexpr uint32_t LENGTH_CODE_BASE = 257;
-    static constexpr uint32_t MIN_LEN = 3; // Corresponds to MIN_MATCH_LENGTH
-    static constexpr uint32_t MAX_LEN = 258; // Corresponds to MAX_MATCH_LENGTH
     
-    // Constants for improved compression
-    static constexpr uint32_t MAX_HASH_CHAIN_LENGTH = 16384; // Increased from 8192 for better compression
-    static constexpr bool USE_HASH_CHAIN_LIMIT = true; // Enable hash chain limit for speed vs compression trade-off
-    static constexpr size_t MIN_MATCH_FOR_FAR_DISTANCE = 5; // Require longer matches for far distances
-    
-    // Constants for adaptive minimum match length - more aggressive thresholds for better compression
-    static constexpr size_t ADAPTIVE_MIN_LENGTH_CLOSE = 3;  // Min length for nearby matches (< 4K)
-    static constexpr size_t ADAPTIVE_MIN_LENGTH_FAR = 4;    // Min length for 4-16K distances
-    static constexpr size_t ADAPTIVE_MIN_LENGTH_VERY_FAR = 5; // Min length for 16K+ distances
-    
-    // Advanced hash function parameters
-    static constexpr uint32_t HASH_BITS = 16; // Use 16-bit hash for better distribution
-    static constexpr uint32_t HASH_SHIFT = 5;  // Higher shift creates better hash distribution
-    static constexpr uint32_t HASH_MASK = (1 << HASH_BITS) - 1; // Mask for hash function
-
-    // Helper to get length code from actual length
-    static uint32_t getLengthCode(size_t length) {
-        if (length < MIN_LEN || length > MAX_LEN) {
-            // Handle error or clamp - for now, maybe throw?
-            // Or ensure this is never called with invalid lengths
-            return 0; // Indicate error/invalid
-        }
-        return LENGTH_CODE_BASE + (static_cast<uint32_t>(length) - MIN_LEN);
-    }
-
-    // Helper to get length from code
-    static size_t getLengthFromCode(uint32_t code) {
-        if (code < LENGTH_CODE_BASE || code >= (LENGTH_CODE_BASE + (MAX_LEN - MIN_LEN + 1))) {
-            return 0; // Indicate error/invalid
-        }
-        return static_cast<size_t>(code - LENGTH_CODE_BASE + MIN_LEN);
-    }
-
-    // Note: Distance codes/handling will be added later
-
-    /**
-     * @brief Default constructor using typical window sizes.
-     * 
-     * @param searchBufferSize Size of the search buffer (increased for better compression)
-     * @param lookAheadBufferSize Size of the look-ahead buffer
-     * @param useGreedyParsing When true, uses greedy parsing instead of lazy parsing
-     * @param useAdaptiveMinLength When true, adjusts minimum match length based on distance
-     * @param aggressiveMatching When true, uses more aggressive match finding (better compression but slower)
-     */
-    Lz77Compressor(size_t searchBufferSize = 32768, 
-                  size_t lookAheadBufferSize = 258, 
-                  bool useGreedyParsing = false, 
-                  bool useAdaptiveMinLength = true,
-                  bool aggressiveMatching = true);
-
-    // Generate a sequence of symbols (Literals 0-255, EOB 256, Length Codes 257+)
-    // and associated distances for length codes.
+    // Symbol structure for intermediate format
     struct Lz77Symbol {
-        uint32_t symbol;    // Literal (0-255), EOB (256), or Length Code (257+)
-        uint32_t distance = 0;  // Distance for length codes (0 if literal)
-        uint32_t length = 0;    // Actual length (3-258) for length codes (0 if literal)
-        uint8_t literal = 0; // Actual literal byte (only if symbol <= 255)
-
-        bool isLiteral() const { return symbol < LENGTH_CODE_BASE; }
-    };
-
-    std::vector<Lz77Symbol> compressToSymbols(const std::vector<uint8_t>& data) const;
-
-    // Original compress/decompress might be removed or adapted later
-    // They don't fit the Deflate model directly anymore.
-    std::vector<uint8_t> compress(const std::vector<uint8_t>& data) const override;
-    std::vector<uint8_t> decompress(const std::vector<uint8_t>& data) const override;
-
-private:
-    // Configuration for the sliding window
-    size_t searchBufferSize_;
-    size_t lookAheadBufferSize_;
-    bool useGreedyParsing_; // Greedy vs lazy parsing
-    bool useAdaptiveMinLength_; // Dynamically adjust min match length based on distance
-    bool aggressiveMatching_; // Use more aggressive match finding strategies
-
-    // Simple structure to represent a match found in the search buffer
-    struct Match {
-        size_t distance = 0; // How far back the match starts
-        size_t length = 0;   // How long the match is
+        uint32_t symbol = 0;         // Value in the range [0, 285]
+        size_t distance = 0;         // Distance for length-distance pairs
+        size_t length = 0;           // Length for length-distance pairs
+        uint8_t literal = 0;         // Literal value
         
-        // Calculate compression benefit (bytes saved)
-        int compressionBenefit() const {
-            // Standard encoding:
-            // - A match costs 5 bytes (flag + 2 bytes length + 2 bytes distance)
-            // - A literal costs 2 bytes (flag + literal)
-            
-            // Calculate savings
-            int literalCost = static_cast<int>(length) * 2;  // Cost if encoded as literals
-            int matchCost = 5;  // Fixed cost of encoding match
-            
-            // For matches with small distance, we can use the more compact encoding
-            if (length <= 6 && distance < 1024) {
-                matchCost = 3; // More efficient encoding: flag + 16 bits
-            }
-            
-            // Calculate benefit (positive means savings)
-            return literalCost - matchCost;
-        }
+        bool isLiteral() const { return symbol < 256; }
+        bool isLength() const { return symbol >= 257 && symbol <= 285; }
+        bool isEob() const { return symbol == EOB_SYMBOL; }
     };
-
-    // Helper method to determine minimum match length based on distance
-    size_t getMinMatchLength(size_t distance) const {
-        if (!useAdaptiveMinLength_)
-            return MIN_LEN;
-            
-        if (distance < 4096)
-            return ADAPTIVE_MIN_LENGTH_CLOSE;
-        else if (distance < 16384)
-            return ADAPTIVE_MIN_LENGTH_FAR;
-        else
-            return ADAPTIVE_MIN_LENGTH_VERY_FAR;
-    }
-
-    // Helper for optimized compression logic
-    Match findBestMatchAt(
-        const std::vector<uint8_t>& data,
-        size_t pos,
-        const std::unordered_map<uint32_t, std::vector<size_t>>& hashTable) const;
-        
-    // Attempt to extend a match by comparing bytes directly, bypassing hash lookup
-    void extendMatch(Match& match, const std::vector<uint8_t>& data, size_t currentPos, size_t matchPos) const;
     
-    // Advanced match scoring for better compression decisions
-    float scoreMatch(const Match& match) const {
-        float score = static_cast<float>(match.length);
+    /**
+     * @brief Construct a new Lz77Compressor object
+     * 
+     * @param windowSize Size of the search window
+     * @param minMatchLength Minimum match length to consider
+     * @param maxMatchLength Maximum match length to consider
+     * @param useGreedyParsing When true, uses simple greedy parsing instead of lazy parsing
+     * @param useOptimalParsing When true, uses optimal parsing for better compression ratio
+     * @param aggressiveMatching When true, uses more aggressive match finding strategies
+     */
+    Lz77Compressor(
+        size_t windowSize = 32768, 
+        size_t minMatchLength = 3, 
+        size_t maxMatchLength = 258,
+        bool useGreedyParsing = false,
+        bool useOptimalParsing = false,
+        bool aggressiveMatching = true
+    );
+    
+    /**
+     * @brief Compress data using LZ77 algorithm
+     * @param data Input data to compress
+     * @return Compressed data as a vector of bytes
+     */
+    std::vector<uint8_t> compress(const std::vector<uint8_t>& data) const override;
+    
+    /**
+     * @brief Decompress LZ77-compressed data
+     * @param data Compressed data to decompress
+     * @return Decompressed data as a vector of bytes
+     */
+    std::vector<uint8_t> decompress(const std::vector<uint8_t>& data) const override;
+    
+    /**
+     * @brief Convert a length code to actual length
+     * @param code The length code
+     * @return The actual length
+     */
+    static uint32_t getLengthFromCode(uint32_t code);
+    
+private:
+    // Configuration parameters
+    size_t windowSize_;
+    size_t minMatchLength_;
+    size_t maxMatchLength_;
+    bool useGreedyParsing_;
+    bool useOptimalParsing_;
+    bool aggressiveMatching_;
+    
+    // Hash table configuration
+    size_t hashBits_ = 15;
+    size_t maxHashChainLength_ = 64;
+    size_t hashChainLimit_ = 8192;
+    
+    // Match structure with improved value calculation
+    struct Match {
+        size_t distance = 0;
+        size_t length = 0;
+        size_t position = 0;
         
-        // Give preference to shorter distances
-        if (match.distance < 128)
-            return score * 1.2f;  // Boost for very close matches
-        else if (match.distance < 1024)
-            return score * 1.1f;  // Small boost for close matches
-        else if (match.distance > 16384)
-            return score * 0.9f;  // Penalty for far matches
+        Match() = default;
+        Match(size_t dist, size_t len, size_t pos = 0) 
+            : distance(dist), length(len), position(pos) {}
+        
+        // Calculation of compression benefit in bytes
+        float compressionBenefit() const {
+            if (length < 3) return -1.0f;  // Minimum match length is usually 3
             
-        return score;
-    }
-        
-    // Evaluate if a match is worth using based on distance and length
-    bool isMatchWorthUsing(const Match& match, size_t distance = 0) const {
-        size_t dist = (distance > 0) ? distance : match.distance;
-        
-        // Always require positive compression benefit
-        if (match.compressionBenefit() <= 0) return false;
-        
-        // For far distances, require longer matches based on adaptive minimum length
-        size_t minRequiredLength = getMinMatchLength(dist);
-        if (match.length < minRequiredLength) {
-            return false;
+            // A match encoding typically costs 2-4 bytes (depending on length and distance)
+            // While the literals it replaces would cost 1 byte each
+            float encodingOverhead = 3.0f; // Average cost of length-distance pair
+            return static_cast<float>(length) - encodingOverhead;
         }
-        
-        // Additional check for very short matches
-        if (match.length == MIN_LEN && dist > 8192) {
-            return false; // Minimum-length matches only for close distances
-        }
-        
-        // With aggressive matching, allow most matches that save space
-        if (aggressiveMatching_ && match.length >= minRequiredLength) {
-            return true;
-        }
-        
-        return true;
-    }
-
-    // --- Encoding constants/helpers ---
-    // We need a simple way to distinguish literals from (distance, length) pairs.
-    // Example: Use a flag byte. 0 = literal, 1 = pair.
-    // More sophisticated methods exist (e.g., prefix codes), but start simple.
-    // Note: The exact encoding details will be refined during implementation.
-    // Need to decide how to encode distance and length (e.g., fixed bytes? variable?)
+    };
+    
+    // Enhanced hash function with better distribution
+    uint32_t hashTriplet(const std::vector<uint8_t>& data, size_t pos) const;
+    
+    // Update hash table with better management for long chains
+    void updateHashTable(std::unordered_map<uint32_t, std::vector<size_t>>& hashTable, 
+                          const std::vector<uint8_t>& data, size_t pos) const;
+    
+    // Find best match with improved search strategy
+    Match findBestMatchAt(const std::vector<uint8_t>& data, size_t pos, 
+                         const std::unordered_map<uint32_t, std::vector<size_t>>& hashTable) const;
+    
+    // Advanced match scoring for better match selection
+    float scoreMatch(const Match& match) const;
+    
+    // Get the length code for encoding
+    uint32_t getLengthCode(size_t length) const;
+    
+    // Compress to intermediate symbol representation
+    std::vector<Lz77Symbol> compressToSymbols(const std::vector<uint8_t>& data) const;
+    
+    // Encode symbols to bytes
+    std::vector<uint8_t> encodeSymbols(const std::vector<Lz77Symbol>& symbols) const;
+    
+    // Optimal parsing using dynamic programming
+    std::vector<Lz77Symbol> optimalParse(
+        const std::vector<uint8_t>& data,
+        std::unordered_map<uint32_t, std::vector<size_t>>& hashTable) const;
 };
 
 } // namespace compression

@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['scorematch_0',['scoreMatch',['../classcompression_1_1Lz77Compressor.html#a2bf2651aa0e65088dea5bfd70211b8ae',1,'compression::Lz77Compressor']]],
-  ['serializefrequencymap_1',['serializeFrequencyMap',['../classcompression_1_1HuffmanCompressor.html#aced24ba0dddcce010044cc8e6cbf3534',1,'compression::HuffmanCompressor']]],
-  ['serializeheader_2',['serializeHeader',['../namespacecompression_1_1format.html#ae8ea4c6ebe9f52ea2601c631bda13fbb',1,'compression::format']]],
-  ['stringtoalgorithmid_3',['stringToAlgorithmId',['../namespacecompression_1_1format.html#a69529234368757ea5c5633aca84d07b3',1,'compression::format']]]
+  ['readbit_0',['readBit',['../classcompression_1_1BitIO_1_1BitReader.html#aec7923b8281aa6a97beadb0d93109dd3',1,'compression::BitIO::BitReader']]],
+  ['readbits_1',['readBits',['../classcompression_1_1BitIO_1_1BitReader.html#a68e8ddc49d99913fef5fd71157b86122',1,'compression::BitIO::BitReader']]],
+  ['readdynamictables_2',['readDynamicTables',['../classcompression_1_1DeflateCompressor.html#acfddfcbb59ca37a1c65ab142659761e9',1,'compression::DeflateCompressor']]],
+  ['runlengthencodecodelengths_3',['runLengthEncodeCodeLengths',['../classcompression_1_1DeflateCompressor.html#ad6ce0356fb4cdaa7858188998a19edde',1,'compression::DeflateCompressor']]]
 ];

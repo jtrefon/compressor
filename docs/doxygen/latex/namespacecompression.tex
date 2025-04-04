@@ -25,7 +25,7 @@ struct \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decode
 class \mbox{\hyperlink{classcompression_1_1ICompressor}{ICompressor}}
 \begin{DoxyCompactList}\small\item\em Interface for compression and decompression algorithms. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1Lz77Compressor}{Lz77\+Compressor}}
-\begin{DoxyCompactList}\small\item\em Implements the LZ77 compression algorithm. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Implements LZ77 compression algorithm with advanced optimizations. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structcompression_1_1NodeComparator}{Node\+Comparator}}
 \item 
 struct \mbox{\hyperlink{structcompression_1_1NodePtrGreater}{Node\+Ptr\+Greater}}
@@ -52,15 +52,6 @@ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNo
 \item 
 void \mbox{\hyperlink{namespacecompression_a818c6efb6d2629007fe3521496d51c8f}{dummy\+\_\+function}} ()
 \begin{DoxyCompactList}\small\item\em A dummy function for initial setup. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsubsection*{Variables}
-\begin{DoxyCompactItemize}
-\item 
-constexpr size\+\_\+t \mbox{\hyperlink{namespacecompression_abe2725705560eab73f9408871ab4544d}{MIN\+\_\+\+MATCH\+\_\+\+LENGTH}} = \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a56863bb12c9b4aeff239dd28b5346990}{Lz77\+Compressor\+::\+MIN\+\_\+\+LEN}}
-\item 
-constexpr size\+\_\+t \mbox{\hyperlink{namespacecompression_a8495a49d17ece58e9cd2ea9a6c180cef}{MAX\+\_\+\+MATCH\+\_\+\+LENGTH}} = \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af310a3723175f4c07e13231a807f302a}{Lz77\+Compressor\+::\+MAX\+\_\+\+LEN}}
-\item 
-constexpr uint16\+\_\+t \mbox{\hyperlink{namespacecompression_a24aa9f9d9d040d4619254438593ac96b}{MAX\+\_\+\+DISTANCE}} = 32768
-\end{DoxyCompactItemize}
 
 
 \doxysubsection{Typedef Documentation}
@@ -100,25 +91,4 @@ void compression\+::dummy\+\_\+function (\begin{DoxyParamCaption}{}{}\end{DoxyPa
 
 
 A dummy function for initial setup. 
-
-
-
-\doxysubsection{Variable Documentation}
-\Hypertarget{namespacecompression_a24aa9f9d9d040d4619254438593ac96b}\index{compression@{compression}!MAX\_DISTANCE@{MAX\_DISTANCE}}
-\index{MAX\_DISTANCE@{MAX\_DISTANCE}!compression@{compression}}
-\doxysubsubsection{\texorpdfstring{MAX\_DISTANCE}{MAX\_DISTANCE}}
-{\footnotesize\ttfamily \label{namespacecompression_a24aa9f9d9d040d4619254438593ac96b} 
-uint16\+\_\+t compression\+::\+MAX\+\_\+\+DISTANCE = 32768\hspace{0.3cm}{\ttfamily [constexpr]}}
-
-\Hypertarget{namespacecompression_a8495a49d17ece58e9cd2ea9a6c180cef}\index{compression@{compression}!MAX\_MATCH\_LENGTH@{MAX\_MATCH\_LENGTH}}
-\index{MAX\_MATCH\_LENGTH@{MAX\_MATCH\_LENGTH}!compression@{compression}}
-\doxysubsubsection{\texorpdfstring{MAX\_MATCH\_LENGTH}{MAX\_MATCH\_LENGTH}}
-{\footnotesize\ttfamily \label{namespacecompression_a8495a49d17ece58e9cd2ea9a6c180cef} 
-size\+\_\+t compression\+::\+MAX\+\_\+\+MATCH\+\_\+\+LENGTH = \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af310a3723175f4c07e13231a807f302a}{Lz77\+Compressor\+::\+MAX\+\_\+\+LEN}}\hspace{0.3cm}{\ttfamily [constexpr]}}
-
-\Hypertarget{namespacecompression_abe2725705560eab73f9408871ab4544d}\index{compression@{compression}!MIN\_MATCH\_LENGTH@{MIN\_MATCH\_LENGTH}}
-\index{MIN\_MATCH\_LENGTH@{MIN\_MATCH\_LENGTH}!compression@{compression}}
-\doxysubsubsection{\texorpdfstring{MIN\_MATCH\_LENGTH}{MIN\_MATCH\_LENGTH}}
-{\footnotesize\ttfamily \label{namespacecompression_abe2725705560eab73f9408871ab4544d} 
-size\+\_\+t compression\+::\+MIN\+\_\+\+MATCH\+\_\+\+LENGTH = \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a56863bb12c9b4aeff239dd28b5346990}{Lz77\+Compressor\+::\+MIN\+\_\+\+LEN}}\hspace{0.3cm}{\ttfamily [constexpr]}}
 

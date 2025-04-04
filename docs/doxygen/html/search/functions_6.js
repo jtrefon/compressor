@@ -4,7 +4,6 @@ var searchData=
   ['generatetable_1',['generateTable',['../classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5',1,'compression::utils::Crc32']]],
   ['getbuffer_2',['getBuffer',['../classcompression_1_1BitIO_1_1BitWriter.html#a30ef96acd7d4eeb7f62a01393b53363b',1,'compression::BitIO::BitWriter']]],
   ['getcodelengths_3',['getCodeLengths',['../classcompression_1_1HuffmanCoder.html#aa6e6f43fa32f6e5f07c7e188fbd169c0',1,'compression::HuffmanCoder']]],
-  ['getlengthcode_4',['getLengthCode',['../classcompression_1_1Lz77Compressor.html#ad691f0e538881d309fe200a57792fe47',1,'compression::Lz77Compressor']]],
-  ['getlengthfromcode_5',['getLengthFromCode',['../classcompression_1_1Lz77Compressor.html#abde9c6e8d564ec6ebe62f8eec3d93024',1,'compression::Lz77Compressor']]],
-  ['getminmatchlength_6',['getMinMatchLength',['../classcompression_1_1Lz77Compressor.html#a280e027cc7a16ea5bdaaf4a56ebf0806',1,'compression::Lz77Compressor']]]
+  ['getlengthcode_4',['getLengthCode',['../classcompression_1_1Lz77Compressor.html#aa8946d3cdf20060ebd1a1bdd7267fc25',1,'compression::Lz77Compressor']]],
+  ['getlengthfromcode_5',['getLengthFromCode',['../classcompression_1_1Lz77Compressor.html#a6b2b17fb689f1c3b7f9d2b2102f13e98',1,'compression::Lz77Compressor']]]
 ];

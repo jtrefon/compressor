@@ -116,19 +116,73 @@ $(function(){initNavTree('structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af7d146fee8a4f6d18be5426942dcfad0" id="r_af7d146fee8a4f6d18be5426942dcfad0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7d146fee8a4f6d18be5426942dcfad0">isLiteral</a> () const</td></tr>
 <tr class="separator:af7d146fee8a4f6d18be5426942dcfad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44278f55703c8aefc26cfbaf0ab46a7e" id="r_a44278f55703c8aefc26cfbaf0ab46a7e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44278f55703c8aefc26cfbaf0ab46a7e">isLength</a> () const</td></tr>
+<tr class="separator:a44278f55703c8aefc26cfbaf0ab46a7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5322e6391b8716712023c77b86cff8b" id="r_ac5322e6391b8716712023c77b86cff8b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5322e6391b8716712023c77b86cff8b">isEob</a> () const</td></tr>
+<tr class="separator:ac5322e6391b8716712023c77b86cff8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a74f3d99da038794b625278c60a07a548" id="r_a74f3d99da038794b625278c60a07a548"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74f3d99da038794b625278c60a07a548">symbol</a></td></tr>
+<tr class="memitem:a74f3d99da038794b625278c60a07a548" id="r_a74f3d99da038794b625278c60a07a548"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74f3d99da038794b625278c60a07a548">symbol</a> = 0</td></tr>
 <tr class="separator:a74f3d99da038794b625278c60a07a548"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa340b44241ab27c205074acb5604fed8" id="r_aa340b44241ab27c205074acb5604fed8"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa340b44241ab27c205074acb5604fed8">distance</a> = 0</td></tr>
-<tr class="separator:aa340b44241ab27c205074acb5604fed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c1d82f3c9fb6d373aafc41db18c74ee" id="r_a2c1d82f3c9fb6d373aafc41db18c74ee"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c1d82f3c9fb6d373aafc41db18c74ee">length</a> = 0</td></tr>
-<tr class="separator:a2c1d82f3c9fb6d373aafc41db18c74ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fbf25a4e5fb7564a5686b236c9b562f" id="r_a0fbf25a4e5fb7564a5686b236c9b562f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fbf25a4e5fb7564a5686b236c9b562f">distance</a> = 0</td></tr>
+<tr class="separator:a0fbf25a4e5fb7564a5686b236c9b562f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a212fe79f838b0dba517782c2cd0acfc7" id="r_a212fe79f838b0dba517782c2cd0acfc7"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a212fe79f838b0dba517782c2cd0acfc7">length</a> = 0</td></tr>
+<tr class="separator:a212fe79f838b0dba517782c2cd0acfc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13a422f2470393e02ea3225a1d52f648" id="r_a13a422f2470393e02ea3225a1d52f648"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13a422f2470393e02ea3225a1d52f648">literal</a> = 0</td></tr>
 <tr class="separator:a13a422f2470393e02ea3225a1d52f648"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac5322e6391b8716712023c77b86cff8b" name="ac5322e6391b8716712023c77b86cff8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5322e6391b8716712023c77b86cff8b">&#9670;&#160;</a></span>isEob()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool compression::Lz77Compressor::Lz77Symbol::isEob </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a44278f55703c8aefc26cfbaf0ab46a7e" name="a44278f55703c8aefc26cfbaf0ab46a7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44278f55703c8aefc26cfbaf0ab46a7e">&#9670;&#160;</a></span>isLength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool compression::Lz77Compressor::Lz77Symbol::isLength </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af7d146fee8a4f6d18be5426942dcfad0" name="af7d146fee8a4f6d18be5426942dcfad0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af7d146fee8a4f6d18be5426942dcfad0">&#9670;&#160;</a></span>isLiteral()</h2>
 
@@ -155,28 +209,28 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="aa340b44241ab27c205074acb5604fed8" name="aa340b44241ab27c205074acb5604fed8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa340b44241ab27c205074acb5604fed8">&#9670;&#160;</a></span>distance</h2>
+<a id="a0fbf25a4e5fb7564a5686b236c9b562f" name="a0fbf25a4e5fb7564a5686b236c9b562f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fbf25a4e5fb7564a5686b236c9b562f">&#9670;&#160;</a></span>distance</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t compression::Lz77Compressor::Lz77Symbol::distance = 0</td>
+          <td class="memname">size_t compression::Lz77Compressor::Lz77Symbol::distance = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a2c1d82f3c9fb6d373aafc41db18c74ee" name="a2c1d82f3c9fb6d373aafc41db18c74ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c1d82f3c9fb6d373aafc41db18c74ee">&#9670;&#160;</a></span>length</h2>
+<a id="a212fe79f838b0dba517782c2cd0acfc7" name="a212fe79f838b0dba517782c2cd0acfc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a212fe79f838b0dba517782c2cd0acfc7">&#9670;&#160;</a></span>length</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t compression::Lz77Compressor::Lz77Symbol::length = 0</td>
+          <td class="memname">size_t compression::Lz77Compressor::Lz77Symbol::length = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -204,7 +258,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t compression::Lz77Compressor::Lz77Symbol::symbol</td>
+          <td class="memname">uint32_t compression::Lz77Compressor::Lz77Symbol::symbol = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">

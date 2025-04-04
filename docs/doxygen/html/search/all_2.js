@@ -6,7 +6,7 @@ var searchData=
   ['compression_20library_3',['Compression Library',['../md_README.html',1,'']]],
   ['compression_3a_3aformat_4',['format',['../namespacecompression_1_1format.html',1,'compression']]],
   ['compression_3a_3autils_5',['utils',['../namespacecompression_1_1utils.html',1,'compression']]],
-  ['compressionbenefit_6',['compressionBenefit',['../structcompression_1_1Lz77Compressor_1_1Match.html#a031962efe8effaa8c954ebbe6cd15d24',1,'compression::Lz77Compressor::Match']]],
+  ['compressionbenefit_6',['compressionBenefit',['../structcompression_1_1Lz77Compressor_1_1Match.html#a23b074182b92aef13ce9ff76b58057f6',1,'compression::Lz77Compressor::Match']]],
   ['compresstosymbols_7',['compressToSymbols',['../classcompression_1_1Lz77Compressor.html#afb67b0b5c52961e40c2f3f8533972b8e',1,'compression::Lz77Compressor']]],
   ['contributing_8',['Contributing',['../md_README.html#autotoc_md3',1,'']]],
   ['crc32_9',['Crc32',['../classcompression_1_1utils_1_1Crc32.html',1,'compression::utils::Crc32'],['../classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440',1,'compression::utils::Crc32::Crc32()']]],

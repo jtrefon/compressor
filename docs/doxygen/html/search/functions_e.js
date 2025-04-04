@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['writebit_0',['writeBit',['../classcompression_1_1BitIO_1_1BitWriter.html#af8a1dc19ff15c374a46670a33f6620eb',1,'compression::BitIO::BitWriter']]],
-  ['writebits_1',['writeBits',['../classcompression_1_1BitIO_1_1BitWriter.html#a31429c07a0c51f3e9237ea852410ed3d',1,'compression::BitIO::BitWriter']]],
-  ['writedynamictables_2',['writeDynamicTables',['../classcompression_1_1DeflateCompressor.html#afe387a738d22dc6c446dce9931870284',1,'compression::DeflateCompressor']]],
-  ['writenumber_3',['writeNumber',['../classcompression_1_1BitIO_1_1BitWriter.html#a9c9d7a6568de2b3a62c10e6096bed2a5',1,'compression::BitIO::BitWriter']]]
+  ['uint8tobyte_0',['uint8ToByte',['../classcompression_1_1ByteTypeAdapter.html#a67b67cc60e8a11eafe1b6496d11e7c5f',1,'compression::ByteTypeAdapter::uint8ToByte(const std::vector&lt; uint8_t &gt; &amp;input)'],['../classcompression_1_1ByteTypeAdapter.html#aa4e4afbccf08dc73d6f15c34145e7fda',1,'compression::ByteTypeAdapter::uint8ToByte(const std::vector&lt; uint8_t &gt; &amp;data)']]],
+  ['updatehashtable_1',['updateHashTable',['../classcompression_1_1Lz77Compressor.html#a029ab71d88804c1d2a3638991f3e9d27',1,'compression::Lz77Compressor']]]
 ];

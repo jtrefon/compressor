@@ -19,8 +19,5 @@ var namespacecompression =
     [ "HuffmanCode", "namespacecompression.html#a6191838f076351c001e205cd68c21db1", null ],
     [ "HuffmanCodeMap", "namespacecompression.html#a68cae564be86e0659bfcc1fa3d7680ee", null ],
     [ "buildDecodingTree", "namespacecompression.html#a674035059190e85c3d11e80d754c7251", null ],
-    [ "dummy_function", "namespacecompression.html#a818c6efb6d2629007fe3521496d51c8f", null ],
-    [ "MAX_DISTANCE", "namespacecompression.html#a24aa9f9d9d040d4619254438593ac96b", null ],
-    [ "MAX_MATCH_LENGTH", "namespacecompression.html#a8495a49d17ece58e9cd2ea9a6c180cef", null ],
-    [ "MIN_MATCH_LENGTH", "namespacecompression.html#abe2725705560eab73f9408871ab4544d", null ]
+    [ "dummy_function", "namespacecompression.html#a818c6efb6d2629007fe3521496d51c8f", null ]
 ];

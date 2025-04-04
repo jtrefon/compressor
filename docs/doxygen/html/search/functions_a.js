@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['operator_28_29_0',['operator()',['../structcompression_1_1NodeComparator.html#af2ad2463f03e0c44668f602b93544a07',1,'compression::NodeComparator::operator()()'],['../structcompression_1_1NodePtrGreater.html#a0e5f6112a464131623c69094ebb5f59a',1,'compression::NodePtrGreater::operator()()']]]
+  ['match_0',['Match',['../structcompression_1_1Lz77Compressor_1_1Match.html#a99903607c309a9b7b0881599784fc8c5',1,'compression::Lz77Compressor::Match::Match()=default'],['../structcompression_1_1Lz77Compressor_1_1Match.html#a4d47621d6705d5e66ec2fd3b027aa0ea',1,'compression::Lz77Compressor::Match::Match(size_t dist, size_t len, size_t pos=0)']]]
 ];

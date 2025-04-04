@@ -61,7 +61,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BitIO_8hpp.html",
-"structcompression_1_1HuffmanCoder_1_1HuffmanNode.html"
+"namespacecompression_1_1utils.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

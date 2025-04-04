@@ -2,7 +2,7 @@
 \hypertarget{classcompression_1_1Lz77Compressor}{}\label{classcompression_1_1Lz77Compressor}\index{compression::Lz77Compressor@{compression::Lz77Compressor}}
 
 
-Implements the LZ77 compression algorithm.  
+Implements LZ77 compression algorithm with advanced optimizations.  
 
 
 
@@ -25,14 +25,12 @@ struct \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Match}}
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classcompression_1_1Lz77Compressor_a93c587f128a8c4bc6a35c03fd4737d16}{Lz77\+Compressor}} (size\+\_\+t search\+Buffer\+Size=32768, size\+\_\+t look\+Ahead\+Buffer\+Size=258, bool use\+Greedy\+Parsing=false, bool use\+Adaptive\+Min\+Length=true, bool aggressive\+Matching=true)
-\begin{DoxyCompactList}\small\item\em Default constructor using typical window sizes. \end{DoxyCompactList}\item 
-std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Symbol}} $>$ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_afb67b0b5c52961e40c2f3f8533972b8e}{compress\+To\+Symbols}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const
-\item 
+\mbox{\hyperlink{classcompression_1_1Lz77Compressor_af678f34af7cc1313a0bcd8c23deada75}{Lz77\+Compressor}} (size\+\_\+t window\+Size=32768, size\+\_\+t min\+Match\+Length=3, size\+\_\+t max\+Match\+Length=258, bool use\+Greedy\+Parsing=false, bool use\+Optimal\+Parsing=false, bool aggressive\+Matching=true)
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{classcompression_1_1Lz77Compressor}{Lz77\+Compressor} object. \end{DoxyCompactList}\item 
 std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_aac063f8811bfebfba7c8ce2fbb1ba895}{compress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
-\begin{DoxyCompactList}\small\item\em Compresses the input data. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Compress data using LZ77 algorithm. \end{DoxyCompactList}\item 
 std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ad9bf31062c9afc053328b17c87589ddc}{decompress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
-\begin{DoxyCompactList}\small\item\em Decompresses the input data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Decompress LZ77-\/compressed data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classcompression_1_1ICompressor}{compression\+::\+ICompressor}}}
 \begin{DoxyCompactItemize}
 \item 
@@ -41,94 +39,97 @@ virtual \mbox{\hyperlink{classcompression_1_1ICompressor_a3a2142d5686b5959e7a1a3
 \doxysubsubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-static uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ad691f0e538881d309fe200a57792fe47}{get\+Length\+Code}} (size\+\_\+t length)
-\item 
-static size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_abde9c6e8d564ec6ebe62f8eec3d93024}{get\+Length\+From\+Code}} (uint32\+\_\+t code)
-\end{DoxyCompactItemize}
+static uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a6b2b17fb689f1c3b7f9d2b2102f13e98}{get\+Length\+From\+Code}} (uint32\+\_\+t code)
+\begin{DoxyCompactList}\small\item\em Convert a length code to actual length. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Static Public Attributes}
 \begin{DoxyCompactItemize}
+\item 
+static constexpr uint8\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a9e84116d2b0ef8b02e8e9aad5988af71}{LITERAL\+\_\+\+FLAG}} = 0x00
+\item 
+static constexpr uint8\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a2526cb159d78993f4b01d8d3781e4924}{LENGTH\+\_\+\+DISTANCE\+\_\+\+FLAG}} = 0x01
 \item 
 static constexpr uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a1592affc0c88b2f0c7329f79a9b4f6d2}{EOB\+\_\+\+SYMBOL}} = 256
 \item 
 static constexpr uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_acca5a707d98ffc246584fb8f91bdc4ee}{LENGTH\+\_\+\+CODE\+\_\+\+BASE}} = 257
-\item 
-static constexpr uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a56863bb12c9b4aeff239dd28b5346990}{MIN\+\_\+\+LEN}} = 3
-\item 
-static constexpr uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af310a3723175f4c07e13231a807f302a}{MAX\+\_\+\+LEN}} = 258
-\item 
-static constexpr uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af3aa1a8e5604f0364d3914e3e265872d}{MAX\+\_\+\+HASH\+\_\+\+CHAIN\+\_\+\+LENGTH}} = 16384
-\item 
-static constexpr bool \mbox{\hyperlink{classcompression_1_1Lz77Compressor_adedc38c824232fb33b7b09b51f2480c2}{USE\+\_\+\+HASH\+\_\+\+CHAIN\+\_\+\+LIMIT}} = true
-\item 
-static constexpr size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a50539d1e8808f782d470085740f42cf9}{MIN\+\_\+\+MATCH\+\_\+\+FOR\+\_\+\+FAR\+\_\+\+DISTANCE}} = 5
-\item 
-static constexpr size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a67cc62980f2bcb35496eb20d303c3233}{ADAPTIVE\+\_\+\+MIN\+\_\+\+LENGTH\+\_\+\+CLOSE}} = 3
-\item 
-static constexpr size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a3b3a386c79b97e63224fdead20f33ef8}{ADAPTIVE\+\_\+\+MIN\+\_\+\+LENGTH\+\_\+\+FAR}} = 4
-\item 
-static constexpr size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a7cc6d02ed12875572484bd1cf81a8760}{ADAPTIVE\+\_\+\+MIN\+\_\+\+LENGTH\+\_\+\+VERY\+\_\+\+FAR}} = 5
-\item 
-static constexpr uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af6b545854ade1753b5e2054a3b816f86}{HASH\+\_\+\+BITS}} = 16
-\item 
-static constexpr uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a61108e67f25f9cc7d5f3073f1d07f6d4}{HASH\+\_\+\+SHIFT}} = 5
-\item 
-static constexpr uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a53eb38f5a18cbf6b767fe0db6f4e6dd4}{HASH\+\_\+\+MASK}} = (1 $<$$<$ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af6b545854ade1753b5e2054a3b816f86}{HASH\+\_\+\+BITS}}) -\/ 1
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a280e027cc7a16ea5bdaaf4a56ebf0806}{get\+Min\+Match\+Length}} (size\+\_\+t distance) const
+uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a409c9d5b2c41af03ae09835028b7a79d}{hash\+Triplet}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data, size\+\_\+t pos) const
+\item 
+void \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a029ab71d88804c1d2a3638991f3e9d27}{update\+Hash\+Table}} (std\+::unordered\+\_\+map$<$ uint32\+\_\+t, std\+::vector$<$ size\+\_\+t $>$ $>$ \&hash\+Table, const std\+::vector$<$ uint8\+\_\+t $>$ \&data, size\+\_\+t pos) const
 \item 
 \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Match}} \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ac26c3bf317391f6f64fe45224d1f58e3}{find\+Best\+Match\+At}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data, size\+\_\+t pos, const std\+::unordered\+\_\+map$<$ uint32\+\_\+t, std\+::vector$<$ size\+\_\+t $>$ $>$ \&hash\+Table) const
 \item 
-void \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a6fafe3ff48fd9f7f8391a7e3ad132031}{extend\+Match}} (\mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Match}} \&match, const std\+::vector$<$ uint8\+\_\+t $>$ \&data, size\+\_\+t current\+Pos, size\+\_\+t match\+Pos) const
-\item 
 float \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a2bf2651aa0e65088dea5bfd70211b8ae}{score\+Match}} (const \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Match}} \&match) const
 \item 
-bool \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af699a7bbe8687ce2238008789f315642}{is\+Match\+Worth\+Using}} (const \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Match}} \&match, size\+\_\+t distance=0) const
+uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_aa8946d3cdf20060ebd1a1bdd7267fc25}{get\+Length\+Code}} (size\+\_\+t length) const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Symbol}} $>$ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_afb67b0b5c52961e40c2f3f8533972b8e}{compress\+To\+Symbols}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const
+\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a4cd3a388a93c61ddf7c2dd18d5737f5e}{encode\+Symbols}} (const std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Symbol}} $>$ \&symbols) const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Symbol}} $>$ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a4af2d1a9989dfb90e11fd5275cd89c4c}{optimal\+Parse}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data, std\+::unordered\+\_\+map$<$ uint32\+\_\+t, std\+::vector$<$ size\+\_\+t $>$ $>$ \&hash\+Table) const
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a4abad90bb78c6d35eab7a603d1c77fd8}{search\+Buffer\+Size\+\_\+}}
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a2346a062eb962869e146e7c933f8c851}{window\+Size\+\_\+}}
 \item 
-size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a24e9bf3b390b42a685dc31a8619066c9}{look\+Ahead\+Buffer\+Size\+\_\+}}
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a4c673a56ba5ee20aa9b654da645839d1}{min\+Match\+Length\+\_\+}}
+\item 
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ab140afffc7cd4cdb34b04c673befa301}{max\+Match\+Length\+\_\+}}
 \item 
 bool \mbox{\hyperlink{classcompression_1_1Lz77Compressor_aa8796f4b04ceefb3e603933202963972}{use\+Greedy\+Parsing\+\_\+}}
 \item 
-bool \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a705e908d53f844957721557060d970b5}{use\+Adaptive\+Min\+Length\+\_\+}}
+bool \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ab91dce998f008338f5b689e30b75f625}{use\+Optimal\+Parsing\+\_\+}}
 \item 
 bool \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ada0fc5c995e7107307a658c2069938b1}{aggressive\+Matching\+\_\+}}
+\item 
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a0588b928a6b0c613652d674554f4f7de}{hash\+Bits\+\_\+}} = 15
+\item 
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a86642a6b12a7238686ddb3ff8f471497}{max\+Hash\+Chain\+Length\+\_\+}} = 64
+\item 
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a9cefccd2799a4dd21139d94fad2a9894}{hash\+Chain\+Limit\+\_\+}} = 8192
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-Implements the LZ77 compression algorithm. 
+Implements LZ77 compression algorithm with advanced optimizations. 
 
-LZ77 works by finding repeated sequences of data and replacing them with references (distance, length) to previous occurrences within a sliding window. 
+This implementation includes several optimizations\+:
+\begin{DoxyItemize}
+\item Optimal parsing using dynamic programming (when enabled)
+\item Enhanced hash function for better match distribution
+\item Adaptive encoding for different match lengths and distances
+\item Advanced match scoring that considers multiple factors
+\item Aggressive match finding with multi-\/position lookahead 
+\end{DoxyItemize}
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{classcompression_1_1Lz77Compressor_a93c587f128a8c4bc6a35c03fd4737d16}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!Lz77Compressor@{Lz77Compressor}}
+\Hypertarget{classcompression_1_1Lz77Compressor_af678f34af7cc1313a0bcd8c23deada75}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!Lz77Compressor@{Lz77Compressor}}
 \index{Lz77Compressor@{Lz77Compressor}!compression::Lz77Compressor@{compression::Lz77Compressor}}
 \doxysubsubsection{\texorpdfstring{Lz77Compressor()}{Lz77Compressor()}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a93c587f128a8c4bc6a35c03fd4737d16} 
-compression\+::\+Lz77\+Compressor\+::\+Lz77\+Compressor (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{search\+Buffer\+Size}{ = {\ttfamily 32768}, }\item[{size\+\_\+t}]{look\+Ahead\+Buffer\+Size}{ = {\ttfamily 258}, }\item[{bool}]{use\+Greedy\+Parsing}{ = {\ttfamily false}, }\item[{bool}]{use\+Adaptive\+Min\+Length}{ = {\ttfamily true}, }\item[{bool}]{aggressive\+Matching}{ = {\ttfamily true}}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_af678f34af7cc1313a0bcd8c23deada75} 
+compression\+::\+Lz77\+Compressor\+::\+Lz77\+Compressor (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{window\+Size}{ = {\ttfamily 32768}, }\item[{size\+\_\+t}]{min\+Match\+Length}{ = {\ttfamily 3}, }\item[{size\+\_\+t}]{max\+Match\+Length}{ = {\ttfamily 258}, }\item[{bool}]{use\+Greedy\+Parsing}{ = {\ttfamily false}, }\item[{bool}]{use\+Optimal\+Parsing}{ = {\ttfamily false}, }\item[{bool}]{aggressive\+Matching}{ = {\ttfamily true}}\end{DoxyParamCaption})}
 
 
 
-Default constructor using typical window sizes. 
+Construct a new \doxylink{classcompression_1_1Lz77Compressor}{Lz77\+Compressor} object. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em search\+Buffer\+Size} & Size of the search buffer (increased for better compression) \\
+{\em window\+Size} & Size of the search window \\
 \hline
-{\em look\+Ahead\+Buffer\+Size} & Size of the look-\/ahead buffer \\
+{\em min\+Match\+Length} & Minimum match length to consider \\
 \hline
-{\em use\+Greedy\+Parsing} & When true, uses greedy parsing instead of lazy parsing \\
+{\em max\+Match\+Length} & Maximum match length to consider \\
 \hline
-{\em use\+Adaptive\+Min\+Length} & When true, adjusts minimum match length based on distance \\
+{\em use\+Greedy\+Parsing} & When true, uses simple greedy parsing instead of lazy parsing \\
 \hline
-{\em aggressive\+Matching} & When true, uses more aggressive match finding (better compression but slower) \\
+{\em use\+Optimal\+Parsing} & When true, uses optimal parsing for better compression ratio \\
+\hline
+{\em aggressive\+Matching} & When true, uses more aggressive match finding strategies \\
 \hline
 \end{DoxyParams}
 
@@ -142,23 +143,16 @@ std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Lz77\+Compressor\+::compress 
 
 
 
-Compresses the input data. 
-
-Pure virtual function to be implemented by concrete strategies.
+Compress data using LZ77 algorithm. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em data} & The raw data to compress. \\
+{\em data} & Input data to compress \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$uint8\+\_\+t$>$ The compressed data. 
+Compressed data as a vector of bytes 
 \end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em std\+::runtime\+\_\+error} & or derived class on compression failure. \\
-\hline
-\end{DoxyExceptions}
 
 
 Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a8671d6084c1bf54b1dc440ad7ee7ee2f}{compression\+::\+ICompressor}}.
@@ -167,7 +161,7 @@ Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a8671d6084c1bf54b1dc
 \index{compressToSymbols@{compressToSymbols}!compression::Lz77Compressor@{compression::Lz77Compressor}}
 \doxysubsubsection{\texorpdfstring{compressToSymbols()}{compressToSymbols()}}
 {\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_afb67b0b5c52961e40c2f3f8533972b8e} 
-std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Compressor\+::\+Lz77\+Symbol}} $>$ compression\+::\+Lz77\+Compressor\+::compress\+To\+Symbols (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const}
+std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Compressor\+::\+Lz77\+Symbol}} $>$ compression\+::\+Lz77\+Compressor\+::compress\+To\+Symbols (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
 \Hypertarget{classcompression_1_1Lz77Compressor_ad9bf31062c9afc053328b17c87589ddc}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!decompress@{decompress}}
 \index{decompress@{decompress}!compression::Lz77Compressor@{compression::Lz77Compressor}}
@@ -177,32 +171,25 @@ std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Lz77\+Compressor\+::decompres
 
 
 
-Decompresses the input data. 
-
-Pure virtual function to be implemented by concrete strategies.
+Decompress LZ77-\/compressed data. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em data} & The compressed data to decompress. \\
+{\em data} & Compressed data to decompress \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$uint8\+\_\+t$>$ The original decompressed data. 
+Decompressed data as a vector of bytes 
 \end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em std\+::runtime\+\_\+error} & or derived class on decompression failure. \\
-\hline
-\end{DoxyExceptions}
 
 
 Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a3d02bbe3947a450e9df997495c5af718}{compression\+::\+ICompressor}}.
 
-\Hypertarget{classcompression_1_1Lz77Compressor_a6fafe3ff48fd9f7f8391a7e3ad132031}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!extendMatch@{extendMatch}}
-\index{extendMatch@{extendMatch}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{extendMatch()}{extendMatch()}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a6fafe3ff48fd9f7f8391a7e3ad132031} 
-void compression\+::\+Lz77\+Compressor\+::extend\+Match (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Match}} \&}]{match}{, }\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{, }\item[{size\+\_\+t}]{current\+Pos}{, }\item[{size\+\_\+t}]{match\+Pos}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+\Hypertarget{classcompression_1_1Lz77Compressor_a4cd3a388a93c61ddf7c2dd18d5737f5e}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!encodeSymbols@{encodeSymbols}}
+\index{encodeSymbols@{encodeSymbols}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{encodeSymbols()}{encodeSymbols()}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a4cd3a388a93c61ddf7c2dd18d5737f5e} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Lz77\+Compressor\+::encode\+Symbols (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Symbol}} $>$ \&}]{symbols}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
 \Hypertarget{classcompression_1_1Lz77Compressor_ac26c3bf317391f6f64fe45224d1f58e3}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!findBestMatchAt@{findBestMatchAt}}
 \index{findBestMatchAt@{findBestMatchAt}!compression::Lz77Compressor@{compression::Lz77Compressor}}
@@ -210,57 +197,57 @@ void compression\+::\+Lz77\+Compressor\+::extend\+Match (\begin{DoxyParamCaption
 {\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_ac26c3bf317391f6f64fe45224d1f58e3} 
 \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Lz77\+Compressor\+::\+Match}} compression\+::\+Lz77\+Compressor\+::find\+Best\+Match\+At (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{, }\item[{size\+\_\+t}]{pos}{, }\item[{const std\+::unordered\+\_\+map$<$ uint32\+\_\+t, std\+::vector$<$ size\+\_\+t $>$ $>$ \&}]{hash\+Table}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_ad691f0e538881d309fe200a57792fe47}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!getLengthCode@{getLengthCode}}
+\Hypertarget{classcompression_1_1Lz77Compressor_aa8946d3cdf20060ebd1a1bdd7267fc25}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!getLengthCode@{getLengthCode}}
 \index{getLengthCode@{getLengthCode}!compression::Lz77Compressor@{compression::Lz77Compressor}}
 \doxysubsubsection{\texorpdfstring{getLengthCode()}{getLengthCode()}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_ad691f0e538881d309fe200a57792fe47} 
-static uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::get\+Length\+Code (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{length}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_aa8946d3cdf20060ebd1a1bdd7267fc25} 
+uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::get\+Length\+Code (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{length}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_abde9c6e8d564ec6ebe62f8eec3d93024}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!getLengthFromCode@{getLengthFromCode}}
+\Hypertarget{classcompression_1_1Lz77Compressor_a6b2b17fb689f1c3b7f9d2b2102f13e98}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!getLengthFromCode@{getLengthFromCode}}
 \index{getLengthFromCode@{getLengthFromCode}!compression::Lz77Compressor@{compression::Lz77Compressor}}
 \doxysubsubsection{\texorpdfstring{getLengthFromCode()}{getLengthFromCode()}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_abde9c6e8d564ec6ebe62f8eec3d93024} 
-static size\+\_\+t compression\+::\+Lz77\+Compressor\+::get\+Length\+From\+Code (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{code}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a6b2b17fb689f1c3b7f9d2b2102f13e98} 
+uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::get\+Length\+From\+Code (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{code}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_a280e027cc7a16ea5bdaaf4a56ebf0806}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!getMinMatchLength@{getMinMatchLength}}
-\index{getMinMatchLength@{getMinMatchLength}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{getMinMatchLength()}{getMinMatchLength()}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a280e027cc7a16ea5bdaaf4a56ebf0806} 
-size\+\_\+t compression\+::\+Lz77\+Compressor\+::get\+Min\+Match\+Length (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{distance}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_af699a7bbe8687ce2238008789f315642}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!isMatchWorthUsing@{isMatchWorthUsing}}
-\index{isMatchWorthUsing@{isMatchWorthUsing}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{isMatchWorthUsing()}{isMatchWorthUsing()}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_af699a7bbe8687ce2238008789f315642} 
-bool compression\+::\+Lz77\+Compressor\+::is\+Match\+Worth\+Using (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Match}} \&}]{match}{, }\item[{size\+\_\+t}]{distance}{ = {\ttfamily 0}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Convert a length code to actual length. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em code} & The length code \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The actual length 
+\end{DoxyReturn}
+\Hypertarget{classcompression_1_1Lz77Compressor_a409c9d5b2c41af03ae09835028b7a79d}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!hashTriplet@{hashTriplet}}
+\index{hashTriplet@{hashTriplet}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{hashTriplet()}{hashTriplet()}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a409c9d5b2c41af03ae09835028b7a79d} 
+uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::hash\+Triplet (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{, }\item[{size\+\_\+t}]{pos}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1Lz77Compressor_a4af2d1a9989dfb90e11fd5275cd89c4c}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!optimalParse@{optimalParse}}
+\index{optimalParse@{optimalParse}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{optimalParse()}{optimalParse()}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a4af2d1a9989dfb90e11fd5275cd89c4c} 
+std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Symbol}} $>$ compression\+::\+Lz77\+Compressor\+::optimal\+Parse (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{, }\item[{std\+::unordered\+\_\+map$<$ uint32\+\_\+t, std\+::vector$<$ size\+\_\+t $>$ $>$ \&}]{hash\+Table}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
 \Hypertarget{classcompression_1_1Lz77Compressor_a2bf2651aa0e65088dea5bfd70211b8ae}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!scoreMatch@{scoreMatch}}
 \index{scoreMatch@{scoreMatch}!compression::Lz77Compressor@{compression::Lz77Compressor}}
 \doxysubsubsection{\texorpdfstring{scoreMatch()}{scoreMatch()}}
 {\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a2bf2651aa0e65088dea5bfd70211b8ae} 
-float compression\+::\+Lz77\+Compressor\+::score\+Match (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Match}} \&}]{match}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+float compression\+::\+Lz77\+Compressor\+::score\+Match (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match}{Match}} \&}]{match}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1Lz77Compressor_a029ab71d88804c1d2a3638991f3e9d27}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!updateHashTable@{updateHashTable}}
+\index{updateHashTable@{updateHashTable}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{updateHashTable()}{updateHashTable()}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a029ab71d88804c1d2a3638991f3e9d27} 
+void compression\+::\+Lz77\+Compressor\+::update\+Hash\+Table (\begin{DoxyParamCaption}\item[{std\+::unordered\+\_\+map$<$ uint32\+\_\+t, std\+::vector$<$ size\+\_\+t $>$ $>$ \&}]{hash\+Table}{, }\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{, }\item[{size\+\_\+t}]{pos}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
 \doxysubsection{Member Data Documentation}
-\Hypertarget{classcompression_1_1Lz77Compressor_a67cc62980f2bcb35496eb20d303c3233}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!ADAPTIVE\_MIN\_LENGTH\_CLOSE@{ADAPTIVE\_MIN\_LENGTH\_CLOSE}}
-\index{ADAPTIVE\_MIN\_LENGTH\_CLOSE@{ADAPTIVE\_MIN\_LENGTH\_CLOSE}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{ADAPTIVE\_MIN\_LENGTH\_CLOSE}{ADAPTIVE\_MIN\_LENGTH\_CLOSE}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a67cc62980f2bcb35496eb20d303c3233} 
-size\+\_\+t compression\+::\+Lz77\+Compressor\+::\+ADAPTIVE\+\_\+\+MIN\+\_\+\+LENGTH\+\_\+\+CLOSE = 3\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
-
-\Hypertarget{classcompression_1_1Lz77Compressor_a3b3a386c79b97e63224fdead20f33ef8}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!ADAPTIVE\_MIN\_LENGTH\_FAR@{ADAPTIVE\_MIN\_LENGTH\_FAR}}
-\index{ADAPTIVE\_MIN\_LENGTH\_FAR@{ADAPTIVE\_MIN\_LENGTH\_FAR}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{ADAPTIVE\_MIN\_LENGTH\_FAR}{ADAPTIVE\_MIN\_LENGTH\_FAR}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a3b3a386c79b97e63224fdead20f33ef8} 
-size\+\_\+t compression\+::\+Lz77\+Compressor\+::\+ADAPTIVE\+\_\+\+MIN\+\_\+\+LENGTH\+\_\+\+FAR = 4\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
-
-\Hypertarget{classcompression_1_1Lz77Compressor_a7cc6d02ed12875572484bd1cf81a8760}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!ADAPTIVE\_MIN\_LENGTH\_VERY\_FAR@{ADAPTIVE\_MIN\_LENGTH\_VERY\_FAR}}
-\index{ADAPTIVE\_MIN\_LENGTH\_VERY\_FAR@{ADAPTIVE\_MIN\_LENGTH\_VERY\_FAR}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{ADAPTIVE\_MIN\_LENGTH\_VERY\_FAR}{ADAPTIVE\_MIN\_LENGTH\_VERY\_FAR}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a7cc6d02ed12875572484bd1cf81a8760} 
-size\+\_\+t compression\+::\+Lz77\+Compressor\+::\+ADAPTIVE\+\_\+\+MIN\+\_\+\+LENGTH\+\_\+\+VERY\+\_\+\+FAR = 5\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
-
 \Hypertarget{classcompression_1_1Lz77Compressor_ada0fc5c995e7107307a658c2069938b1}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!aggressiveMatching\_@{aggressiveMatching\_}}
 \index{aggressiveMatching\_@{aggressiveMatching\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
 \doxysubsubsection{\texorpdfstring{aggressiveMatching\_}{aggressiveMatching\_}}
@@ -273,23 +260,17 @@ bool compression\+::\+Lz77\+Compressor\+::aggressive\+Matching\+\_\+\hspace{0.3c
 {\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a1592affc0c88b2f0c7329f79a9b4f6d2} 
 uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::\+EOB\+\_\+\+SYMBOL = 256\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_af6b545854ade1753b5e2054a3b816f86}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!HASH\_BITS@{HASH\_BITS}}
-\index{HASH\_BITS@{HASH\_BITS}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{HASH\_BITS}{HASH\_BITS}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_af6b545854ade1753b5e2054a3b816f86} 
-uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::\+HASH\+\_\+\+BITS = 16\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+\Hypertarget{classcompression_1_1Lz77Compressor_a0588b928a6b0c613652d674554f4f7de}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!hashBits\_@{hashBits\_}}
+\index{hashBits\_@{hashBits\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{hashBits\_}{hashBits\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a0588b928a6b0c613652d674554f4f7de} 
+size\+\_\+t compression\+::\+Lz77\+Compressor\+::hash\+Bits\+\_\+ = 15\hspace{0.3cm}{\ttfamily [private]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_a53eb38f5a18cbf6b767fe0db6f4e6dd4}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!HASH\_MASK@{HASH\_MASK}}
-\index{HASH\_MASK@{HASH\_MASK}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{HASH\_MASK}{HASH\_MASK}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a53eb38f5a18cbf6b767fe0db6f4e6dd4} 
-uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::\+HASH\+\_\+\+MASK = (1 $<$$<$ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af6b545854ade1753b5e2054a3b816f86}{HASH\+\_\+\+BITS}}) -\/ 1\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
-
-\Hypertarget{classcompression_1_1Lz77Compressor_a61108e67f25f9cc7d5f3073f1d07f6d4}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!HASH\_SHIFT@{HASH\_SHIFT}}
-\index{HASH\_SHIFT@{HASH\_SHIFT}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{HASH\_SHIFT}{HASH\_SHIFT}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a61108e67f25f9cc7d5f3073f1d07f6d4} 
-uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::\+HASH\+\_\+\+SHIFT = 5\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+\Hypertarget{classcompression_1_1Lz77Compressor_a9cefccd2799a4dd21139d94fad2a9894}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!hashChainLimit\_@{hashChainLimit\_}}
+\index{hashChainLimit\_@{hashChainLimit\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{hashChainLimit\_}{hashChainLimit\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a9cefccd2799a4dd21139d94fad2a9894} 
+size\+\_\+t compression\+::\+Lz77\+Compressor\+::hash\+Chain\+Limit\+\_\+ = 8192\hspace{0.3cm}{\ttfamily [private]}}
 
 \Hypertarget{classcompression_1_1Lz77Compressor_acca5a707d98ffc246584fb8f91bdc4ee}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!LENGTH\_CODE\_BASE@{LENGTH\_CODE\_BASE}}
 \index{LENGTH\_CODE\_BASE@{LENGTH\_CODE\_BASE}!compression::Lz77Compressor@{compression::Lz77Compressor}}
@@ -297,59 +278,53 @@ uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::\+HASH\+\_\+\+SHIFT = 5\hspac
 {\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_acca5a707d98ffc246584fb8f91bdc4ee} 
 uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::\+LENGTH\+\_\+\+CODE\+\_\+\+BASE = 257\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_a24e9bf3b390b42a685dc31a8619066c9}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!lookAheadBufferSize\_@{lookAheadBufferSize\_}}
-\index{lookAheadBufferSize\_@{lookAheadBufferSize\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{lookAheadBufferSize\_}{lookAheadBufferSize\_}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a24e9bf3b390b42a685dc31a8619066c9} 
-size\+\_\+t compression\+::\+Lz77\+Compressor\+::look\+Ahead\+Buffer\+Size\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+\Hypertarget{classcompression_1_1Lz77Compressor_a2526cb159d78993f4b01d8d3781e4924}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!LENGTH\_DISTANCE\_FLAG@{LENGTH\_DISTANCE\_FLAG}}
+\index{LENGTH\_DISTANCE\_FLAG@{LENGTH\_DISTANCE\_FLAG}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{LENGTH\_DISTANCE\_FLAG}{LENGTH\_DISTANCE\_FLAG}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a2526cb159d78993f4b01d8d3781e4924} 
+uint8\+\_\+t compression\+::\+Lz77\+Compressor\+::\+LENGTH\+\_\+\+DISTANCE\+\_\+\+FLAG = 0x01\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_af3aa1a8e5604f0364d3914e3e265872d}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!MAX\_HASH\_CHAIN\_LENGTH@{MAX\_HASH\_CHAIN\_LENGTH}}
-\index{MAX\_HASH\_CHAIN\_LENGTH@{MAX\_HASH\_CHAIN\_LENGTH}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{MAX\_HASH\_CHAIN\_LENGTH}{MAX\_HASH\_CHAIN\_LENGTH}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_af3aa1a8e5604f0364d3914e3e265872d} 
-uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::\+MAX\+\_\+\+HASH\+\_\+\+CHAIN\+\_\+\+LENGTH = 16384\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+\Hypertarget{classcompression_1_1Lz77Compressor_a9e84116d2b0ef8b02e8e9aad5988af71}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!LITERAL\_FLAG@{LITERAL\_FLAG}}
+\index{LITERAL\_FLAG@{LITERAL\_FLAG}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{LITERAL\_FLAG}{LITERAL\_FLAG}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a9e84116d2b0ef8b02e8e9aad5988af71} 
+uint8\+\_\+t compression\+::\+Lz77\+Compressor\+::\+LITERAL\+\_\+\+FLAG = 0x00\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_af310a3723175f4c07e13231a807f302a}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!MAX\_LEN@{MAX\_LEN}}
-\index{MAX\_LEN@{MAX\_LEN}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{MAX\_LEN}{MAX\_LEN}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_af310a3723175f4c07e13231a807f302a} 
-uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::\+MAX\+\_\+\+LEN = 258\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+\Hypertarget{classcompression_1_1Lz77Compressor_a86642a6b12a7238686ddb3ff8f471497}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!maxHashChainLength\_@{maxHashChainLength\_}}
+\index{maxHashChainLength\_@{maxHashChainLength\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{maxHashChainLength\_}{maxHashChainLength\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a86642a6b12a7238686ddb3ff8f471497} 
+size\+\_\+t compression\+::\+Lz77\+Compressor\+::max\+Hash\+Chain\+Length\+\_\+ = 64\hspace{0.3cm}{\ttfamily [private]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_a56863bb12c9b4aeff239dd28b5346990}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!MIN\_LEN@{MIN\_LEN}}
-\index{MIN\_LEN@{MIN\_LEN}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{MIN\_LEN}{MIN\_LEN}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a56863bb12c9b4aeff239dd28b5346990} 
-uint32\+\_\+t compression\+::\+Lz77\+Compressor\+::\+MIN\+\_\+\+LEN = 3\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+\Hypertarget{classcompression_1_1Lz77Compressor_ab140afffc7cd4cdb34b04c673befa301}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!maxMatchLength\_@{maxMatchLength\_}}
+\index{maxMatchLength\_@{maxMatchLength\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{maxMatchLength\_}{maxMatchLength\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_ab140afffc7cd4cdb34b04c673befa301} 
+size\+\_\+t compression\+::\+Lz77\+Compressor\+::max\+Match\+Length\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
 
-\Hypertarget{classcompression_1_1Lz77Compressor_a50539d1e8808f782d470085740f42cf9}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!MIN\_MATCH\_FOR\_FAR\_DISTANCE@{MIN\_MATCH\_FOR\_FAR\_DISTANCE}}
-\index{MIN\_MATCH\_FOR\_FAR\_DISTANCE@{MIN\_MATCH\_FOR\_FAR\_DISTANCE}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{MIN\_MATCH\_FOR\_FAR\_DISTANCE}{MIN\_MATCH\_FOR\_FAR\_DISTANCE}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a50539d1e8808f782d470085740f42cf9} 
-size\+\_\+t compression\+::\+Lz77\+Compressor\+::\+MIN\+\_\+\+MATCH\+\_\+\+FOR\+\_\+\+FAR\+\_\+\+DISTANCE = 5\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
-
-\Hypertarget{classcompression_1_1Lz77Compressor_a4abad90bb78c6d35eab7a603d1c77fd8}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!searchBufferSize\_@{searchBufferSize\_}}
-\index{searchBufferSize\_@{searchBufferSize\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{searchBufferSize\_}{searchBufferSize\_}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a4abad90bb78c6d35eab7a603d1c77fd8} 
-size\+\_\+t compression\+::\+Lz77\+Compressor\+::search\+Buffer\+Size\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
-
-\Hypertarget{classcompression_1_1Lz77Compressor_adedc38c824232fb33b7b09b51f2480c2}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!USE\_HASH\_CHAIN\_LIMIT@{USE\_HASH\_CHAIN\_LIMIT}}
-\index{USE\_HASH\_CHAIN\_LIMIT@{USE\_HASH\_CHAIN\_LIMIT}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{USE\_HASH\_CHAIN\_LIMIT}{USE\_HASH\_CHAIN\_LIMIT}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_adedc38c824232fb33b7b09b51f2480c2} 
-bool compression\+::\+Lz77\+Compressor\+::\+USE\+\_\+\+HASH\+\_\+\+CHAIN\+\_\+\+LIMIT = true\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
-
-\Hypertarget{classcompression_1_1Lz77Compressor_a705e908d53f844957721557060d970b5}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!useAdaptiveMinLength\_@{useAdaptiveMinLength\_}}
-\index{useAdaptiveMinLength\_@{useAdaptiveMinLength\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
-\doxysubsubsection{\texorpdfstring{useAdaptiveMinLength\_}{useAdaptiveMinLength\_}}
-{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a705e908d53f844957721557060d970b5} 
-bool compression\+::\+Lz77\+Compressor\+::use\+Adaptive\+Min\+Length\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+\Hypertarget{classcompression_1_1Lz77Compressor_a4c673a56ba5ee20aa9b654da645839d1}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!minMatchLength\_@{minMatchLength\_}}
+\index{minMatchLength\_@{minMatchLength\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{minMatchLength\_}{minMatchLength\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a4c673a56ba5ee20aa9b654da645839d1} 
+size\+\_\+t compression\+::\+Lz77\+Compressor\+::min\+Match\+Length\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
 
 \Hypertarget{classcompression_1_1Lz77Compressor_aa8796f4b04ceefb3e603933202963972}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!useGreedyParsing\_@{useGreedyParsing\_}}
 \index{useGreedyParsing\_@{useGreedyParsing\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
 \doxysubsubsection{\texorpdfstring{useGreedyParsing\_}{useGreedyParsing\_}}
 {\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_aa8796f4b04ceefb3e603933202963972} 
 bool compression\+::\+Lz77\+Compressor\+::use\+Greedy\+Parsing\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1Lz77Compressor_ab91dce998f008338f5b689e30b75f625}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!useOptimalParsing\_@{useOptimalParsing\_}}
+\index{useOptimalParsing\_@{useOptimalParsing\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{useOptimalParsing\_}{useOptimalParsing\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_ab91dce998f008338f5b689e30b75f625} 
+bool compression\+::\+Lz77\+Compressor\+::use\+Optimal\+Parsing\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1Lz77Compressor_a2346a062eb962869e146e7c933f8c851}\index{compression::Lz77Compressor@{compression::Lz77Compressor}!windowSize\_@{windowSize\_}}
+\index{windowSize\_@{windowSize\_}!compression::Lz77Compressor@{compression::Lz77Compressor}}
+\doxysubsubsection{\texorpdfstring{windowSize\_}{windowSize\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1Lz77Compressor_a2346a062eb962869e146e7c933f8c851} 
+size\+\_\+t compression\+::\+Lz77\+Compressor\+::window\+Size\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
 
 
 

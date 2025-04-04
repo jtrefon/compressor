@@ -16,6 +16,7 @@
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/FileFormat.hpp> // Include the new header format definitions
 #include <compression/Crc32.hpp> // Include CRC32 utility
+#include <compression/Lz77Compressor.hpp>
 
 // --- Helper Functions --- 
 
@@ -58,6 +59,8 @@ std::unique_ptr<compression::ICompressor> createCompressor(compression::format::
             return std::make_unique<compression::NullCompressor>();
         case compression::format::AlgorithmID::HUFFMAN_COMPRESSOR:
             return std::make_unique<compression::HuffmanCompressor>();
+        case compression::format::AlgorithmID::LZ77_COMPRESSOR:
+            return std::make_unique<compression::Lz77Compressor>(32768, 3, 258, false, true, true);
         default:
             throw std::invalid_argument("Unknown or unsupported compression algorithm ID: " 
                                         + std::to_string(static_cast<uint8_t>(id)));
@@ -77,7 +80,7 @@ std::unique_ptr<compression::ICompressor> createCompressor(const std::string& st
 
 void printUsage(const char* appName) {
     std::cerr << "Usage: " << appName << " <compress|decompress> <strategy|ignored_on_decompress> <input_file> <output_file>\n"
-              << "Strategies: null, rle, huffman\n";
+              << "Strategies: null, rle, huffman, lz77\n";
 }
 
 int main(int argc, char* argv[]) {

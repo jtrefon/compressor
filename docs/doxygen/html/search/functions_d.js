@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['uint8tobyte_0',['uint8ToByte',['../classcompression_1_1ByteTypeAdapter.html#a67b67cc60e8a11eafe1b6496d11e7c5f',1,'compression::ByteTypeAdapter::uint8ToByte(const std::vector&lt; uint8_t &gt; &amp;input)'],['../classcompression_1_1ByteTypeAdapter.html#aa4e4afbccf08dc73d6f15c34145e7fda',1,'compression::ByteTypeAdapter::uint8ToByte(const std::vector&lt; uint8_t &gt; &amp;data)']]]
+  ['scorematch_0',['scoreMatch',['../classcompression_1_1Lz77Compressor.html#a2bf2651aa0e65088dea5bfd70211b8ae',1,'compression::Lz77Compressor']]],
+  ['serializefrequencymap_1',['serializeFrequencyMap',['../classcompression_1_1HuffmanCompressor.html#aced24ba0dddcce010044cc8e6cbf3534',1,'compression::HuffmanCompressor']]],
+  ['serializeheader_2',['serializeHeader',['../namespacecompression_1_1format.html#ae8ea4c6ebe9f52ea2601c631bda13fbb',1,'compression::format']]],
+  ['stringtoalgorithmid_3',['stringToAlgorithmId',['../namespacecompression_1_1format.html#a69529234368757ea5c5633aca84d07b3',1,'compression::format']]]
 ];

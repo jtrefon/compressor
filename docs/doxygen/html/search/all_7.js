@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['hash_5fbits_0',['HASH_BITS',['../classcompression_1_1Lz77Compressor.html#af6b545854ade1753b5e2054a3b816f86',1,'compression::Lz77Compressor']]],
-  ['hash_5fmask_1',['HASH_MASK',['../classcompression_1_1Lz77Compressor.html#a53eb38f5a18cbf6b767fe0db6f4e6dd4',1,'compression::Lz77Compressor']]],
-  ['hash_5fshift_2',['HASH_SHIFT',['../classcompression_1_1Lz77Compressor.html#a61108e67f25f9cc7d5f3073f1d07f6d4',1,'compression::Lz77Compressor']]],
+  ['hashbits_5f_0',['hashBits_',['../classcompression_1_1Lz77Compressor.html#a0588b928a6b0c613652d674554f4f7de',1,'compression::Lz77Compressor']]],
+  ['hashchainlimit_5f_1',['hashChainLimit_',['../classcompression_1_1Lz77Compressor.html#a9cefccd2799a4dd21139d94fad2a9894',1,'compression::Lz77Compressor']]],
+  ['hashtriplet_2',['hashTriplet',['../classcompression_1_1Lz77Compressor.html#a409c9d5b2c41af03ae09835028b7a79d',1,'compression::Lz77Compressor']]],
   ['header_5fsize_3',['HEADER_SIZE',['../namespacecompression_1_1format.html#aba5b49b42f55e79b68d089c9941c3a85',1,'compression::format']]],
   ['huffman_5fcompressor_4',['HUFFMAN_COMPRESSOR',['../namespacecompression_1_1format.html#a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e',1,'compression::format']]],
   ['huffmancode_5',['HuffmanCode',['../classcompression_1_1HuffmanCompressor.html#a54d89945cf5ab41fffb5bf74c25f463e',1,'compression::HuffmanCompressor::HuffmanCode'],['../namespacecompression.html#a6191838f076351c001e205cd68c21db1',1,'compression::HuffmanCode']]],

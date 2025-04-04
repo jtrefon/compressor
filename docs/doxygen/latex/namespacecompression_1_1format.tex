@@ -8,10 +8,13 @@ struct \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}
 \doxysubsubsection*{Enumerations}
 \begin{DoxyCompactItemize}
 \item 
-enum class \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}} \+: uint8\+\_\+t \{ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca668cc0031f11143c29478bd8940938ec}{NULL\+\_\+\+COMPRESSOR}} = 0
+enum class \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}} \+: uint8\+\_\+t \{ \newline
+\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca668cc0031f11143c29478bd8940938ec}{NULL\+\_\+\+COMPRESSOR}} = 0
 , \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a}{RLE\+\_\+\+COMPRESSOR}} = 1
 , \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e}{HUFFMAN\+\_\+\+COMPRESSOR}} = 2
-, \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}{UNKNOWN}} = 255
+, \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca19b71095c705af4d813c070da95afa34}{LZ77\+\_\+\+COMPRESSOR}} = 3
+, \newline
+\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}{UNKNOWN}} = 255
  \}
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
@@ -54,6 +57,10 @@ RLE\+\_\+\+COMPRESSOR&\\
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{HUFFMAN\_COMPRESSOR@{HUFFMAN\_COMPRESSOR}!compression::format@{compression::format}}\index{compression::format@{compression::format}!HUFFMAN\_COMPRESSOR@{HUFFMAN\_COMPRESSOR}}}\Hypertarget{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e}\label{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e} 
 HUFFMAN\+\_\+\+COMPRESSOR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LZ77\_COMPRESSOR@{LZ77\_COMPRESSOR}!compression::format@{compression::format}}\index{compression::format@{compression::format}!LZ77\_COMPRESSOR@{LZ77\_COMPRESSOR}}}\Hypertarget{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca19b71095c705af4d813c070da95afa34}\label{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca19b71095c705af4d813c070da95afa34} 
+LZ77\+\_\+\+COMPRESSOR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{UNKNOWN@{UNKNOWN}!compression::format@{compression::format}}\index{compression::format@{compression::format}!UNKNOWN@{UNKNOWN}}}\Hypertarget{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}\label{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3} 
