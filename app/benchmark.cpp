@@ -17,6 +17,7 @@
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/Lz77Compressor.hpp>
 #include <compression/DeflateCompressor.hpp>
+#include <compression/ArithmeticCompressor.hpp>
 
 // --- Helper Functions ---
 
@@ -165,12 +166,14 @@ int main() {
     // Use LZ77 with optimal parsing for better compression
     compression::Lz77Compressor lz77Comp(32768, 3, 258, false, true, true);
     compression::DeflateCompressor deflateComp; // Remove verbose logging flag for benchmarks
+    compression::ArithmeticCompressor arithmeticComp;
 
     // --- Run Benchmarks ---
     std::vector<BenchmarkResult> results;
     results.push_back(runBenchmark("Null", nullComp, originalData));
     results.push_back(runBenchmark("RLE", rleComp, originalData));
     results.push_back(runBenchmark("Huffman", huffmanComp, originalData));
+    results.push_back(runBenchmark("Arithmetic", arithmeticComp, originalData));
     results.push_back(runBenchmark("LZ77", lz77Comp, originalData));
     results.push_back(runBenchmark("Deflate", deflateComp, originalData));
 
