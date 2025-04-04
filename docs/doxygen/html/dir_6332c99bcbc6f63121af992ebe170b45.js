@@ -1,6 +1,7 @@
 var dir_6332c99bcbc6f63121af992ebe170b45 =
 [
     [ "BitIO.hpp", "BitIO_8hpp.html", "BitIO_8hpp" ],
+    [ "BwtCompressor.hpp", "BwtCompressor_8hpp.html", "BwtCompressor_8hpp" ],
     [ "ByteTypeAdapter.hpp", "ByteTypeAdapter_8hpp.html", "ByteTypeAdapter_8hpp" ],
     [ "Crc32.hpp", "Crc32_8hpp.html", "Crc32_8hpp" ],
     [ "DeflateCompressor.hpp", "DeflateCompressor_8hpp.html", "DeflateCompressor_8hpp" ],

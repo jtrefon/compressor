@@ -115,11 +115,15 @@ $(function(){initNavTree('functions.html',''); initResizable(true); });
 <li>bitPosition_&#160;:&#160;<a class="el" href="classcompression_1_1BitIO_1_1BitWriter.html#aa407c686fb2f499c84369526735821c5">compression::BitIO::BitWriter</a></li>
 <li>BitReader()&#160;:&#160;<a class="el" href="classcompression_1_1BitIO_1_1BitReader.html#a8b7c75dff064edeac26e83829bbdb777">compression::BitIO::BitReader</a></li>
 <li>BitWriter()&#160;:&#160;<a class="el" href="classcompression_1_1BitIO_1_1BitWriter.html#a727c9cceb6896f1d0f77cdabb75bad3f">compression::BitIO::BitWriter</a></li>
+<li>blockSize_&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#ad77d712a91e2a2f1b7099ded2ff8409d">compression::BwtCompressor</a></li>
 <li>buffer_&#160;:&#160;<a class="el" href="classcompression_1_1BitIO_1_1BitReader.html#add913eb709a6a4e767f30b8b0d1f9331">compression::BitIO::BitReader</a>, <a class="el" href="classcompression_1_1BitIO_1_1BitWriter.html#a0027e60f338b3027ae059da8eca08d91">compression::BitIO::BitWriter</a></li>
 <li>buildFrequencyMap()&#160;:&#160;<a class="el" href="classcompression_1_1HuffmanCompressor.html#a37e6989848a9d00460d263c70f8ecedc">compression::HuffmanCompressor</a></li>
 <li>buildFrequencyMaps()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#aaafa2a386245c329623f5903d9b7c5ae">compression::DeflateCompressor</a></li>
 <li>buildHuffmanCodes()&#160;:&#160;<a class="el" href="classcompression_1_1HuffmanCoder.html#a2ec33b97f01afcab3ea869970369cada">compression::HuffmanCoder</a></li>
 <li>buildHuffmanTree()&#160;:&#160;<a class="el" href="classcompression_1_1HuffmanCoder.html#a741ead68d6ff4df8ec64fe5d80b4c283">compression::HuffmanCoder</a>, <a class="el" href="classcompression_1_1HuffmanCompressor.html#a7655d98e3bfcc08d25b92452079676e7">compression::HuffmanCompressor</a></li>
+<li>BwtCompressor()&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#ab4b1b15f0a34daae131c63a094d03d5e">compression::BwtCompressor</a></li>
+<li>bwtDecode()&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#a1cdc7c577e0a80c099f4d4d5d5ab383c">compression::BwtCompressor</a></li>
+<li>bwtEncode()&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#a7508d13187867ae86d160db724160eb8">compression::BwtCompressor</a></li>
 <li>bytePos_&#160;:&#160;<a class="el" href="classcompression_1_1BitIO_1_1BitReader.html#a5995ef8d118d768d27eb1cfb91de382c">compression::BitIO::BitReader</a></li>
 <li>bytesToUint8()&#160;:&#160;<a class="el" href="classcompression_1_1ByteTypeAdapter.html#ab3be0b03c9691417a3bfdfedfb97c49a">compression::ByteTypeAdapter</a></li>
 <li>byteToUint8()&#160;:&#160;<a class="el" href="classcompression_1_1ByteTypeAdapter.html#aefe20e15923b47c133ce53e40f65a88c">compression::ByteTypeAdapter</a></li>
@@ -128,19 +132,22 @@ $(function(){initNavTree('functions.html',''); initResizable(true); });
 
 <h3><a id="index_c" name="index_c"></a>- c -</h3><ul>
 <li>calculate()&#160;:&#160;<a class="el" href="classcompression_1_1utils_1_1Crc32.html#a377dd69a904487cc7fa3d738bbb59101">compression::utils::Crc32</a></li>
-<li>compress()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#a31d4adbb45b2ec7d80919f76cf766309">compression::DeflateCompressor</a>, <a class="el" href="classcompression_1_1HuffmanCompressor.html#a27d90ba0f87694afffda3c005a96a6f5">compression::HuffmanCompressor</a>, <a class="el" href="classcompression_1_1ICompressor.html#a8671d6084c1bf54b1dc440ad7ee7ee2f">compression::ICompressor</a>, <a class="el" href="classcompression_1_1Lz77Compressor.html#aac063f8811bfebfba7c8ce2fbb1ba895">compression::Lz77Compressor</a>, <a class="el" href="classcompression_1_1NullCompressor.html#a1568a73a2403c2d81caf317091e2bd70">compression::NullCompressor</a>, <a class="el" href="classcompression_1_1RleCompressor.html#a7859e06c9a9df4a9b9c8fd10c4bc445e">compression::RleCompressor</a></li>
+<li>compareRotations()&#160;:&#160;<a class="el" href="structcompression_1_1SuffixArray.html#a8052b6d0f2da402a375577cbc782e2d2">compression::SuffixArray</a></li>
+<li>compress()&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#a46ed9ffd59bed575ae8a73f8939b70c6">compression::BwtCompressor</a>, <a class="el" href="classcompression_1_1DeflateCompressor.html#a31d4adbb45b2ec7d80919f76cf766309">compression::DeflateCompressor</a>, <a class="el" href="classcompression_1_1HuffmanCompressor.html#a27d90ba0f87694afffda3c005a96a6f5">compression::HuffmanCompressor</a>, <a class="el" href="classcompression_1_1ICompressor.html#a8671d6084c1bf54b1dc440ad7ee7ee2f">compression::ICompressor</a>, <a class="el" href="classcompression_1_1Lz77Compressor.html#aac063f8811bfebfba7c8ce2fbb1ba895">compression::Lz77Compressor</a>, <a class="el" href="classcompression_1_1NullCompressor.html#a1568a73a2403c2d81caf317091e2bd70">compression::NullCompressor</a>, <a class="el" href="classcompression_1_1RleCompressor.html#a7859e06c9a9df4a9b9c8fd10c4bc445e">compression::RleCompressor</a></li>
 <li>compressionBenefit()&#160;:&#160;<a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html#a23b074182b92aef13ce9ff76b58057f6">compression::Lz77Compressor::Match</a></li>
 <li>compressToSymbols()&#160;:&#160;<a class="el" href="classcompression_1_1Lz77Compressor.html#afb67b0b5c52961e40c2f3f8533972b8e">compression::Lz77Compressor</a></li>
+<li>constructSuffixArray()&#160;:&#160;<a class="el" href="structcompression_1_1SuffixArray.html#ad8c1b034e6961575de2b0bbeed4b2d8a">compression::SuffixArray</a></li>
 <li>Crc32()&#160;:&#160;<a class="el" href="classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440">compression::utils::Crc32</a></li>
 <li>crc_table&#160;:&#160;<a class="el" href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">compression::utils::Crc32</a></li>
 </ul>
 
 
 <h3><a id="index_d" name="index_d"></a>- d -</h3><ul>
-<li>data&#160;:&#160;<a class="el" href="structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a1f75cf36c2734f6b6ebde39bab480504">compression::HuffmanCompressor::HuffmanNode</a></li>
+<li>data&#160;:&#160;<a class="el" href="structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a1f75cf36c2734f6b6ebde39bab480504">compression::HuffmanCompressor::HuffmanNode</a>, <a class="el" href="structcompression_1_1SuffixArray.html#a35dc00dbeaa50bdf10a5cbc87c2fa276">compression::SuffixArray</a></li>
+<li>decode()&#160;:&#160;<a class="el" href="classcompression_1_1MoveToFrontEncoder.html#a651fe7c98b27dba450b31391960de1ac">compression::MoveToFrontEncoder</a></li>
 <li>decodeSymbol()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#aedd63af4fc0aa83844ab03ddea73a893">compression::DeflateCompressor</a></li>
 <li>decodeSymbols()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#a9f1be8b77c0008fb8988da158142afae">compression::DeflateCompressor</a></li>
-<li>decompress()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#a20412aae5569ea3f69ee05ed82f11a10">compression::DeflateCompressor</a>, <a class="el" href="classcompression_1_1HuffmanCompressor.html#a61bbc5bcd67b9a06f36fa4c21758e055">compression::HuffmanCompressor</a>, <a class="el" href="classcompression_1_1ICompressor.html#a3d02bbe3947a450e9df997495c5af718">compression::ICompressor</a>, <a class="el" href="classcompression_1_1Lz77Compressor.html#ad9bf31062c9afc053328b17c87589ddc">compression::Lz77Compressor</a>, <a class="el" href="classcompression_1_1NullCompressor.html#ab0abd5fabe71687d41aaee516a252508">compression::NullCompressor</a>, <a class="el" href="classcompression_1_1RleCompressor.html#aa2d47d81de95fbbe7bb07479a80751cd">compression::RleCompressor</a></li>
+<li>decompress()&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#a3b6ee04c947248ad74ebc56a04014556">compression::BwtCompressor</a>, <a class="el" href="classcompression_1_1DeflateCompressor.html#a20412aae5569ea3f69ee05ed82f11a10">compression::DeflateCompressor</a>, <a class="el" href="classcompression_1_1HuffmanCompressor.html#a61bbc5bcd67b9a06f36fa4c21758e055">compression::HuffmanCompressor</a>, <a class="el" href="classcompression_1_1ICompressor.html#a3d02bbe3947a450e9df997495c5af718">compression::ICompressor</a>, <a class="el" href="classcompression_1_1Lz77Compressor.html#ad9bf31062c9afc053328b17c87589ddc">compression::Lz77Compressor</a>, <a class="el" href="classcompression_1_1NullCompressor.html#ab0abd5fabe71687d41aaee516a252508">compression::NullCompressor</a>, <a class="el" href="classcompression_1_1RleCompressor.html#aa2d47d81de95fbbe7bb07479a80751cd">compression::RleCompressor</a></li>
 <li>DeflateCompressor()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#a537d716c8ccd127ad2c1eeac55bb2c28">compression::DeflateCompressor</a></li>
 <li>deserializeFrequencyMap()&#160;:&#160;<a class="el" href="classcompression_1_1HuffmanCompressor.html#a09c1f9f1411f284d6710810cbb0759ae">compression::HuffmanCompressor</a></li>
 <li>distance&#160;:&#160;<a class="el" href="structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html#a0fbf25a4e5fb7564a5686b236c9b562f">compression::Lz77Compressor::Lz77Symbol</a>, <a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html#a3acaac816accbf2a569f9f23413cc0e9">compression::Lz77Compressor::Match</a></li>
@@ -148,7 +155,9 @@ $(function(){initNavTree('functions.html',''); initResizable(true); });
 
 
 <h3><a id="index_e" name="index_e"></a>- e -</h3><ul>
+<li>encode()&#160;:&#160;<a class="el" href="classcompression_1_1MoveToFrontEncoder.html#a39378dfd9a109402215e527aa9108fc2">compression::MoveToFrontEncoder</a></li>
 <li>encodeSymbols()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#a4ae0f2e0b0eb5885671db2065f935ff3">compression::DeflateCompressor</a>, <a class="el" href="classcompression_1_1Lz77Compressor.html#a4cd3a388a93c61ddf7c2dd18d5737f5e">compression::Lz77Compressor</a></li>
+<li>entropyCompressor_&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#a1d7e80bed470ae8c4eab47d7c16841a5">compression::BwtCompressor</a></li>
 <li>EOB_SYMBOL&#160;:&#160;<a class="el" href="classcompression_1_1Lz77Compressor.html#a1592affc0c88b2f0c7329f79a9b4f6d2">compression::Lz77Compressor</a></li>
 <li>extraBitsCount&#160;:&#160;<a class="el" href="structcompression_1_1RleSymbol.html#a981c9d5bb8b9c74af90edc09f0242ef5">compression::RleSymbol</a></li>
 <li>extraBitsValue&#160;:&#160;<a class="el" href="structcompression_1_1RleSymbol.html#aefd6635248d83f1609d538b1c7529897">compression::RleSymbol</a></li>
@@ -213,6 +222,7 @@ $(function(){initNavTree('functions.html',''); initResizable(true); });
 <li>maxHashChainLength_&#160;:&#160;<a class="el" href="classcompression_1_1Lz77Compressor.html#a86642a6b12a7238686ddb3ff8f471497">compression::Lz77Compressor</a></li>
 <li>maxMatchLength_&#160;:&#160;<a class="el" href="classcompression_1_1Lz77Compressor.html#ab140afffc7cd4cdb34b04c673befa301">compression::Lz77Compressor</a></li>
 <li>minMatchLength_&#160;:&#160;<a class="el" href="classcompression_1_1Lz77Compressor.html#a4c673a56ba5ee20aa9b654da645839d1">compression::Lz77Compressor</a></li>
+<li>mtfCoder_&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#a4bcd2ab95f6813ea3d34bb0c436a81a9">compression::BwtCompressor</a></li>
 </ul>
 
 
@@ -235,13 +245,17 @@ $(function(){initNavTree('functions.html',''); initResizable(true); });
 <li>readBits()&#160;:&#160;<a class="el" href="classcompression_1_1BitIO_1_1BitReader.html#a68e8ddc49d99913fef5fd71157b86122">compression::BitIO::BitReader</a></li>
 <li>readDynamicTables()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#acfddfcbb59ca37a1c65ab142659761e9">compression::DeflateCompressor</a></li>
 <li>right&#160;:&#160;<a class="el" href="structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#a34eeb80ca36a6b087fde24a90b72b52a">compression::HuffmanCoder::HuffmanNode</a>, <a class="el" href="structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a04f9d3ed461ee11addc7b6589050fed3">compression::HuffmanCompressor::HuffmanNode</a>, <a class="el" href="structcompression_1_1HuffmanDecoderNode.html#a09616eba4ca2e5be75168fd76c19e58e">compression::HuffmanDecoderNode</a></li>
+<li>runLengthDecode()&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#a6d0804aa936e5ec321f099ffe1744afc">compression::BwtCompressor</a></li>
+<li>runLengthEncode()&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#a4316f05426a7e368ee6dedb04f41d70d">compression::BwtCompressor</a></li>
 <li>runLengthEncodeCodeLengths()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#ad6ce0356fb4cdaa7858188998a19edde">compression::DeflateCompressor</a></li>
 </ul>
 
 
 <h3><a id="index_s" name="index_s"></a>- s -</h3><ul>
+<li>SA&#160;:&#160;<a class="el" href="structcompression_1_1SuffixArray.html#a4e55f63b8c6747c8e104e0c847955baf">compression::SuffixArray</a></li>
 <li>scoreMatch()&#160;:&#160;<a class="el" href="classcompression_1_1Lz77Compressor.html#a2bf2651aa0e65088dea5bfd70211b8ae">compression::Lz77Compressor</a></li>
 <li>serializeFrequencyMap()&#160;:&#160;<a class="el" href="classcompression_1_1HuffmanCompressor.html#aced24ba0dddcce010044cc8e6cbf3534">compression::HuffmanCompressor</a></li>
+<li>SuffixArray()&#160;:&#160;<a class="el" href="structcompression_1_1SuffixArray.html#abb8d5ccd6ccaf8b4febad3b6a303be1e">compression::SuffixArray</a></li>
 <li>symbol&#160;:&#160;<a class="el" href="structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#a2e27c88f8f6d2dc9d5587d4731fdfb85">compression::HuffmanCoder::HuffmanNode</a>, <a class="el" href="structcompression_1_1HuffmanDecoderNode.html#a608ffbff344bd636d19cddd572fe9bdf">compression::HuffmanDecoderNode</a>, <a class="el" href="structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html#a74f3d99da038794b625278c60a07a548">compression::Lz77Compressor::Lz77Symbol</a>, <a class="el" href="structcompression_1_1RleSymbol.html#af2d95a5c333655e78371629e587defcd">compression::RleSymbol</a></li>
 </ul>
 
@@ -269,6 +283,7 @@ $(function(){initNavTree('functions.html',''); initResizable(true); });
 
 
 <h3><a id="index__7E" name="index__7E"></a>- ~ -</h3><ul>
+<li>~BwtCompressor()&#160;:&#160;<a class="el" href="classcompression_1_1BwtCompressor.html#a72d647a04bd1410b588312a8ada986be">compression::BwtCompressor</a></li>
 <li>~DeflateCompressor()&#160;:&#160;<a class="el" href="classcompression_1_1DeflateCompressor.html#a05f93b4d4202624a3fde7d348a25ab0d">compression::DeflateCompressor</a></li>
 <li>~ICompressor()&#160;:&#160;<a class="el" href="classcompression_1_1ICompressor.html#a3a2142d5686b5959e7a1a3d4c0eec8b8">compression::ICompressor</a></li>
 </ul>

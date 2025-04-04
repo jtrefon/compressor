@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lz77_5fcompressor_0',['LZ77_COMPRESSOR',['../namespacecompression_1_1format.html#a285b07642e4e703bc65cdd22753a8e1ca19b71095c705af4d813c070da95afa34',1,'compression::format']]]
+  ['huffman_5fcompressor_0',['HUFFMAN_COMPRESSOR',['../namespacecompression_1_1format.html#a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e',1,'compression::format']]]
 ];

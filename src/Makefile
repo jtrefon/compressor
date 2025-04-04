@@ -185,6 +185,30 @@ compression/fast:
 	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/compression.dir/build.make src/CMakeFiles/compression.dir/build
 .PHONY : compression/fast
 
+BwtCompressor.o: BwtCompressor.cpp.o
+.PHONY : BwtCompressor.o
+
+# target to build an object file
+BwtCompressor.cpp.o:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/compression.dir/build.make src/CMakeFiles/compression.dir/BwtCompressor.cpp.o
+.PHONY : BwtCompressor.cpp.o
+
+BwtCompressor.i: BwtCompressor.cpp.i
+.PHONY : BwtCompressor.i
+
+# target to preprocess a source file
+BwtCompressor.cpp.i:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/compression.dir/build.make src/CMakeFiles/compression.dir/BwtCompressor.cpp.i
+.PHONY : BwtCompressor.cpp.i
+
+BwtCompressor.s: BwtCompressor.cpp.s
+.PHONY : BwtCompressor.s
+
+# target to generate assembly for a file
+BwtCompressor.cpp.s:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/compression.dir/build.make src/CMakeFiles/compression.dir/BwtCompressor.cpp.s
+.PHONY : BwtCompressor.cpp.s
+
 DeflateCompressor.o: DeflateCompressor.cpp.o
 .PHONY : DeflateCompressor.o
 
@@ -319,6 +343,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... compression"
+	@echo "... BwtCompressor.o"
+	@echo "... BwtCompressor.i"
+	@echo "... BwtCompressor.s"
 	@echo "... DeflateCompressor.o"
 	@echo "... DeflateCompressor.i"
 	@echo "... DeflateCompressor.s"
