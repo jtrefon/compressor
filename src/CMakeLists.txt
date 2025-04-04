@@ -15,6 +15,7 @@ target_sources(compression PRIVATE
     HuffmanCompressor.cpp
     Lz77Compressor.cpp
     DeflateCompressor.cpp
+    BwtCompressor.cpp
 #     some_compression_algorithm.cpp
 )
 

@@ -27,116 +27,119 @@
 \DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a}{RLE\_COMPRESSOR}}\ =\ 1,}
 \DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e}{HUFFMAN\_COMPRESSOR}}\ =\ 2,}
 \DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca19b71095c705af4d813c070da95afa34}{LZ77\_COMPRESSOR}}\ =\ 3,}
-\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ Add\ future\ IDs\ here}}
-\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}{UNKNOWN}}\ =\ 255}
-\DoxyCodeLine{00028\ \};}
-\DoxyCodeLine{00029\ }
-\DoxyCodeLine{00030\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{namespacecompression_1_1format_aba5b49b42f55e79b68d089c9941c3a85}{HEADER\_SIZE}}\ =\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.size()\ }
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}{FORMAT\_VERSION}})\ }
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}})\ }
-\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(uint64\_t)\ \textcolor{comment}{//\ Original\ Size}}
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(uint32\_t);\ \textcolor{comment}{//\ Original\ Checksum\ (CRC32)}}
-\DoxyCodeLine{00035\ }
-\DoxyCodeLine{00036\ \textcolor{comment}{//\ -\/-\/-\/\ Header\ Structure\ (Conceptual)\ -\/-\/-\/\ }}
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00038\ \textcolor{comment}{//\ We\ won't\ use\ a\ packed\ struct\ directly\ to\ avoid\ portability\ issues\ (padding,\ endianness).}}
-\DoxyCodeLine{00039\ \textcolor{comment}{//\ Instead,\ we'll\ use\ serialization/deserialization\ functions.}}
-\DoxyCodeLine{00040\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{FileHeader}}\ \{}
-\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//\ Magic\ number\ is\ implicitly\ checked/written}}
-\DoxyCodeLine{00042\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}}\ =\ \mbox{\hyperlink{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}{FORMAT\_VERSION}};}
-\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}}\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_abd9e727a2953ac31c6351c27702a1903}{algorithmId}}\ =\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}{AlgorithmID::UNKNOWN}};}
-\DoxyCodeLine{00044\ \ \ \ \ uint64\_t\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a217b347c362ecb3f79d556ac1933aead}{originalSize}}\ =\ 0;}
-\DoxyCodeLine{00045\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a45c1ace1b20558ef34075c9cbf0a2db9}{originalChecksum}}\ =\ 0;\ \textcolor{comment}{//\ Added\ CRC32\ checksum}}
-\DoxyCodeLine{00046\ \};}
-\DoxyCodeLine{00047\ }
-\DoxyCodeLine{00048\ \textcolor{comment}{//\ -\/-\/-\/\ Serialization\ /\ Deserialization\ -\/-\/-\/\ }}
-\DoxyCodeLine{00049\ }
-\DoxyCodeLine{00055\ \textcolor{keyword}{inline}\ std::vector<uint8\_t>\ \mbox{\hyperlink{namespacecompression_1_1format_ae8ea4c6ebe9f52ea2601c631bda13fbb}{serializeHeader}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{FileHeader}}\&\ header)\ \{}
-\DoxyCodeLine{00056\ \ \ \ \ std::vector<uint8\_t>\ buffer(\mbox{\hyperlink{namespacecompression_1_1format_aba5b49b42f55e79b68d089c9941c3a85}{HEADER\_SIZE}});}
-\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ offset\ =\ 0;}
-\DoxyCodeLine{00058\ }
-\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{//\ 1.\ Magic\ Number}}
-\DoxyCodeLine{00060\ \ \ \ \ std::copy(\mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.begin(),\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.end(),\ buffer.begin()\ +\ offset);}
-\DoxyCodeLine{00061\ \ \ \ \ offset\ +=\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.size();}
-\DoxyCodeLine{00062\ }
-\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ 2.\ Format\ Version}}
-\DoxyCodeLine{00064\ \ \ \ \ buffer[offset++]\ =\ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}};}
-\DoxyCodeLine{00065\ }
-\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//\ 3.\ Algorithm\ ID}}
-\DoxyCodeLine{00067\ \ \ \ \ buffer[offset++]\ =\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}(header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_abd9e727a2953ac31c6351c27702a1903}{algorithmId}});}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ 4.\ Original\ Size\ (little-\/endian)}}
-\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ ++i)\ \{}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ buffer[offset++]\ =\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}((header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a217b347c362ecb3f79d556ac1933aead}{originalSize}}\ >>\ (i\ *\ 8))\ \&\ 0xFF);}
-\DoxyCodeLine{00072\ \ \ \ \ \}}
-\DoxyCodeLine{00073\ }
-\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ 5.\ Original\ Checksum\ (little-\/endian)}}
-\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 4;\ ++i)\ \{}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ buffer[offset++]\ =\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}((header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a45c1ace1b20558ef34075c9cbf0a2db9}{originalChecksum}}\ >>\ (i\ *\ 8))\ \&\ 0xFF);}
-\DoxyCodeLine{00077\ \ \ \ \ \}}
-\DoxyCodeLine{00078\ }
-\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{return}\ buffer;}
-\DoxyCodeLine{00080\ \}}
-\DoxyCodeLine{00081\ }
-\DoxyCodeLine{00088\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{FileHeader}}\ \mbox{\hyperlink{namespacecompression_1_1format_a9d543ebd8ca0de313b42e446e64b5b1a}{deserializeHeader}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ buffer)\ \{}
-\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{if}\ (buffer.size()\ <\ \mbox{\hyperlink{namespacecompression_1_1format_aba5b49b42f55e79b68d089c9941c3a85}{HEADER\_SIZE}})\ \{}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Buffer\ too\ small\ to\ contain\ file\ header."{}});}
-\DoxyCodeLine{00091\ \ \ \ \ \}}
-\DoxyCodeLine{00092\ }
-\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ offset\ =\ 0;}
-\DoxyCodeLine{00094\ \ \ \ \ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{FileHeader}}\ header;}
-\DoxyCodeLine{00095\ }
-\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ 1.\ Verify\ Magic\ Number}}
-\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{if}\ (!std::equal(\mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.begin(),\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.end(),\ buffer.begin()\ +\ offset))\ \{}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Invalid\ magic\ number.\ Not\ a\ recognized\ compressed\ file."{}});}
-\DoxyCodeLine{00099\ \ \ \ \ \}}
-\DoxyCodeLine{00100\ \ \ \ \ offset\ +=\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.size();}
-\DoxyCodeLine{00101\ }
-\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ 2.\ Read\ and\ Verify\ Format\ Version}}
-\DoxyCodeLine{00103\ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}}\ =\ buffer[offset++];}
-\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordflow}{if}\ (header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}}\ !=\ \mbox{\hyperlink{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}{FORMAT\_VERSION}})\ \{}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Unsupported\ format\ version:\ "{}}\ +\ std::to\_string(header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}}));}
-\DoxyCodeLine{00106\ \ \ \ \ \}}
-\DoxyCodeLine{00107\ }
-\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ 3.\ Read\ Algorithm\ ID}}
-\DoxyCodeLine{00109\ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_abd9e727a2953ac31c6351c27702a1903}{algorithmId}}\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}}\textcolor{keyword}{>}(buffer[offset++]);}
-\DoxyCodeLine{00110\ }
-\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{//\ 4.\ Read\ Original\ Size\ (assuming\ little-\/endian\ storage)}}
-\DoxyCodeLine{00112\ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a217b347c362ecb3f79d556ac1933aead}{originalSize}}\ =\ 0;}
-\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ ++i)\ \{}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a217b347c362ecb3f79d556ac1933aead}{originalSize}}\ |=\ (\textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(buffer[offset++])\ <<\ (i\ *\ 8));}
-\DoxyCodeLine{00115\ \ \ \ \ \}}
-\DoxyCodeLine{00116\ }
-\DoxyCodeLine{00117\ \ \ \ \ \textcolor{comment}{//\ 5.\ Read\ Original\ Checksum\ (assuming\ little-\/endian\ storage)}}
-\DoxyCodeLine{00118\ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a45c1ace1b20558ef34075c9cbf0a2db9}{originalChecksum}}\ =\ 0;}
-\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 4;\ ++i)\ \{}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a45c1ace1b20558ef34075c9cbf0a2db9}{originalChecksum}}\ |=\ (\textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(buffer[offset++])\ <<\ (i\ *\ 8));}
-\DoxyCodeLine{00121\ \ \ \ \ \}}
-\DoxyCodeLine{00122\ }
-\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordflow}{return}\ header;}
-\DoxyCodeLine{00124\ \}}
-\DoxyCodeLine{00125\ }
-\DoxyCodeLine{00131\ \textcolor{keyword}{inline}\ std::string\ \mbox{\hyperlink{namespacecompression_1_1format_a46dd00fcac1185f96800c379d67e1463}{algorithmIdToString}}(\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}}\ \textcolor{keywordtype}{id})\ \{}
-\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordflow}{switch}\ (\textcolor{keywordtype}{id})\ \{}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca668cc0031f11143c29478bd8940938ec}{AlgorithmID::NULL\_COMPRESSOR}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}null"{}};}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a}{AlgorithmID::RLE\_COMPRESSOR}}:\ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}rle"{}};}
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e}{AlgorithmID::HUFFMAN\_COMPRESSOR}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}huffman"{}};}
-\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca19b71095c705af4d813c070da95afa34}{AlgorithmID::LZ77\_COMPRESSOR}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}lz77"{}};}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unknown"{}};}
-\DoxyCodeLine{00138\ \ \ \ \ \}}
-\DoxyCodeLine{00139\ \}}
-\DoxyCodeLine{00140\ }
-\DoxyCodeLine{00146\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}}\ \mbox{\hyperlink{namespacecompression_1_1format_a69529234368757ea5c5633aca84d07b3}{stringToAlgorithmId}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
-\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ \textcolor{stringliteral}{"{}null"{}})\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca668cc0031f11143c29478bd8940938ec}{AlgorithmID::NULL\_COMPRESSOR}};}
-\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ \textcolor{stringliteral}{"{}rle"{}})\ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a}{AlgorithmID::RLE\_COMPRESSOR}};}
-\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ \textcolor{stringliteral}{"{}huffman"{}})\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e}{AlgorithmID::HUFFMAN\_COMPRESSOR}};}
-\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ \textcolor{stringliteral}{"{}lz77"{}})\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca19b71095c705af4d813c070da95afa34}{AlgorithmID::LZ77\_COMPRESSOR}};}
-\DoxyCodeLine{00151\ \ \ \ \ \textcolor{comment}{//\ Add\ mappings\ for\ future\ algorithms}}
-\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}{AlgorithmID::UNKNOWN}};}
-\DoxyCodeLine{00153\ \}}
-\DoxyCodeLine{00154\ }
-\DoxyCodeLine{00155\ }
-\DoxyCodeLine{00156\ \}\ \textcolor{comment}{//\ namespace\ format}}
-\DoxyCodeLine{00157\ \}\ \textcolor{comment}{//\ namespace\ compression\ }}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca6ee08d0021c0eaa887ca9e3ca5d3dfba}{BWT\_COMPRESSOR}}\ =\ 4,}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ Add\ future\ IDs\ here}}
+\DoxyCodeLine{00028\ \ \ \ \ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}{UNKNOWN}}\ =\ 255}
+\DoxyCodeLine{00029\ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{namespacecompression_1_1format_aba5b49b42f55e79b68d089c9941c3a85}{HEADER\_SIZE}}\ =\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.size()\ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}{FORMAT\_VERSION}})\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}})\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(uint64\_t)\ \textcolor{comment}{//\ Original\ Size}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \textcolor{keyword}{sizeof}(uint32\_t);\ \textcolor{comment}{//\ Original\ Checksum\ (CRC32)}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ -\/-\/-\/\ Header\ Structure\ (Conceptual)\ -\/-\/-\/\ }}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ We\ won't\ use\ a\ packed\ struct\ directly\ to\ avoid\ portability\ issues\ (padding,\ endianness).}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ Instead,\ we'll\ use\ serialization/deserialization\ functions.}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{FileHeader}}\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ Magic\ number\ is\ implicitly\ checked/written}}
+\DoxyCodeLine{00043\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}}\ =\ \mbox{\hyperlink{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}{FORMAT\_VERSION}};}
+\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}}\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_abd9e727a2953ac31c6351c27702a1903}{algorithmId}}\ =\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}{AlgorithmID::UNKNOWN}};}
+\DoxyCodeLine{00045\ \ \ \ \ uint64\_t\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a217b347c362ecb3f79d556ac1933aead}{originalSize}}\ =\ 0;}
+\DoxyCodeLine{00046\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a45c1ace1b20558ef34075c9cbf0a2db9}{originalChecksum}}\ =\ 0;\ \textcolor{comment}{//\ Added\ CRC32\ checksum}}
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ -\/-\/-\/\ Serialization\ /\ Deserialization\ -\/-\/-\/\ }}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{inline}\ std::vector<uint8\_t>\ \mbox{\hyperlink{namespacecompression_1_1format_ae8ea4c6ebe9f52ea2601c631bda13fbb}{serializeHeader}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{FileHeader}}\&\ header)\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ std::vector<uint8\_t>\ buffer(\mbox{\hyperlink{namespacecompression_1_1format_aba5b49b42f55e79b68d089c9941c3a85}{HEADER\_SIZE}});}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ offset\ =\ 0;}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ 1.\ Magic\ Number}}
+\DoxyCodeLine{00061\ \ \ \ \ std::copy(\mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.begin(),\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.end(),\ buffer.begin()\ +\ offset);}
+\DoxyCodeLine{00062\ \ \ \ \ offset\ +=\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.size();}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ 2.\ Format\ Version}}
+\DoxyCodeLine{00065\ \ \ \ \ buffer[offset++]\ =\ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ 3.\ Algorithm\ ID}}
+\DoxyCodeLine{00068\ \ \ \ \ buffer[offset++]\ =\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}(header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_abd9e727a2953ac31c6351c27702a1903}{algorithmId}});}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ 4.\ Original\ Size\ (little-\/endian)}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ ++i)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ buffer[offset++]\ =\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}((header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a217b347c362ecb3f79d556ac1933aead}{originalSize}}\ >>\ (i\ *\ 8))\ \&\ 0xFF);}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ 5.\ Original\ Checksum\ (little-\/endian)}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 4;\ ++i)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ buffer[offset++]\ =\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}((header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a45c1ace1b20558ef34075c9cbf0a2db9}{originalChecksum}}\ >>\ (i\ *\ 8))\ \&\ 0xFF);}
+\DoxyCodeLine{00078\ \ \ \ \ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{return}\ buffer;}
+\DoxyCodeLine{00081\ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{FileHeader}}\ \mbox{\hyperlink{namespacecompression_1_1format_a9d543ebd8ca0de313b42e446e64b5b1a}{deserializeHeader}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ buffer)\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{if}\ (buffer.size()\ <\ \mbox{\hyperlink{namespacecompression_1_1format_aba5b49b42f55e79b68d089c9941c3a85}{HEADER\_SIZE}})\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Buffer\ too\ small\ to\ contain\ file\ header."{}});}
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ offset\ =\ 0;}
+\DoxyCodeLine{00095\ \ \ \ \ \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{FileHeader}}\ header;}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{comment}{//\ 1.\ Verify\ Magic\ Number}}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{if}\ (!std::equal(\mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.begin(),\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.end(),\ buffer.begin()\ +\ offset))\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Invalid\ magic\ number.\ Not\ a\ recognized\ compressed\ file."{}});}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \ \ \ \ offset\ +=\ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{MAGIC\_NUMBER}}.size();}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ 2.\ Read\ and\ Verify\ Format\ Version}}
+\DoxyCodeLine{00104\ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}}\ =\ buffer[offset++];}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordflow}{if}\ (header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}}\ !=\ \mbox{\hyperlink{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}{FORMAT\_VERSION}})\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Unsupported\ format\ version:\ "{}}\ +\ std::to\_string(header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_adce8cce791997d09a594b34dbd2cd0f3}{formatVersion}}));}
+\DoxyCodeLine{00107\ \ \ \ \ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//\ 3.\ Read\ Algorithm\ ID}}
+\DoxyCodeLine{00110\ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_abd9e727a2953ac31c6351c27702a1903}{algorithmId}}\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}}\textcolor{keyword}{>}(buffer[offset++]);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ 4.\ Read\ Original\ Size\ (assuming\ little-\/endian\ storage)}}
+\DoxyCodeLine{00113\ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a217b347c362ecb3f79d556ac1933aead}{originalSize}}\ =\ 0;}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ ++i)\ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a217b347c362ecb3f79d556ac1933aead}{originalSize}}\ |=\ (\textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(buffer[offset++])\ <<\ (i\ *\ 8));}
+\DoxyCodeLine{00116\ \ \ \ \ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{comment}{//\ 5.\ Read\ Original\ Checksum\ (assuming\ little-\/endian\ storage)}}
+\DoxyCodeLine{00119\ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a45c1ace1b20558ef34075c9cbf0a2db9}{originalChecksum}}\ =\ 0;}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 4;\ ++i)\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ header.\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader_a45c1ace1b20558ef34075c9cbf0a2db9}{originalChecksum}}\ |=\ (\textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(buffer[offset++])\ <<\ (i\ *\ 8));}
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordflow}{return}\ header;}
+\DoxyCodeLine{00125\ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00132\ \textcolor{keyword}{inline}\ std::string\ \mbox{\hyperlink{namespacecompression_1_1format_a46dd00fcac1185f96800c379d67e1463}{algorithmIdToString}}(\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}}\ \textcolor{keywordtype}{id})\ \{}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordflow}{switch}\ (\textcolor{keywordtype}{id})\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca668cc0031f11143c29478bd8940938ec}{AlgorithmID::NULL\_COMPRESSOR}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}null"{}};}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a}{AlgorithmID::RLE\_COMPRESSOR}}:\ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}rle"{}};}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e}{AlgorithmID::HUFFMAN\_COMPRESSOR}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}huffman"{}};}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca19b71095c705af4d813c070da95afa34}{AlgorithmID::LZ77\_COMPRESSOR}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}lz77"{}};}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca6ee08d0021c0eaa887ca9e3ca5d3dfba}{AlgorithmID::BWT\_COMPRESSOR}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}bwt"{}};}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unknown"{}};}
+\DoxyCodeLine{00140\ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00148\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{AlgorithmID}}\ \mbox{\hyperlink{namespacecompression_1_1format_a69529234368757ea5c5633aca84d07b3}{stringToAlgorithmId}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ \textcolor{stringliteral}{"{}null"{}})\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca668cc0031f11143c29478bd8940938ec}{AlgorithmID::NULL\_COMPRESSOR}};}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ \textcolor{stringliteral}{"{}rle"{}})\ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a}{AlgorithmID::RLE\_COMPRESSOR}};}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ \textcolor{stringliteral}{"{}huffman"{}})\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e}{AlgorithmID::HUFFMAN\_COMPRESSOR}};}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ \textcolor{stringliteral}{"{}lz77"{}})\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca19b71095c705af4d813c070da95afa34}{AlgorithmID::LZ77\_COMPRESSOR}};}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ \textcolor{stringliteral}{"{}bwt"{}})\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca6ee08d0021c0eaa887ca9e3ca5d3dfba}{AlgorithmID::BWT\_COMPRESSOR}};}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{comment}{//\ Add\ mappings\ for\ future\ algorithms}}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3}{AlgorithmID::UNKNOWN}};}
+\DoxyCodeLine{00156\ \}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \}\ \textcolor{comment}{//\ namespace\ format}}
+\DoxyCodeLine{00160\ \}\ \textcolor{comment}{//\ namespace\ compression\ }}
 
 \end{DoxyCode}

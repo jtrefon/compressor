@@ -3,6 +3,7 @@
 #include <compression/NullCompressor.hpp>
 #include <compression/RleCompressor.hpp>
 #include <compression/HuffmanCompressor.hpp>
+#include <compression/BwtCompressor.hpp>
 #include <vector>
 #include <cstdint>
 #include <string>
@@ -271,6 +272,152 @@ TEST_F(HuffmanCompressorTest, DecompressInvalidData_TruncatedPayload) {
     
     // Decompression should ideally throw due to missing bits or invalid final state
     EXPECT_THROW(compressor.decompress(truncatedData), std::runtime_error); 
+}
+
+// BWT Compressor Tests
+TEST(BwtCompressorTest, EmptyData) {
+    compression::BwtCompressor compressor;
+    std::vector<uint8_t> data;
+    auto compressed = compressor.compress(data);
+    EXPECT_TRUE(compressed.empty());
+    auto decompressed = compressor.decompress(compressed);
+    EXPECT_TRUE(decompressed.empty());
+}
+
+TEST(BwtCompressorTest, SimpleString) {
+    compression::BwtCompressor compressor;
+    std::string message = "banana";
+    std::vector<uint8_t> data(message.begin(), message.end());
+    
+    auto compressed = compressor.compress(data);
+    EXPECT_FALSE(compressed.empty());
+    
+    auto decompressed = compressor.decompress(compressed);
+    EXPECT_EQ(data.size(), decompressed.size());
+    
+    std::string result(decompressed.begin(), decompressed.end());
+    EXPECT_EQ(message, result);
+}
+
+TEST(BwtCompressorTest, SingleChar) {
+    compression::BwtCompressor compressor;
+    std::string message = "a";
+    std::vector<uint8_t> data(message.begin(), message.end());
+    
+    auto compressed = compressor.compress(data);
+    EXPECT_FALSE(compressed.empty());
+    
+    auto decompressed = compressor.decompress(compressed);
+    EXPECT_EQ(data.size(), decompressed.size());
+    EXPECT_EQ(data, decompressed);
+}
+
+TEST(BwtCompressorTest, RepeatedSingleChar) {
+    compression::BwtCompressor compressor;
+    std::string message = "aaaaa";
+    std::vector<uint8_t> data(message.begin(), message.end());
+    
+    auto compressed = compressor.compress(data);
+    EXPECT_FALSE(compressed.empty());
+    
+    auto decompressed = compressor.decompress(compressed);
+    EXPECT_EQ(data.size(), decompressed.size());
+    EXPECT_EQ(data, decompressed);
+}
+
+TEST(BwtCompressorTest, RepeatedPattern) {
+    compression::BwtCompressor compressor;
+    // Create a string with repeating pattern "abcabcabc..."
+    std::string pattern = "abc";
+    std::string message;
+    for (int i = 0; i < 100; ++i) {
+        message += pattern;
+    }
+    
+    std::vector<uint8_t> data(message.begin(), message.end());
+    
+    auto compressed = compressor.compress(data);
+    EXPECT_FALSE(compressed.empty());
+    EXPECT_LT(compressed.size(), data.size()); // Should compress well
+    
+    auto decompressed = compressor.decompress(compressed);
+    EXPECT_EQ(data.size(), decompressed.size());
+    EXPECT_EQ(data, decompressed);
+}
+
+TEST(BwtCompressorTest, LargeText) {
+    compression::BwtCompressor compressor;
+    
+    // Create a simple repeating pattern that will compress well
+    std::string pattern = "abcdefghijklmnopqrstuvwxyz";
+    std::string message;
+    for (int i = 0; i < 100; ++i) {
+        message += pattern;
+    }
+    
+    std::vector<uint8_t> data(message.begin(), message.end());
+    
+    // Test compression
+    auto compressed = compressor.compress(data);
+    EXPECT_FALSE(compressed.empty());
+    EXPECT_LT(compressed.size(), data.size()) << "BWT should compress repeating text";
+    
+    // Test decompression
+    auto decompressed = compressor.decompress(compressed);
+    EXPECT_EQ(data.size(), decompressed.size());
+    EXPECT_EQ(data, decompressed);
+}
+
+TEST(BwtCompressorTest, BinaryData) {
+    compression::BwtCompressor compressor;
+    // Create binary data with a mix of values
+    std::vector<uint8_t> data(256);
+    for (size_t i = 0; i < data.size(); ++i) {
+        data[i] = static_cast<uint8_t>(i % 256);
+    }
+    
+    auto compressed = compressor.compress(data);
+    EXPECT_FALSE(compressed.empty());
+    
+    auto decompressed = compressor.decompress(compressed);
+    EXPECT_EQ(data.size(), decompressed.size());
+    EXPECT_EQ(data, decompressed);
+}
+
+// MoveToFrontEncoder Tests
+TEST(MoveToFrontTest, BasicEncoding) {
+    compression::MoveToFrontEncoder mtf;
+    std::string message = "banana";
+    std::vector<uint8_t> data(message.begin(), message.end());
+    
+    auto encoded = mtf.encode(data);
+    EXPECT_EQ(data.size(), encoded.size());
+    
+    auto decoded = mtf.decode(encoded);
+    EXPECT_EQ(data.size(), decoded.size());
+    
+    for (size_t i = 0; i < data.size(); ++i) {
+        EXPECT_EQ(data[i], decoded[i]);
+    }
+}
+
+TEST(MoveToFrontTest, AllByteValues) {
+    compression::MoveToFrontEncoder mtf;
+    // Test with all possible byte values
+    std::vector<uint8_t> data(256);
+    for (int i = 0; i < 256; ++i) {
+        data[i] = static_cast<uint8_t>(i);
+    }
+    
+    auto encoded = mtf.encode(data);
+    EXPECT_EQ(data.size(), encoded.size());
+    
+    auto decoded = mtf.decode(encoded);
+    EXPECT_EQ(data.size(), decoded.size());
+    
+    for (size_t i = 0; i < data.size(); ++i) {
+        EXPECT_EQ(data[i], decoded[i]);
+    }
 }
 
 // GoogleTest main function is usually sufficient

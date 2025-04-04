@@ -11,7 +11,9 @@ var searchData=
   ['rlecompressor_2ecpp_2eo_2ed_8',['RleCompressor.cpp.o.d',['../RleCompressor_8cpp_8o_8d.html',1,'']]],
   ['rlecompressor_2ehpp_9',['RleCompressor.hpp',['../RleCompressor_8hpp.html',1,'']]],
   ['rlesymbol_10',['RleSymbol',['../structcompression_1_1RleSymbol.html',1,'compression']]],
-  ['runlengthencodecodelengths_11',['runLengthEncodeCodeLengths',['../classcompression_1_1DeflateCompressor.html#ad6ce0356fb4cdaa7858188998a19edde',1,'compression::DeflateCompressor']]],
-  ['running_20benchmarks_12',['Running Benchmarks',['../md_README.html#autotoc_md7',1,'']]],
-  ['running_20tests_13',['Running Tests',['../md_README.html#autotoc_md6',1,'']]]
+  ['runlengthdecode_11',['runLengthDecode',['../classcompression_1_1BwtCompressor.html#a6d0804aa936e5ec321f099ffe1744afc',1,'compression::BwtCompressor']]],
+  ['runlengthencode_12',['runLengthEncode',['../classcompression_1_1BwtCompressor.html#a4316f05426a7e368ee6dedb04f41d70d',1,'compression::BwtCompressor']]],
+  ['runlengthencodecodelengths_13',['runLengthEncodeCodeLengths',['../classcompression_1_1DeflateCompressor.html#ad6ce0356fb4cdaa7858188998a19edde',1,'compression::DeflateCompressor']]],
+  ['running_20benchmarks_14',['Running Benchmarks',['../md_README.html#autotoc_md7',1,'']]],
+  ['running_20tests_15',['Running Tests',['../md_README.html#autotoc_md6',1,'']]]
 ];

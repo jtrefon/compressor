@@ -12,6 +12,8 @@ namespace \mbox{\hyperlink{namespacecompression_1_1utils}{utils}}
 \item 
 class \mbox{\hyperlink{classcompression_1_1BitIO}{Bit\+IO}}
 \begin{DoxyCompactList}\small\item\em Class for bit-\/level reading and writing operations. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcompression_1_1BwtCompressor}{Bwt\+Compressor}}
+\begin{DoxyCompactList}\small\item\em Implements the Burrows-\/\+Wheeler Transform (BWT) compression algorithm. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter}{Byte\+Type\+Adapter}}
 \begin{DoxyCompactList}\small\item\em Adapter class to convert between uint8\+\_\+t and byte types. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1DeflateCompressor}{Deflate\+Compressor}}
@@ -26,6 +28,8 @@ class \mbox{\hyperlink{classcompression_1_1ICompressor}{ICompressor}}
 \begin{DoxyCompactList}\small\item\em Interface for compression and decompression algorithms. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1Lz77Compressor}{Lz77\+Compressor}}
 \begin{DoxyCompactList}\small\item\em Implements LZ77 compression algorithm with advanced optimizations. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcompression_1_1MoveToFrontEncoder}{Move\+To\+Front\+Encoder}}
+\begin{DoxyCompactList}\small\item\em MTF (Move-\/\+To-\/\+Front) encoder used with BWT for better compression. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structcompression_1_1NodeComparator}{Node\+Comparator}}
 \item 
 struct \mbox{\hyperlink{structcompression_1_1NodePtrGreater}{Node\+Ptr\+Greater}}
@@ -35,7 +39,9 @@ class \mbox{\hyperlink{classcompression_1_1NullCompressor}{Null\+Compressor}}
 class \mbox{\hyperlink{classcompression_1_1RleCompressor}{Rle\+Compressor}}
 \begin{DoxyCompactList}\small\item\em Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} using Run-\/\+Length Encoding (RLE). \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structcompression_1_1RleSymbol}{Rle\+Symbol}}
-\begin{DoxyCompactList}\small\item\em Helper structure for RLE of code lengths. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Helper structure for RLE of code lengths. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structcompression_1_1SuffixArray}{Suffix\+Array}}
+\end{DoxyCompactItemize}
 \doxysubsubsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 

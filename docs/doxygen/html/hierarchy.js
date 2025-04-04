@@ -11,6 +11,7 @@ var hierarchy =
     [ "compression::HuffmanCoder::HuffmanNode", "structcompression_1_1HuffmanCoder_1_1HuffmanNode.html", null ],
     [ "compression::HuffmanCompressor::HuffmanNode", "structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html", null ],
     [ "compression::ICompressor", "classcompression_1_1ICompressor.html", [
+      [ "compression::BwtCompressor", "classcompression_1_1BwtCompressor.html", null ],
       [ "compression::DeflateCompressor", "classcompression_1_1DeflateCompressor.html", null ],
       [ "compression::HuffmanCompressor", "classcompression_1_1HuffmanCompressor.html", null ],
       [ "compression::Lz77Compressor", "classcompression_1_1Lz77Compressor.html", null ],
@@ -19,7 +20,9 @@ var hierarchy =
     ] ],
     [ "compression::Lz77Compressor::Lz77Symbol", "structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html", null ],
     [ "compression::Lz77Compressor::Match", "structcompression_1_1Lz77Compressor_1_1Match.html", null ],
+    [ "compression::MoveToFrontEncoder", "classcompression_1_1MoveToFrontEncoder.html", null ],
     [ "compression::NodeComparator", "structcompression_1_1NodeComparator.html", null ],
     [ "compression::NodePtrGreater", "structcompression_1_1NodePtrGreater.html", null ],
-    [ "compression::RleSymbol", "structcompression_1_1RleSymbol.html", null ]
+    [ "compression::RleSymbol", "structcompression_1_1RleSymbol.html", null ],
+    [ "compression::SuffixArray", "structcompression_1_1SuffixArray.html", null ]
 ];
