@@ -56,6 +56,11 @@ std::vector<uint8_t> RleCompressor::decompress(const std::vector<uint8_t>& data)
         uint8_t count = data[i];
         uint8_t value = data[i + 1];
         
+        // Check for invalid zero count
+        if (count == 0) {
+            throw std::runtime_error("Invalid RLE data: zero count encountered");
+        }
+        
         // Expand the run
         for (uint8_t j = 0; j < count; ++j) {
             decompressed.push_back(value);

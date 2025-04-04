@@ -11,6 +11,7 @@ var searchData=
   ['deserializefrequencymap_8',['deserializeFrequencyMap',['../classcompression_1_1HuffmanCompressor.html#a09c1f9f1411f284d6710810cbb0759ae',1,'compression::HuffmanCompressor']]],
   ['deserializeheader_9',['deserializeHeader',['../namespacecompression_1_1format.html#a9d543ebd8ca0de313b42e446e64b5b1a',1,'compression::format']]],
   ['distance_10',['distance',['../structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html#a0fbf25a4e5fb7564a5686b236c9b562f',1,'compression::Lz77Compressor::Lz77Symbol::distance'],['../structcompression_1_1Lz77Compressor_1_1Match.html#a3acaac816accbf2a569f9f23413cc0e9',1,'compression::Lz77Compressor::Match::distance']]],
-  ['dummy_2ehpp_11',['dummy.hpp',['../dummy_8hpp.html',1,'']]],
-  ['dummy_5ffunction_12',['dummy_function',['../namespacecompression.html#a818c6efb6d2629007fe3521496d51c8f',1,'compression']]]
+  ['documentation_11',['API Documentation',['../md_README.html#autotoc_md11',1,'']]],
+  ['dummy_2ehpp_12',['dummy.hpp',['../dummy_8hpp.html',1,'']]],
+  ['dummy_5ffunction_13',['dummy_function',['../namespacecompression.html#a818c6efb6d2629007fe3521496d51c8f',1,'compression']]]
 ];

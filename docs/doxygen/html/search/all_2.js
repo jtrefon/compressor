@@ -1,16 +1,17 @@
 var searchData=
 [
   ['calculate_0',['calculate',['../classcompression_1_1utils_1_1Crc32.html#a377dd69a904487cc7fa3d738bbb59101',1,'compression::utils::Crc32::calculate(const uint8_t *data, size_t size) const'],['../classcompression_1_1utils_1_1Crc32.html#a1dec4c1fe6dd3e37fc17bb6b8c80d8ea',1,'compression::utils::Crc32::calculate(const std::vector&lt; uint8_t &gt; &amp;data) const']]],
-  ['compress_1',['compress',['../classcompression_1_1DeflateCompressor.html#a31d4adbb45b2ec7d80919f76cf766309',1,'compression::DeflateCompressor::compress()'],['../classcompression_1_1HuffmanCompressor.html#a27d90ba0f87694afffda3c005a96a6f5',1,'compression::HuffmanCompressor::compress()'],['../classcompression_1_1ICompressor.html#a8671d6084c1bf54b1dc440ad7ee7ee2f',1,'compression::ICompressor::compress()'],['../classcompression_1_1Lz77Compressor.html#aac063f8811bfebfba7c8ce2fbb1ba895',1,'compression::Lz77Compressor::compress()'],['../classcompression_1_1NullCompressor.html#a1568a73a2403c2d81caf317091e2bd70',1,'compression::NullCompressor::compress()'],['../classcompression_1_1RleCompressor.html#a7859e06c9a9df4a9b9c8fd10c4bc445e',1,'compression::RleCompressor::compress()']]],
-  ['compression_2',['compression',['../namespacecompression.html',1,'']]],
-  ['compression_20library_3',['Compression Library',['../md_README.html',1,'']]],
-  ['compression_3a_3aformat_4',['format',['../namespacecompression_1_1format.html',1,'compression']]],
-  ['compression_3a_3autils_5',['utils',['../namespacecompression_1_1utils.html',1,'compression']]],
-  ['compressionbenefit_6',['compressionBenefit',['../structcompression_1_1Lz77Compressor_1_1Match.html#a23b074182b92aef13ce9ff76b58057f6',1,'compression::Lz77Compressor::Match']]],
-  ['compresstosymbols_7',['compressToSymbols',['../classcompression_1_1Lz77Compressor.html#afb67b0b5c52961e40c2f3f8533972b8e',1,'compression::Lz77Compressor']]],
-  ['contributing_8',['Contributing',['../md_README.html#autotoc_md3',1,'']]],
-  ['crc32_9',['Crc32',['../classcompression_1_1utils_1_1Crc32.html',1,'compression::utils::Crc32'],['../classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440',1,'compression::utils::Crc32::Crc32()']]],
-  ['crc32_2ehpp_10',['Crc32.hpp',['../Crc32_8hpp.html',1,'']]],
-  ['crc32calculator_11',['crc32Calculator',['../namespacecompression_1_1utils.html#a6e7c2c743b912267eb941e512c5e659e',1,'compression::utils']]],
-  ['crc_5ftable_12',['crc_table',['../classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1',1,'compression::utils::Crc32']]]
+  ['command_20line_20utility_1',['Command-line Utility',['../md_README.html#autotoc_md10',1,'']]],
+  ['compress_2',['compress',['../classcompression_1_1DeflateCompressor.html#a31d4adbb45b2ec7d80919f76cf766309',1,'compression::DeflateCompressor::compress()'],['../classcompression_1_1HuffmanCompressor.html#a27d90ba0f87694afffda3c005a96a6f5',1,'compression::HuffmanCompressor::compress()'],['../classcompression_1_1ICompressor.html#a8671d6084c1bf54b1dc440ad7ee7ee2f',1,'compression::ICompressor::compress()'],['../classcompression_1_1Lz77Compressor.html#aac063f8811bfebfba7c8ce2fbb1ba895',1,'compression::Lz77Compressor::compress()'],['../classcompression_1_1NullCompressor.html#a1568a73a2403c2d81caf317091e2bd70',1,'compression::NullCompressor::compress()'],['../classcompression_1_1RleCompressor.html#a7859e06c9a9df4a9b9c8fd10c4bc445e',1,'compression::RleCompressor::compress()']]],
+  ['compression_3',['compression',['../namespacecompression.html',1,'']]],
+  ['compression_20library_4',['Compression Library',['../md_README.html',1,'']]],
+  ['compression_3a_3aformat_5',['format',['../namespacecompression_1_1format.html',1,'compression']]],
+  ['compression_3a_3autils_6',['utils',['../namespacecompression_1_1utils.html',1,'compression']]],
+  ['compressionbenefit_7',['compressionBenefit',['../structcompression_1_1Lz77Compressor_1_1Match.html#a23b074182b92aef13ce9ff76b58057f6',1,'compression::Lz77Compressor::Match']]],
+  ['compresstosymbols_8',['compressToSymbols',['../classcompression_1_1Lz77Compressor.html#afb67b0b5c52961e40c2f3f8533972b8e',1,'compression::Lz77Compressor']]],
+  ['contributing_9',['Contributing',['../md_README.html#autotoc_md12',1,'']]],
+  ['crc32_10',['Crc32',['../classcompression_1_1utils_1_1Crc32.html',1,'compression::utils::Crc32'],['../classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440',1,'compression::utils::Crc32::Crc32()']]],
+  ['crc32_2ehpp_11',['Crc32.hpp',['../Crc32_8hpp.html',1,'']]],
+  ['crc32calculator_12',['crc32Calculator',['../namespacecompression_1_1utils.html#a6e7c2c743b912267eb941e512c5e659e',1,'compression::utils']]],
+  ['crc_5ftable_13',['crc_table',['../classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1',1,'compression::utils::Crc32']]]
 ];

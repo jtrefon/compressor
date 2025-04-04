@@ -26,10 +26,21 @@ var NAVTREE =
 [
   [ "Compression Library", "index.html", [
     [ "Compression Library", "md_README.html", [
-      [ "Project Structure", "md_README.html#autotoc_md1", null ],
-      [ "Building the Project", "md_README.html#autotoc_md2", null ],
-      [ "Contributing", "md_README.html#autotoc_md3", null ],
-      [ "License", "md_README.html#autotoc_md4", null ]
+      [ "Features", "md_README.html#autotoc_md1", null ],
+      [ "Project Structure", "md_README.html#autotoc_md2", null ],
+      [ "Building the Project", "md_README.html#autotoc_md3", [
+        [ "Prerequisites", "md_README.html#autotoc_md4", null ],
+        [ "Build Steps", "md_README.html#autotoc_md5", null ]
+      ] ],
+      [ "Running Tests", "md_README.html#autotoc_md6", null ],
+      [ "Running Benchmarks", "md_README.html#autotoc_md7", null ],
+      [ "Usage Examples", "md_README.html#autotoc_md8", [
+        [ "Basic Library Usage", "md_README.html#autotoc_md9", null ],
+        [ "Command-line Utility", "md_README.html#autotoc_md10", null ]
+      ] ],
+      [ "API Documentation", "md_README.html#autotoc_md11", null ],
+      [ "Contributing", "md_README.html#autotoc_md12", null ],
+      [ "License", "md_README.html#autotoc_md13", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -61,7 +72,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BitIO_8hpp.html",
-"namespacecompression_1_1utils.html"
+"namespacecompression_1_1format.html#a285b07642e4e703bc65cdd22753a8e1ca696b031073e74bf2cb98e5ef201d4aa3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

@@ -106,42 +106,167 @@ $(function(){initNavTree('md_README.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md0"></a></p>
-<p>This project aims to develop a cutting-edge file compression library focused on achieving high compression ratios for files at rest.</p>
+<p>A high-performance file compression library implemented in C++ that provides multiple compression algorithms with a focus on achieving excellent compression ratios for files at rest.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
+Features</h1>
+<ul>
+<li>Multiple compression algorithms:<ul>
+<li><b>Null Compressor</b>: Reference implementation with no compression</li>
+<li><b>RLE (Run-Length Encoding)</b>: Simple compression for data with repeated patterns</li>
+<li><b>Huffman Coding</b>: Statistical compression using variable-length codes</li>
+<li><b>LZ77</b>: Dictionary-based compression using sliding window technique</li>
+<li><b>Deflate</b>: Combined LZ77 and Huffman coding (similar to gzip/zlib)</li>
+</ul>
+</li>
+<li>Optimized implementations:<ul>
+<li>Fast hash-based string matching for LZ77</li>
+<li>Efficient bit-level encoding and decoding</li>
+<li>Robust error handling for corrupted data</li>
+</ul>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Project Structure</h1>
 <div class="fragment"><div class="line">compression/</div>
 <div class="line">├── CMakeLists.txt         # Main CMake configuration</div>
 <div class="line">├── README.md              # Project overview (this file)</div>
 <div class="line">├── .gitignore             # Git ignore rules</div>
 <div class="line">├── include/               # Public header files for the library</div>
-<div class="line">│   └── compression/</div>
-<div class="line">│       └── dummy.hpp      # Placeholder header</div>
-<div class="line">├── src/                   # Source files for the library</div>
-<div class="line">│   └── CMakeLists.txt     # Library CMake configuration</div>
-<div class="line">│   # *.cpp                # Library implementation files will go here</div>
-<div class="line">├── app/                   # Source files for the example application</div>
-<div class="line">│   ├── CMakeLists.txt     # Application CMake configuration</div>
-<div class="line">│   └── main.cpp           # Application entry point</div>
+<div class="line">│   └── compression/       # Library public API headers</div>
+<div class="line">├── src/                   # Source files for the library implementation</div>
+<div class="line">├── app/                   # Source files for applications</div>
+<div class="line">│   ├── main.cpp           # Compression utility app</div>
+<div class="line">│   └── benchmark.cpp      # Benchmark application</div>
 <div class="line">├── tests/                 # Unit and integration tests</div>
-<div class="line">│   ├── CMakeLists.txt     # Tests CMake configuration (includes GoogleTest)</div>
-<div class="line">│   └── main.cpp           # Test runner entry point</div>
-<div class="line">├── docs/                  # Documentation files (e.g., Doxygen config, Markdown)</div>
-<div class="line">└── external/              # Directory for external dependencies (if not managed by CMake)</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
+<div class="line">├── docs/                  # Documentation files</div>
+<div class="line">└── data/                  # Test data for benchmarking</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
 Building the Project</h1>
-<p>This project uses CMake for building.</p>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Prerequisites</h2>
+<ul>
+<li>C++17 compatible compiler (GCC 8+, Clang 7+, MSVC 2019+)</li>
+<li>CMake 3.14+</li>
+<li>Git (for downloading dependencies)</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Build Steps</h2>
 <ol type="1">
-<li><b>Configure:</b> Create a build directory and run CMake: <code>bash mkdir build cd build cmake .. </code></li>
-<li><b>Build:</b> Compile the library, application, and tests: <code>bash cmake --build . </code></li>
-<li><b>Run Tests:</b> Execute the tests: <code>bash ctest </code></li>
-<li><b>Run Application:</b> The application executable will be in the <code>build/app</code> directory: <code>bash ./app/compress_app </code></li>
+<li><b>Clone the repository:</b> <div class="fragment"><div class="line">git clone https://github.com/yourusername/compression.git</div>
+<div class="line">cd compression</div>
+</div><!-- fragment --></li>
+<li><b>Configure:</b> Create a build directory and run CMake: <div class="fragment"><div class="line">mkdir build</div>
+<div class="line">cd build</div>
+<div class="line">cmake ..</div>
+</div><!-- fragment --></li>
+<li><p class="startli"><b>Build:</b> Compile the library, applications, and tests: </p><div class="fragment"><div class="line">cmake --build build</div>
+</div><!-- fragment --><p class="startli">Or, for multi-core builds: </p><div class="fragment"><div class="line">cmake --build build -j$(nproc)</div>
+</div><!-- fragment --></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
+Running Tests</h1>
+<p>After building, run the tests to verify everything is working correctly:</p>
+<div class="fragment"><div class="line">cd build</div>
+<div class="line">./tests/compression_tests</div>
+</div><!-- fragment --><p>To run a specific test category: </p><div class="fragment"><div class="line">./tests/compression_tests --gtest_filter=&quot;Lz77CompressorTest.*&quot;</div>
+</div><!-- fragment --><p>Available test categories:</p><ul>
+<li><code>NullCompressorTest.*</code></li>
+<li><code>RleCompressorTest.*</code></li>
+<li><code>HuffmanCompressorTest.*</code></li>
+<li><code>Lz77CompressorTest.*</code></li>
+<li><code>DeflateCompressorTest.*</code></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md7"></a>
+Running Benchmarks</h1>
+<p>Benchmark different compression algorithms using the benchmark application:</p>
+<div class="fragment"><div class="line">cd build</div>
+<div class="line">./app/compression_benchmark</div>
+</div><!-- fragment --><p>The benchmark results will be displayed in the console and also written to a file named <code>BENCHMARKS.md</code> in the project root directory.</p>
+<p>The benchmark:</p><ul>
+<li>Tests all implemented compression algorithms</li>
+<li>Reports original and compressed size</li>
+<li>Calculates compression ratio</li>
+<li>Measures compression and decompression time</li>
+<li>Uses real-world test data from the <code>data/</code> directory</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md8"></a>
+Usage Examples</h1>
+<h2><a class="anchor" id="autotoc_md9"></a>
+Basic Library Usage</h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="Lz77Compressor_8hpp.html">compression/Lz77Compressor.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line">    <span class="comment">// Create data to compress</span></div>
+<div class="line">    std::vector&lt;uint8_t&gt; data = {<span class="charliteral">&#39;H&#39;</span>, <span class="charliteral">&#39;e&#39;</span>, <span class="charliteral">&#39;l&#39;</span>, <span class="charliteral">&#39;l&#39;</span>, <span class="charliteral">&#39;o&#39;</span>, <span class="charliteral">&#39;,&#39;</span>, <span class="charliteral">&#39; &#39;</span>, <span class="charliteral">&#39;w&#39;</span>, <span class="charliteral">&#39;o&#39;</span>, <span class="charliteral">&#39;r&#39;</span>, <span class="charliteral">&#39;l&#39;</span>, <span class="charliteral">&#39;d&#39;</span>, <span class="charliteral">&#39;!&#39;</span>};</div>
+<div class="line">    </div>
+<div class="line">    <span class="comment">// Create compressor instance</span></div>
+<div class="line">    <a class="code hl_class" href="classcompression_1_1Lz77Compressor.html">compression::Lz77Compressor</a> compressor;</div>
+<div class="line">    </div>
+<div class="line">    <span class="comment">// Compress data</span></div>
+<div class="line">    std::vector&lt;uint8_t&gt; compressed = compressor.<a class="code hl_function" href="classcompression_1_1Lz77Compressor.html#aac063f8811bfebfba7c8ce2fbb1ba895">compress</a>(data);</div>
+<div class="line">    </div>
+<div class="line">    <span class="comment">// Decompress data</span></div>
+<div class="line">    std::vector&lt;uint8_t&gt; decompressed = compressor.<a class="code hl_function" href="classcompression_1_1Lz77Compressor.html#ad9bf31062c9afc053328b17c87589ddc">decompress</a>(compressed);</div>
+<div class="line">    </div>
+<div class="line">    <span class="comment">// Check compression stats</span></div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Original size: &quot;</span> &lt;&lt; data.size() &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Compressed size: &quot;</span> &lt;&lt; compressed.size() &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Compression ratio: &quot;</span> &lt;&lt; (float)compressed.size() / data.size() * 100 &lt;&lt; <span class="stringliteral">&quot;%\n&quot;</span>;</div>
+<div class="line">    </div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="ttc" id="aLz77Compressor_8hpp_html"><div class="ttname"><a href="Lz77Compressor_8hpp.html">Lz77Compressor.hpp</a></div></div>
+<div class="ttc" id="aclasscompression_1_1Lz77Compressor_html"><div class="ttname"><a href="classcompression_1_1Lz77Compressor.html">compression::Lz77Compressor</a></div><div class="ttdoc">Implements LZ77 compression algorithm with advanced optimizations.</div><div class="ttdef"><b>Definition</b> Lz77Compressor.hpp:25</div></div>
+<div class="ttc" id="aclasscompression_1_1Lz77Compressor_html_aac063f8811bfebfba7c8ce2fbb1ba895"><div class="ttname"><a href="classcompression_1_1Lz77Compressor.html#aac063f8811bfebfba7c8ce2fbb1ba895">compression::Lz77Compressor::compress</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; compress(const std::vector&lt; uint8_t &gt; &amp;data) const override</div><div class="ttdoc">Compress data using LZ77 algorithm.</div><div class="ttdef"><b>Definition</b> Lz77Compressor.cpp:211</div></div>
+<div class="ttc" id="aclasscompression_1_1Lz77Compressor_html_ad9bf31062c9afc053328b17c87589ddc"><div class="ttname"><a href="classcompression_1_1Lz77Compressor.html#ad9bf31062c9afc053328b17c87589ddc">compression::Lz77Compressor::decompress</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; decompress(const std::vector&lt; uint8_t &gt; &amp;data) const override</div><div class="ttdoc">Decompress LZ77-compressed data.</div><div class="ttdef"><b>Definition</b> Lz77Compressor.cpp:335</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
+Command-line Utility</h2>
+<div class="fragment"><div class="line"># Compress a file</div>
+<div class="line">./app/compress_app compress input.txt output.compressed</div>
+<div class="line"> </div>
+<div class="line"># Decompress a file</div>
+<div class="line">./app/compress_app decompress output.compressed restored.txt</div>
+<div class="line"> </div>
+<div class="line"># Choose a specific algorithm (null, rle, huffman, lz77, deflate)</div>
+<div class="line">./app/compress_app compress --algorithm lz77 input.txt output.compressed</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md11"></a>
+API Documentation</h1>
+<p>The library offers a simple interface for compression operations:</p>
+<ul>
+<li>All compressors implement the <code>ICompressor</code> interface</li>
+<li>Main methods: <code>compress()</code> and <code>decompress()</code></li>
+<li>Common parameters and return types for all algorithms</li>
+<li>Thread-safe implementations for concurrent use</li>
+</ul>
+<p>Generate detailed API documentation with Doxygen:</p>
+<div class="fragment"><div class="line">cmake --build build --target doc</div>
+</div><!-- fragment --><p>Then open <code>build/docs/html/index.html</code> in your browser.</p>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Contributing</h1>
-<p>(Details on contributing guidelines will go here)</p>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<p>Contributions are welcome! Here's how you can contribute:</p>
+<ol type="1">
+<li>Fork the repository</li>
+<li>Create a feature branch (<code>git checkout -b feature/amazing-feature</code>)</li>
+<li>Make your changes</li>
+<li>Run tests to ensure they pass (<code>./tests/compression_tests</code>)</li>
+<li>Commit your changes (&lsquo;git commit -m 'Add amazing feature&rsquo;<code>)</code></li>
+<li><code>Push to the branch (</code>git push origin feature/amazing-feature`)</li>
+<li>Open a Pull Request</li>
+</ol>
+<p>Please ensure that your code follows the existing style, includes appropriate tests, and all tests pass.</p>
+<h1><a class="anchor" id="autotoc_md13"></a>
 License</h1>
-<p>(License information will go here) </p>
+<p>This project is licensed under the GNU General Public License v3.0 (GPLv3) - see the LICENSE file for details.</p>
+<p>The GPLv3 is a strong copyleft license that ensures the software and its derivatives remain free and open source. This means you can:</p>
+<ul>
+<li>Use the software for any purpose</li>
+<li>Study how the software works and modify it</li>
+<li>Redistribute the software</li>
+<li>Improve the software and release your improvements to the public</li>
+</ul>
+<p>Any modifications or software that incorporates this code must also be released under the GPLv3. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
