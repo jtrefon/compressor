@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['right_0',['right',['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#ad43cbfbc156570ad6051084c497058c0',1,'compression::HuffmanCompressor::HuffmanNode']]]
+  ['originalchecksum_0',['originalChecksum',['../structcompression_1_1format_1_1FileHeader.html#a45c1ace1b20558ef34075c9cbf0a2db9',1,'compression::format::FileHeader']]],
+  ['originalsize_1',['originalSize',['../structcompression_1_1format_1_1FileHeader.html#a217b347c362ecb3f79d556ac1933aead',1,'compression::format::FileHeader']]]
 ];

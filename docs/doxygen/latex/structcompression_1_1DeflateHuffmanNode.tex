@@ -1,0 +1,88 @@
+\doxysection{compression\+::Deflate\+Huffman\+Node Struct Reference}
+\hypertarget{structcompression_1_1DeflateHuffmanNode}{}\label{structcompression_1_1DeflateHuffmanNode}\index{compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode_1_1Compare}{Compare}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode_ad4cf93e34183a220acf8eb320f17ea93}{Deflate\+Huffman\+Node}} (uint32\+\_\+t sym, uint64\+\_\+t freq)
+\item 
+\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode_a2b7981ce0482f4162818fa5dad82688d}{Deflate\+Huffman\+Node}} (\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode}{Deflate\+Huffman\+Node}} \texorpdfstring{$\ast$}{*}l, \mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode}{Deflate\+Huffman\+Node}} \texorpdfstring{$\ast$}{*}r)
+\item 
+\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode_a3547d9c314e65e02f86bd91196436a60}{\texorpdfstring{$\sim$}{\string~}\+Deflate\+Huffman\+Node}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode_a92524d672e9a936fe5a92fb8e7fe5ced}{symbol}}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode_adc8360f21c0b29c050e48255149e8334}{frequency}}
+\item 
+\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode}{Deflate\+Huffman\+Node}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode_aaea523ff47717e9f0e6a9950c23e092c}{left}} = nullptr
+\item 
+\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode}{Deflate\+Huffman\+Node}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode_a4db0fb0fe543962689df9854716f5a9b}{right}} = nullptr
+\item 
+bool \mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode_ae0c774ad81fb9abc6b024083aebeb4f1}{is\+Leaf}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structcompression_1_1DeflateHuffmanNode_ad4cf93e34183a220acf8eb320f17ea93}\index{compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}!DeflateHuffmanNode@{DeflateHuffmanNode}}
+\index{DeflateHuffmanNode@{DeflateHuffmanNode}!compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}}
+\doxysubsubsection{\texorpdfstring{DeflateHuffmanNode()}{DeflateHuffmanNode()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{structcompression_1_1DeflateHuffmanNode_ad4cf93e34183a220acf8eb320f17ea93} 
+compression\+::\+Deflate\+Huffman\+Node\+::\+Deflate\+Huffman\+Node (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{sym}{, }\item[{uint64\+\_\+t}]{freq}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{structcompression_1_1DeflateHuffmanNode_a2b7981ce0482f4162818fa5dad82688d}\index{compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}!DeflateHuffmanNode@{DeflateHuffmanNode}}
+\index{DeflateHuffmanNode@{DeflateHuffmanNode}!compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}}
+\doxysubsubsection{\texorpdfstring{DeflateHuffmanNode()}{DeflateHuffmanNode()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{structcompression_1_1DeflateHuffmanNode_a2b7981ce0482f4162818fa5dad82688d} 
+compression\+::\+Deflate\+Huffman\+Node\+::\+Deflate\+Huffman\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode}{Deflate\+Huffman\+Node}} \texorpdfstring{$\ast$}{*}}]{l}{, }\item[{\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode}{Deflate\+Huffman\+Node}} \texorpdfstring{$\ast$}{*}}]{r}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{structcompression_1_1DeflateHuffmanNode_a3547d9c314e65e02f86bd91196436a60}\index{compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}!````~DeflateHuffmanNode@{\texorpdfstring{$\sim$}{\string~}DeflateHuffmanNode}}
+\index{````~DeflateHuffmanNode@{\texorpdfstring{$\sim$}{\string~}DeflateHuffmanNode}!compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}DeflateHuffmanNode()}{\string~DeflateHuffmanNode()}}
+{\footnotesize\ttfamily \label{structcompression_1_1DeflateHuffmanNode_a3547d9c314e65e02f86bd91196436a60} 
+compression\+::\+Deflate\+Huffman\+Node\+::\texorpdfstring{$\sim$}{\string~}\+Deflate\+Huffman\+Node (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structcompression_1_1DeflateHuffmanNode_adc8360f21c0b29c050e48255149e8334}\index{compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}!frequency@{frequency}}
+\index{frequency@{frequency}!compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}}
+\doxysubsubsection{\texorpdfstring{frequency}{frequency}}
+{\footnotesize\ttfamily \label{structcompression_1_1DeflateHuffmanNode_adc8360f21c0b29c050e48255149e8334} 
+uint64\+\_\+t compression\+::\+Deflate\+Huffman\+Node\+::frequency}
+
+\Hypertarget{structcompression_1_1DeflateHuffmanNode_ae0c774ad81fb9abc6b024083aebeb4f1}\index{compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}!isLeaf@{isLeaf}}
+\index{isLeaf@{isLeaf}!compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}}
+\doxysubsubsection{\texorpdfstring{isLeaf}{isLeaf}}
+{\footnotesize\ttfamily \label{structcompression_1_1DeflateHuffmanNode_ae0c774ad81fb9abc6b024083aebeb4f1} 
+bool compression\+::\+Deflate\+Huffman\+Node\+::is\+Leaf = false}
+
+\Hypertarget{structcompression_1_1DeflateHuffmanNode_aaea523ff47717e9f0e6a9950c23e092c}\index{compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}!left@{left}}
+\index{left@{left}!compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}}
+\doxysubsubsection{\texorpdfstring{left}{left}}
+{\footnotesize\ttfamily \label{structcompression_1_1DeflateHuffmanNode_aaea523ff47717e9f0e6a9950c23e092c} 
+\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode}{Deflate\+Huffman\+Node}}\texorpdfstring{$\ast$}{*} compression\+::\+Deflate\+Huffman\+Node\+::left = nullptr}
+
+\Hypertarget{structcompression_1_1DeflateHuffmanNode_a4db0fb0fe543962689df9854716f5a9b}\index{compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}!right@{right}}
+\index{right@{right}!compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}}
+\doxysubsubsection{\texorpdfstring{right}{right}}
+{\footnotesize\ttfamily \label{structcompression_1_1DeflateHuffmanNode_a4db0fb0fe543962689df9854716f5a9b} 
+\mbox{\hyperlink{structcompression_1_1DeflateHuffmanNode}{Deflate\+Huffman\+Node}} \texorpdfstring{$\ast$}{*} compression\+::\+Deflate\+Huffman\+Node\+::right = nullptr}
+
+\Hypertarget{structcompression_1_1DeflateHuffmanNode_a92524d672e9a936fe5a92fb8e7fe5ced}\index{compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}!symbol@{symbol}}
+\index{symbol@{symbol}!compression::DeflateHuffmanNode@{compression::DeflateHuffmanNode}}
+\doxysubsubsection{\texorpdfstring{symbol}{symbol}}
+{\footnotesize\ttfamily \label{structcompression_1_1DeflateHuffmanNode_a92524d672e9a936fe5a92fb8e7fe5ced} 
+uint32\+\_\+t compression\+::\+Deflate\+Huffman\+Node\+::symbol}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{DeflateCompressor_8cpp}{Deflate\+Compressor.\+cpp}}\end{DoxyCompactItemize}

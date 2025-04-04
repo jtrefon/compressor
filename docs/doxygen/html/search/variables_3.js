@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['format_5fversion_0',['FORMAT_VERSION',['../namespacecompression_1_1format.html#a2992ddc5d1be37cb786afb257128782c',1,'compression::format']]],
-  ['formatversion_1',['formatVersion',['../structcompression_1_1format_1_1FileHeader.html#adce8cce791997d09a594b34dbd2cd0f3',1,'compression::format::FileHeader']]],
-  ['frequency_2',['frequency',['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a70eaea4fa8a8fc66318ccfedcb5a9dca',1,'compression::HuffmanCompressor::HuffmanNode']]]
+  ['data_0',['data',['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a1f75cf36c2734f6b6ebde39bab480504',1,'compression::HuffmanCompressor::HuffmanNode']]],
+  ['distance_1',['distance',['../structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html#a0fbf25a4e5fb7564a5686b236c9b562f',1,'compression::Lz77Compressor::Lz77Symbol::distance'],['../structcompression_1_1Lz77Compressor_1_1Match.html#a3acaac816accbf2a569f9f23413cc0e9',1,'compression::Lz77Compressor::Match::distance']]]
 ];

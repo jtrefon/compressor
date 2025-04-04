@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['nullcompressor_2ecpp_0',['NullCompressor.cpp',['../NullCompressor_8cpp.html',1,'']]],
-  ['nullcompressor_2ehpp_1',['NullCompressor.hpp',['../NullCompressor_8hpp.html',1,'']]]
+  ['icompressor_2ehpp_0',['ICompressor.hpp',['../ICompressor_8hpp.html',1,'']]]
 ];

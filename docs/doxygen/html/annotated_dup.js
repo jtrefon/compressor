@@ -7,9 +7,18 @@ var annotated_dup =
       [ "utils", "namespacecompression_1_1utils.html", [
         [ "Crc32", "classcompression_1_1utils_1_1Crc32.html", "classcompression_1_1utils_1_1Crc32" ]
       ] ],
+      [ "BitIO", "classcompression_1_1BitIO.html", "classcompression_1_1BitIO" ],
+      [ "ByteTypeAdapter", "classcompression_1_1ByteTypeAdapter.html", null ],
+      [ "DeflateCompressor", "classcompression_1_1DeflateCompressor.html", "classcompression_1_1DeflateCompressor" ],
+      [ "HuffmanCoder", "classcompression_1_1HuffmanCoder.html", "classcompression_1_1HuffmanCoder" ],
       [ "HuffmanCompressor", "classcompression_1_1HuffmanCompressor.html", "classcompression_1_1HuffmanCompressor" ],
+      [ "HuffmanDecoderNode", "structcompression_1_1HuffmanDecoderNode.html", "structcompression_1_1HuffmanDecoderNode" ],
       [ "ICompressor", "classcompression_1_1ICompressor.html", "classcompression_1_1ICompressor" ],
+      [ "Lz77Compressor", "classcompression_1_1Lz77Compressor.html", "classcompression_1_1Lz77Compressor" ],
+      [ "NodeComparator", "structcompression_1_1NodeComparator.html", "structcompression_1_1NodeComparator" ],
+      [ "NodePtrGreater", "structcompression_1_1NodePtrGreater.html", "structcompression_1_1NodePtrGreater" ],
       [ "NullCompressor", "classcompression_1_1NullCompressor.html", "classcompression_1_1NullCompressor" ],
-      [ "RleCompressor", "classcompression_1_1RleCompressor.html", "classcompression_1_1RleCompressor" ]
+      [ "RleCompressor", "classcompression_1_1RleCompressor.html", "classcompression_1_1RleCompressor" ],
+      [ "RleSymbol", "structcompression_1_1RleSymbol.html", "structcompression_1_1RleSymbol" ]
     ] ]
 ];

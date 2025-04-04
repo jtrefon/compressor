@@ -1,0 +1,118 @@
+\doxysection{compression\+::Deflate\+Compressor\+::Bit\+Reader Class Reference}
+\hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader}{}\label{classcompression_1_1DeflateCompressor_1_1BitReader}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_a4fd9a804285c4ddb3f934c927ca3d3c3}{Bit\+Reader}} (const std\+::vector$<$ std\+::byte $>$ \&in)
+\item 
+\mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_a13db7a653baba60814aaca38a8d47e55}{Bit\+Reader}} (const std\+::vector$<$ std\+::byte $>$ \&in, size\+\_\+t start\+Offset)
+\item 
+bool \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_a0d512ddd39ca94bfc2b70010995cbbeb}{eof}} () const
+\item 
+bool \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_a2188e456d7bd2f9e11e4ba1b0199a658}{read\+Bit}} ()
+\item 
+uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_a136f00a2271b9abbfb1fec2918c3a5d3}{read\+Bits}} (size\+\_\+t count)
+\item 
+void \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_a7398b86c8a6eb7a43a2873a07aa6ce87}{align\+To\+Byte}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_aa57bb55414234690a44af549809006af}{get\+Current\+Byte\+Position}} () const
+\item 
+void \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_ac5cd03b1d7aa990a3d7635bd1ff91940}{advance\+To\+Byte\+Position}} (size\+\_\+t new\+Byte\+Index)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::vector$<$ std\+::byte $>$ \& \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_a2bb7b1a91635dc6b9ac721cbab66c9a9}{input\+\_\+}}
+\item 
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_a9e47110a1a52dc6b4d83942f146b22cd}{byte\+Index\+\_\+}} = 0
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_a81b9a833ffceeda2a4ea835089d3dd11}{bit\+Buffer\+\_\+}} = 0
+\item 
+int \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitReader_ab5259a8eadfe00ed07fbab41a1cdcb92}{bits\+Left\+\_\+}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_a4fd9a804285c4ddb3f934c927ca3d3c3}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!BitReader@{BitReader}}
+\index{BitReader@{BitReader}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{BitReader()}{BitReader()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_a4fd9a804285c4ddb3f934c927ca3d3c3} 
+compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::\+Bit\+Reader (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{in}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_a13db7a653baba60814aaca38a8d47e55}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!BitReader@{BitReader}}
+\index{BitReader@{BitReader}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{BitReader()}{BitReader()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_a13db7a653baba60814aaca38a8d47e55} 
+compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::\+Bit\+Reader (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{in}{, }\item[{size\+\_\+t}]{start\+Offset}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_ac5cd03b1d7aa990a3d7635bd1ff91940}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!advanceToBytePosition@{advanceToBytePosition}}
+\index{advanceToBytePosition@{advanceToBytePosition}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{advanceToBytePosition()}{advanceToBytePosition()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_ac5cd03b1d7aa990a3d7635bd1ff91940} 
+void compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::advance\+To\+Byte\+Position (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{new\+Byte\+Index}{}\end{DoxyParamCaption})}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_a7398b86c8a6eb7a43a2873a07aa6ce87}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!alignToByte@{alignToByte}}
+\index{alignToByte@{alignToByte}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{alignToByte()}{alignToByte()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_a7398b86c8a6eb7a43a2873a07aa6ce87} 
+void compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::align\+To\+Byte (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_a0d512ddd39ca94bfc2b70010995cbbeb}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!eof@{eof}}
+\index{eof@{eof}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{eof()}{eof()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_a0d512ddd39ca94bfc2b70010995cbbeb} 
+bool compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::eof (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_aa57bb55414234690a44af549809006af}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!getCurrentBytePosition@{getCurrentBytePosition}}
+\index{getCurrentBytePosition@{getCurrentBytePosition}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{getCurrentBytePosition()}{getCurrentBytePosition()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_aa57bb55414234690a44af549809006af} 
+size\+\_\+t compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::get\+Current\+Byte\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_a2188e456d7bd2f9e11e4ba1b0199a658}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!readBit@{readBit}}
+\index{readBit@{readBit}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{readBit()}{readBit()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_a2188e456d7bd2f9e11e4ba1b0199a658} 
+bool compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::read\+Bit (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_a136f00a2271b9abbfb1fec2918c3a5d3}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!readBits@{readBits}}
+\index{readBits@{readBits}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{readBits()}{readBits()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_a136f00a2271b9abbfb1fec2918c3a5d3} 
+uint32\+\_\+t compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::read\+Bits (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{count}{}\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_a81b9a833ffceeda2a4ea835089d3dd11}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!bitBuffer\_@{bitBuffer\_}}
+\index{bitBuffer\_@{bitBuffer\_}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{bitBuffer\_}{bitBuffer\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_a81b9a833ffceeda2a4ea835089d3dd11} 
+uint8\+\_\+t compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::bit\+Buffer\+\_\+ = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_ab5259a8eadfe00ed07fbab41a1cdcb92}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!bitsLeft\_@{bitsLeft\_}}
+\index{bitsLeft\_@{bitsLeft\_}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{bitsLeft\_}{bitsLeft\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_ab5259a8eadfe00ed07fbab41a1cdcb92} 
+int compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::bits\+Left\+\_\+ = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_a9e47110a1a52dc6b4d83942f146b22cd}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!byteIndex\_@{byteIndex\_}}
+\index{byteIndex\_@{byteIndex\_}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{byteIndex\_}{byteIndex\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_a9e47110a1a52dc6b4d83942f146b22cd} 
+size\+\_\+t compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::byte\+Index\+\_\+ = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitReader_a2bb7b1a91635dc6b9ac721cbab66c9a9}\index{compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}!input\_@{input\_}}
+\index{input\_@{input\_}!compression::DeflateCompressor::BitReader@{compression::DeflateCompressor::BitReader}}
+\doxysubsubsection{\texorpdfstring{input\_}{input\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitReader_a2bb7b1a91635dc6b9ac721cbab66c9a9} 
+const std\+::vector$<$std\+::byte$>$\& compression\+::\+Deflate\+Compressor\+::\+Bit\+Reader\+::input\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{DeflateCompressor_8cpp}{Deflate\+Compressor.\+cpp}}\end{DoxyCompactItemize}

@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['readme_2emd_0',['README.md',['../README_8md.html',1,'']]],
-  ['right_1',['right',['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a04f9d3ed461ee11addc7b6589050fed3',1,'compression::HuffmanCompressor::HuffmanNode']]],
-  ['rle_5fcompressor_2',['RLE_COMPRESSOR',['../namespacecompression_1_1format.html#a285b07642e4e703bc65cdd22753a8e1ca472485cccd4d2ff26edbde1eb570615a',1,'compression::format']]],
-  ['rlecompressor_3',['RleCompressor',['../classcompression_1_1RleCompressor.html',1,'compression']]],
-  ['rlecompressor_2ecpp_4',['RleCompressor.cpp',['../RleCompressor_8cpp.html',1,'']]],
-  ['rlecompressor_2ehpp_5',['RleCompressor.hpp',['../RleCompressor_8hpp.html',1,'']]]
+  ['polynomial_0',['POLYNOMIAL',['../classcompression_1_1utils_1_1Crc32.html#a8bc1cbb4d0d49a33b5d80cdbb33acbf3',1,'compression::utils::Crc32']]],
+  ['position_1',['position',['../structcompression_1_1Lz77Compressor_1_1Match.html#a87c408fd32d69b64d2ec03c81acfea93',1,'compression::Lz77Compressor::Match']]],
+  ['prerequisites_2',['Prerequisites',['../md_README.html#autotoc_md4',1,'']]],
+  ['project_3',['Building the Project',['../md_README.html#autotoc_md3',1,'']]],
+  ['project_20structure_4',['Project Structure',['../md_README.html#autotoc_md2',1,'']]]
 ];

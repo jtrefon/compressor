@@ -1,0 +1,78 @@
+\doxysection{compression\+::Deflate\+Compressor\+::Bit\+Writer Class Reference}
+\hypertarget{classcompression_1_1DeflateCompressor_1_1BitWriter}{}\label{classcompression_1_1DeflateCompressor_1_1BitWriter}\index{compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitWriter_aa83670db48950c62249e6c5cbdffe357}{Bit\+Writer}} (std\+::vector$<$ std\+::byte $>$ \&out)
+\item 
+void \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitWriter_abc1f943f102287694edb4565615d7aee}{write\+Bit}} (bool bit)
+\item 
+void \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitWriter_a8ce1a8809aab79588e3d555b3f4da18a}{write\+Bits}} (const std\+::vector$<$ bool $>$ \&bits)
+\item 
+void \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitWriter_a31ee690a40ff22f3e60e82fccdc74536}{flush}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::byte $>$ \& \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitWriter_a2065a4602c5f091740beb6694741df3f}{output\+\_\+}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitWriter_af7b756666529e5180e302f5ddac6893e}{buffer\+\_\+}} = 0
+\item 
+int \mbox{\hyperlink{classcompression_1_1DeflateCompressor_1_1BitWriter_a2aec592737e56447d4490cf752754da4}{bit\+Count\+\_\+}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitWriter_aa83670db48950c62249e6c5cbdffe357}\index{compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}!BitWriter@{BitWriter}}
+\index{BitWriter@{BitWriter}!compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}}
+\doxysubsubsection{\texorpdfstring{BitWriter()}{BitWriter()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitWriter_aa83670db48950c62249e6c5cbdffe357} 
+compression\+::\+Deflate\+Compressor\+::\+Bit\+Writer\+::\+Bit\+Writer (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::byte $>$ \&}]{out}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitWriter_a31ee690a40ff22f3e60e82fccdc74536}\index{compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}!flush@{flush}}
+\index{flush@{flush}!compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}}
+\doxysubsubsection{\texorpdfstring{flush()}{flush()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitWriter_a31ee690a40ff22f3e60e82fccdc74536} 
+void compression\+::\+Deflate\+Compressor\+::\+Bit\+Writer\+::flush (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitWriter_abc1f943f102287694edb4565615d7aee}\index{compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}!writeBit@{writeBit}}
+\index{writeBit@{writeBit}!compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}}
+\doxysubsubsection{\texorpdfstring{writeBit()}{writeBit()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitWriter_abc1f943f102287694edb4565615d7aee} 
+void compression\+::\+Deflate\+Compressor\+::\+Bit\+Writer\+::write\+Bit (\begin{DoxyParamCaption}\item[{bool}]{bit}{}\end{DoxyParamCaption})}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitWriter_a8ce1a8809aab79588e3d555b3f4da18a}\index{compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}!writeBits@{writeBits}}
+\index{writeBits@{writeBits}!compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}}
+\doxysubsubsection{\texorpdfstring{writeBits()}{writeBits()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitWriter_a8ce1a8809aab79588e3d555b3f4da18a} 
+void compression\+::\+Deflate\+Compressor\+::\+Bit\+Writer\+::write\+Bits (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ bool $>$ \&}]{bits}{}\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitWriter_a2aec592737e56447d4490cf752754da4}\index{compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}!bitCount\_@{bitCount\_}}
+\index{bitCount\_@{bitCount\_}!compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}}
+\doxysubsubsection{\texorpdfstring{bitCount\_}{bitCount\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitWriter_a2aec592737e56447d4490cf752754da4} 
+int compression\+::\+Deflate\+Compressor\+::\+Bit\+Writer\+::bit\+Count\+\_\+ = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitWriter_af7b756666529e5180e302f5ddac6893e}\index{compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}!buffer\_@{buffer\_}}
+\index{buffer\_@{buffer\_}!compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}}
+\doxysubsubsection{\texorpdfstring{buffer\_}{buffer\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitWriter_af7b756666529e5180e302f5ddac6893e} 
+uint8\+\_\+t compression\+::\+Deflate\+Compressor\+::\+Bit\+Writer\+::buffer\+\_\+ = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_1_1BitWriter_a2065a4602c5f091740beb6694741df3f}\index{compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}!output\_@{output\_}}
+\index{output\_@{output\_}!compression::DeflateCompressor::BitWriter@{compression::DeflateCompressor::BitWriter}}
+\doxysubsubsection{\texorpdfstring{output\_}{output\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_1_1BitWriter_a2065a4602c5f091740beb6694741df3f} 
+std\+::vector$<$std\+::byte$>$\& compression\+::\+Deflate\+Compressor\+::\+Bit\+Writer\+::output\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{DeflateCompressor_8cpp}{Deflate\+Compressor.\+cpp}}\end{DoxyCompactItemize}

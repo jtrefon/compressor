@@ -105,6 +105,7 @@ $(function(){initNavTree('namespacecompression.html',''); initResizable(true); }
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">compression Namespace Reference</div></div>
 </div><!--header-->
@@ -119,26 +120,122 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1BitIO.html">BitIO</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for bit-level reading and writing operations.  <a href="classcompression_1_1BitIO.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1ByteTypeAdapter.html">ByteTypeAdapter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapter class to convert between uint8_t and byte types.  <a href="classcompression_1_1ByteTypeAdapter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1DeflateCompressor.html">DeflateCompressor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the Deflate compression algorithm.  <a href="classcompression_1_1DeflateCompressor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1HuffmanCoder.html">HuffmanCoder</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that handles Huffman coding functionality.  <a href="classcompression_1_1HuffmanCoder.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1HuffmanCompressor.html">HuffmanCompressor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classcompression_1_1ICompressor.html" title="Interface for compression and decompression algorithms.">ICompressor</a> using Huffman coding.  <a href="classcompression_1_1HuffmanCompressor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcompression_1_1HuffmanDecoderNode.html">HuffmanDecoderNode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Huffman Decoding Tree Node.  <a href="structcompression_1_1HuffmanDecoderNode.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1ICompressor.html">ICompressor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for compression and decompression algorithms.  <a href="classcompression_1_1ICompressor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1Lz77Compressor.html">Lz77Compressor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements LZ77 compression algorithm with advanced optimizations.  <a href="classcompression_1_1Lz77Compressor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcompression_1_1NodeComparator.html">NodeComparator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcompression_1_1NodePtrGreater.html">NodePtrGreater</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1NullCompressor.html">NullCompressor</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Null Object implementation of <a class="el" href="classcompression_1_1ICompressor.html" title="Interface for compression and decompression algorithms.">ICompressor</a>.  <a href="classcompression_1_1NullCompressor.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classcompression_1_1ICompressor.html" title="Interface for compression and decompression algorithms.">ICompressor</a> with a null compression algorithm.  <a href="classcompression_1_1NullCompressor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1RleCompressor.html">RleCompressor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements <a class="el" href="classcompression_1_1ICompressor.html" title="Interface for compression and decompression algorithms.">ICompressor</a> using Run-Length Encoding (RLE).  <a href="classcompression_1_1RleCompressor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcompression_1_1RleSymbol.html">RleSymbol</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper structure for RLE of code lengths.  <a href="structcompression_1_1RleSymbol.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a6191838f076351c001e205cd68c21db1" id="r_a6191838f076351c001e205cd68c21db1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6191838f076351c001e205cd68c21db1">HuffmanCode</a> = std::vector&lt;bool&gt;</td></tr>
+<tr class="separator:a6191838f076351c001e205cd68c21db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68cae564be86e0659bfcc1fa3d7680ee" id="r_a68cae564be86e0659bfcc1fa3d7680ee"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68cae564be86e0659bfcc1fa3d7680ee">HuffmanCodeMap</a> = std::map&lt;uint32_t, <a class="el" href="#a6191838f076351c001e205cd68c21db1">HuffmanCode</a>&gt;</td></tr>
+<tr class="separator:a68cae564be86e0659bfcc1fa3d7680ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e79461baae39e11e6e4202300cf679d" id="r_a9e79461baae39e11e6e4202300cf679d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e79461baae39e11e6e4202300cf679d">FrequencyMap</a> = std::map&lt;uint32_t, uint64_t&gt;</td></tr>
+<tr class="separator:a9e79461baae39e11e6e4202300cf679d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a674035059190e85c3d11e80d754c7251" id="r_a674035059190e85c3d11e80d754c7251"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="structcompression_1_1HuffmanDecoderNode.html">HuffmanDecoderNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a674035059190e85c3d11e80d754c7251">buildDecodingTree</a> (const <a class="el" href="#a68cae564be86e0659bfcc1fa3d7680ee">HuffmanCodeMap</a> &amp;codeMap)</td></tr>
+<tr class="separator:a674035059190e85c3d11e80d754c7251"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a818c6efb6d2629007fe3521496d51c8f" id="r_a818c6efb6d2629007fe3521496d51c8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a818c6efb6d2629007fe3521496d51c8f">dummy_function</a> ()</td></tr>
 <tr class="memdesc:a818c6efb6d2629007fe3521496d51c8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dummy function for initial setup.  <br /></td></tr>
 <tr class="separator:a818c6efb6d2629007fe3521496d51c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a9e79461baae39e11e6e4202300cf679d" name="a9e79461baae39e11e6e4202300cf679d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e79461baae39e11e6e4202300cf679d">&#9670;&#160;</a></span>FrequencyMap</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::map&lt; uint32_t, uint64_t &gt; <a class="el" href="#a9e79461baae39e11e6e4202300cf679d">compression::FrequencyMap</a> = std::map&lt;uint32_t, uint64_t&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6191838f076351c001e205cd68c21db1" name="a6191838f076351c001e205cd68c21db1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6191838f076351c001e205cd68c21db1">&#9670;&#160;</a></span>HuffmanCode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::vector&lt; bool &gt; <a class="el" href="#a6191838f076351c001e205cd68c21db1">compression::HuffmanCode</a> = std::vector&lt;bool&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a68cae564be86e0659bfcc1fa3d7680ee" name="a68cae564be86e0659bfcc1fa3d7680ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68cae564be86e0659bfcc1fa3d7680ee">&#9670;&#160;</a></span>HuffmanCodeMap</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::map&lt; uint32_t, <a class="el" href="#a6191838f076351c001e205cd68c21db1">HuffmanCode</a> &gt; <a class="el" href="#a68cae564be86e0659bfcc1fa3d7680ee">compression::HuffmanCodeMap</a> = std::map&lt;uint32_t, <a class="el" href="#a6191838f076351c001e205cd68c21db1">HuffmanCode</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a674035059190e85c3d11e80d754c7251" name="a674035059190e85c3d11e80d754c7251"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a674035059190e85c3d11e80d754c7251">&#9670;&#160;</a></span>buildDecodingTree()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="structcompression_1_1HuffmanDecoderNode.html">HuffmanDecoderNode</a> &gt; compression::buildDecodingTree </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a68cae564be86e0659bfcc1fa3d7680ee">HuffmanCodeMap</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>codeMap</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a818c6efb6d2629007fe3521496d51c8f" name="a818c6efb6d2629007fe3521496d51c8f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a818c6efb6d2629007fe3521496d51c8f">&#9670;&#160;</a></span>dummy_function()</h2>
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef> // For std::byte
 #include <cstdint> // For uint8_t, uint64_t
 #include <array>
 #include <vector>
@@ -13,8 +12,8 @@ namespace format {
 
 // --- Constants --- 
 
-constexpr std::array<std::byte, 4> MAGIC_NUMBER = {
-    std::byte{'C'}, std::byte{'P'}, std::byte{'R'}, std::byte{'O'}
+constexpr std::array<uint8_t, 4> MAGIC_NUMBER = {
+    'C', 'P', 'R', 'O'
 };
 constexpr uint8_t FORMAT_VERSION = 1;
 
@@ -23,6 +22,7 @@ enum class AlgorithmID : uint8_t {
     NULL_COMPRESSOR = 0,
     RLE_COMPRESSOR = 1,
     HUFFMAN_COMPRESSOR = 2,
+    LZ77_COMPRESSOR = 3,
     // Add future IDs here
     UNKNOWN = 255
 };
@@ -52,8 +52,8 @@ struct FileHeader {
  * @param header The header data to serialize.
  * @return A vector of bytes representing the serialized header.
  */
-inline std::vector<std::byte> serializeHeader(const FileHeader& header) {
-    std::vector<std::byte> buffer(HEADER_SIZE);
+inline std::vector<uint8_t> serializeHeader(const FileHeader& header) {
+    std::vector<uint8_t> buffer(HEADER_SIZE);
     size_t offset = 0;
 
     // 1. Magic Number
@@ -61,19 +61,19 @@ inline std::vector<std::byte> serializeHeader(const FileHeader& header) {
     offset += MAGIC_NUMBER.size();
 
     // 2. Format Version
-    buffer[offset++] = static_cast<std::byte>(header.formatVersion);
+    buffer[offset++] = header.formatVersion;
 
     // 3. Algorithm ID
-    buffer[offset++] = static_cast<std::byte>(header.algorithmId);
+    buffer[offset++] = static_cast<uint8_t>(header.algorithmId);
 
     // 4. Original Size (little-endian)
     for (int i = 0; i < 8; ++i) {
-        buffer[offset++] = static_cast<std::byte>((header.originalSize >> (i * 8)) & 0xFF);
+        buffer[offset++] = static_cast<uint8_t>((header.originalSize >> (i * 8)) & 0xFF);
     }
 
     // 5. Original Checksum (little-endian)
     for (int i = 0; i < 4; ++i) {
-        buffer[offset++] = static_cast<std::byte>((header.originalChecksum >> (i * 8)) & 0xFF);
+        buffer[offset++] = static_cast<uint8_t>((header.originalChecksum >> (i * 8)) & 0xFF);
     }
 
     return buffer;
@@ -85,7 +85,7 @@ inline std::vector<std::byte> serializeHeader(const FileHeader& header) {
  * @return The deserialized FileHeader.
  * @throws std::runtime_error if magic number or version is incorrect, or buffer is too small.
  */
-inline FileHeader deserializeHeader(const std::vector<std::byte>& buffer) {
+inline FileHeader deserializeHeader(const std::vector<uint8_t>& buffer) {
     if (buffer.size() < HEADER_SIZE) {
         throw std::runtime_error("Buffer too small to contain file header.");
     }
@@ -100,7 +100,7 @@ inline FileHeader deserializeHeader(const std::vector<std::byte>& buffer) {
     offset += MAGIC_NUMBER.size();
 
     // 2. Read and Verify Format Version
-    header.formatVersion = static_cast<uint8_t>(buffer[offset++]);
+    header.formatVersion = buffer[offset++];
     if (header.formatVersion != FORMAT_VERSION) {
         throw std::runtime_error("Unsupported format version: " + std::to_string(header.formatVersion));
     }
@@ -133,6 +133,7 @@ inline std::string algorithmIdToString(AlgorithmID id) {
         case AlgorithmID::NULL_COMPRESSOR: return "null";
         case AlgorithmID::RLE_COMPRESSOR:  return "rle";
         case AlgorithmID::HUFFMAN_COMPRESSOR: return "huffman";
+        case AlgorithmID::LZ77_COMPRESSOR: return "lz77";
         default:                          return "unknown";
     }
 }
@@ -146,6 +147,7 @@ inline AlgorithmID stringToAlgorithmId(const std::string& name) {
     if (name == "null") return AlgorithmID::NULL_COMPRESSOR;
     if (name == "rle")  return AlgorithmID::RLE_COMPRESSOR;
     if (name == "huffman") return AlgorithmID::HUFFMAN_COMPRESSOR;
+    if (name == "lz77") return AlgorithmID::LZ77_COMPRESSOR;
     // Add mappings for future algorithms
     return AlgorithmID::UNKNOWN;
 }

@@ -13,6 +13,8 @@ target_sources(compression PRIVATE
     NullCompressor.cpp
     RleCompressor.cpp
     HuffmanCompressor.cpp
+    Lz77Compressor.cpp
+    DeflateCompressor.cpp
 #     some_compression_algorithm.cpp
 )
 

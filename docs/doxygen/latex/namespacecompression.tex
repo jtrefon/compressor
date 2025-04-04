@@ -10,22 +10,78 @@ namespace \mbox{\hyperlink{namespacecompression_1_1utils}{utils}}
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
+class \mbox{\hyperlink{classcompression_1_1BitIO}{Bit\+IO}}
+\begin{DoxyCompactList}\small\item\em Class for bit-\/level reading and writing operations. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter}{Byte\+Type\+Adapter}}
+\begin{DoxyCompactList}\small\item\em Adapter class to convert between uint8\+\_\+t and byte types. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcompression_1_1DeflateCompressor}{Deflate\+Compressor}}
+\begin{DoxyCompactList}\small\item\em Implements the Deflate compression algorithm. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcompression_1_1HuffmanCoder}{Huffman\+Coder}}
+\begin{DoxyCompactList}\small\item\em Class that handles Huffman coding functionality. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1HuffmanCompressor}{Huffman\+Compressor}}
 \begin{DoxyCompactList}\small\item\em Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} using Huffman coding. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}}
+\begin{DoxyCompactList}\small\item\em Huffman Decoding Tree Node. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1ICompressor}{ICompressor}}
 \begin{DoxyCompactList}\small\item\em Interface for compression and decompression algorithms. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcompression_1_1Lz77Compressor}{Lz77\+Compressor}}
+\begin{DoxyCompactList}\small\item\em Implements LZ77 compression algorithm with advanced optimizations. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structcompression_1_1NodeComparator}{Node\+Comparator}}
+\item 
+struct \mbox{\hyperlink{structcompression_1_1NodePtrGreater}{Node\+Ptr\+Greater}}
+\item 
 class \mbox{\hyperlink{classcompression_1_1NullCompressor}{Null\+Compressor}}
-\begin{DoxyCompactList}\small\item\em A Null Object implementation of \doxylink{classcompression_1_1ICompressor}{ICompressor}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} with a null compression algorithm. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcompression_1_1RleCompressor}{Rle\+Compressor}}
-\begin{DoxyCompactList}\small\item\em Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} using Run-\/\+Length Encoding (RLE). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} using Run-\/\+Length Encoding (RLE). \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structcompression_1_1RleSymbol}{Rle\+Symbol}}
+\begin{DoxyCompactList}\small\item\em Helper structure for RLE of code lengths. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{Huffman\+Code}} = std\+::vector$<$bool$>$
+\item 
+using \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} = std\+::map$<$uint32\+\_\+t, \mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{Huffman\+Code}}$>$
+\item 
+using \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{Frequency\+Map}} = std\+::map$<$uint32\+\_\+t, uint64\+\_\+t$>$
+\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} $>$ \mbox{\hyperlink{namespacecompression_a674035059190e85c3d11e80d754c7251}{build\+Decoding\+Tree}} (const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&code\+Map)
 \item 
 void \mbox{\hyperlink{namespacecompression_a818c6efb6d2629007fe3521496d51c8f}{dummy\+\_\+function}} ()
 \begin{DoxyCompactList}\small\item\em A dummy function for initial setup. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
+\doxysubsection{Typedef Documentation}
+\Hypertarget{namespacecompression_a9e79461baae39e11e6e4202300cf679d}\index{compression@{compression}!FrequencyMap@{FrequencyMap}}
+\index{FrequencyMap@{FrequencyMap}!compression@{compression}}
+\doxysubsubsection{\texorpdfstring{FrequencyMap}{FrequencyMap}}
+{\footnotesize\ttfamily \label{namespacecompression_a9e79461baae39e11e6e4202300cf679d} 
+typedef std\+::map$<$ uint32\+\_\+t, uint64\+\_\+t $>$ \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{compression\+::\+Frequency\+Map}} = std\+::map$<$uint32\+\_\+t, uint64\+\_\+t$>$}
+
+\Hypertarget{namespacecompression_a6191838f076351c001e205cd68c21db1}\index{compression@{compression}!HuffmanCode@{HuffmanCode}}
+\index{HuffmanCode@{HuffmanCode}!compression@{compression}}
+\doxysubsubsection{\texorpdfstring{HuffmanCode}{HuffmanCode}}
+{\footnotesize\ttfamily \label{namespacecompression_a6191838f076351c001e205cd68c21db1} 
+typedef std\+::vector$<$ bool $>$ \mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{compression\+::\+Huffman\+Code}} = std\+::vector$<$bool$>$}
+
+\Hypertarget{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}\index{compression@{compression}!HuffmanCodeMap@{HuffmanCodeMap}}
+\index{HuffmanCodeMap@{HuffmanCodeMap}!compression@{compression}}
+\doxysubsubsection{\texorpdfstring{HuffmanCodeMap}{HuffmanCodeMap}}
+{\footnotesize\ttfamily \label{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee} 
+typedef std\+::map$<$ uint32\+\_\+t, \mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{Huffman\+Code}} $>$ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{compression\+::\+Huffman\+Code\+Map}} = std\+::map$<$uint32\+\_\+t, \mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{Huffman\+Code}}$>$}
+
+
+
 \doxysubsection{Function Documentation}
+\Hypertarget{namespacecompression_a674035059190e85c3d11e80d754c7251}\index{compression@{compression}!buildDecodingTree@{buildDecodingTree}}
+\index{buildDecodingTree@{buildDecodingTree}!compression@{compression}}
+\doxysubsubsection{\texorpdfstring{buildDecodingTree()}{buildDecodingTree()}}
+{\footnotesize\ttfamily \label{namespacecompression_a674035059190e85c3d11e80d754c7251} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} $>$ compression\+::build\+Decoding\+Tree (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&}]{code\+Map}{}\end{DoxyParamCaption})}
+
 \Hypertarget{namespacecompression_a818c6efb6d2629007fe3521496d51c8f}\index{compression@{compression}!dummy\_function@{dummy\_function}}
 \index{dummy\_function@{dummy\_function}!compression@{compression}}
 \doxysubsubsection{\texorpdfstring{dummy\_function()}{dummy\_function()}}

@@ -1,0 +1,121 @@
+\doxysection{Lz77\+Compressor.\+hpp}
+\hypertarget{Lz77Compressor_8hpp_source}{}\label{Lz77Compressor_8hpp_source}\index{include/compression/Lz77Compressor.hpp@{include/compression/Lz77Compressor.hpp}}
+\mbox{\hyperlink{Lz77Compressor_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ COMPRESSION\_LZ77COMPRESSOR\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ COMPRESSION\_LZ77COMPRESSOR\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstddef>}\ \textcolor{comment}{//\ Include\ for\ size\_t}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ICompressor_8hpp}{ICompressor.hpp}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cstdint>}\ \textcolor{comment}{//\ For\ uint\ types}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <unordered\_map>}\ \textcolor{comment}{//\ For\ hash\ table\ optimization}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacecompression}{compression}}\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1Lz77Compressor_af678f34af7cc1313a0bcd8c23deada75}{Lz77Compressor}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classcompression_1_1ICompressor}{ICompressor}}\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ Constants\ that\ need\ to\ be\ accessible\ by\ DeflateCompressor}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint8\_t\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a9e84116d2b0ef8b02e8e9aad5988af71}{LITERAL\_FLAG}}\ =\ 0x00;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint8\_t\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a2526cb159d78993f4b01d8d3781e4924}{LENGTH\_DISTANCE\_FLAG}}\ =\ 0x01;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a1592affc0c88b2f0c7329f79a9b4f6d2}{EOB\_SYMBOL}}\ =\ 256;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint32\_t\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_acca5a707d98ffc246584fb8f91bdc4ee}{LENGTH\_CODE\_BASE}}\ =\ 257;}
+\DoxyCodeLine{00032\ \ \ \ \ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ Symbol\ structure\ for\ intermediate\ format}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77Symbol}}\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ uint32\_t\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_a74f3d99da038794b625278c60a07a548}{symbol}}\ =\ 0;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Value\ in\ the\ range\ [0,\ 285]}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_a0fbf25a4e5fb7564a5686b236c9b562f}{distance}}\ =\ 0;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Distance\ for\ length-\/distance\ pairs}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_a212fe79f838b0dba517782c2cd0acfc7}{length}}\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Length\ for\ length-\/distance\ pairs}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_a13a422f2470393e02ea3225a1d52f648}{literal}}\ =\ 0;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Literal\ value}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_af7d146fee8a4f6d18be5426942dcfad0}{isLiteral}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_a74f3d99da038794b625278c60a07a548}{symbol}}\ <\ 256;\ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_a44278f55703c8aefc26cfbaf0ab46a7e}{isLength}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_a74f3d99da038794b625278c60a07a548}{symbol}}\ >=\ 257\ \&\&\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_a74f3d99da038794b625278c60a07a548}{symbol}}\ <=\ 285;\ \}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_ac5322e6391b8716712023c77b86cff8b}{isEob}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol_a74f3d99da038794b625278c60a07a548}{symbol}}\ ==\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a1592affc0c88b2f0c7329f79a9b4f6d2}{EOB\_SYMBOL}};\ \}}
+\DoxyCodeLine{00043\ \ \ \ \ \};}
+\DoxyCodeLine{00044\ \ \ \ \ }
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af678f34af7cc1313a0bcd8c23deada75}{Lz77Compressor}}(}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ windowSize\ =\ 32768,\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ minMatchLength\ =\ 3,\ }
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ maxMatchLength\ =\ 258,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ useGreedyParsing\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ useOptimalParsing\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ aggressiveMatching\ =\ \textcolor{keyword}{true}}
+\DoxyCodeLine{00062\ \ \ \ \ );}
+\DoxyCodeLine{00063\ \ \ \ \ }
+\DoxyCodeLine{00069\ \ \ \ \ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_aac063f8811bfebfba7c8ce2fbb1ba895}{compress}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00070\ \ \ \ \ }
+\DoxyCodeLine{00076\ \ \ \ \ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ad9bf31062c9afc053328b17c87589ddc}{decompress}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00077\ \ \ \ \ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{static}\ uint32\_t\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a6b2b17fb689f1c3b7f9d2b2102f13e98}{getLengthFromCode}}(uint32\_t\ code);}
+\DoxyCodeLine{00084\ \ \ \ \ }
+\DoxyCodeLine{00085\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//\ Configuration\ parameters}}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a2346a062eb962869e146e7c933f8c851}{windowSize\_}};}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a4c673a56ba5ee20aa9b654da645839d1}{minMatchLength\_}};}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ab140afffc7cd4cdb34b04c673befa301}{maxMatchLength\_}};}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_aa8796f4b04ceefb3e603933202963972}{useGreedyParsing\_}};}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ab91dce998f008338f5b689e30b75f625}{useOptimalParsing\_}};}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ada0fc5c995e7107307a658c2069938b1}{aggressiveMatching\_}};}
+\DoxyCodeLine{00093\ \ \ \ \ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ Hash\ table\ configuration}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a0588b928a6b0c613652d674554f4f7de}{hashBits\_}}\ =\ 15;}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a86642a6b12a7238686ddb3ff8f471497}{maxHashChainLength\_}}\ =\ 64;}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a9cefccd2799a4dd21139d94fad2a9894}{hashChainLimit\_}}\ =\ 8192;}
+\DoxyCodeLine{00098\ \ \ \ \ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{comment}{//\ Match\ structure\ with\ improved\ value\ calculation}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_a99903607c309a9b7b0881599784fc8c5}{Match}}\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_a3acaac816accbf2a569f9f23413cc0e9}{distance}}\ =\ 0;}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_aef93be2819baa6bd6c87fdb26f113f44}{length}}\ =\ 0;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_a87c408fd32d69b64d2ec03c81acfea93}{position}}\ =\ 0;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_a99903607c309a9b7b0881599784fc8c5}{Match}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_a4d47621d6705d5e66ec2fd3b027aa0ea}{Match}}(\textcolor{keywordtype}{size\_t}\ dist,\ \textcolor{keywordtype}{size\_t}\ len,\ \textcolor{keywordtype}{size\_t}\ pos\ =\ 0)\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_a3acaac816accbf2a569f9f23413cc0e9}{distance}}(dist),\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_aef93be2819baa6bd6c87fdb26f113f44}{length}}(len),\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_a87c408fd32d69b64d2ec03c81acfea93}{position}}(pos)\ \{\}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Calculation\ of\ compression\ benefit\ in\ bytes}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_a23b074182b92aef13ce9ff76b58057f6}{compressionBenefit}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_aef93be2819baa6bd6c87fdb26f113f44}{length}}\ <\ 3)\ \textcolor{keywordflow}{return}\ -\/1.0f;\ \ \textcolor{comment}{//\ Minimum\ match\ length\ is\ usually\ 3}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ match\ encoding\ typically\ costs\ 2-\/4\ bytes\ (depending\ on\ length\ and\ distance)}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ While\ the\ literals\ it\ replaces\ would\ cost\ 1\ byte\ each}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ encodingOverhead\ =\ 3.0f;\ \textcolor{comment}{//\ Average\ cost\ of\ length-\/distance\ pair}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Match_aef93be2819baa6bd6c87fdb26f113f44}{length}})\ -\/\ encodingOverhead;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \};}
+\DoxyCodeLine{00119\ \ \ \ \ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//\ Enhanced\ hash\ function\ with\ better\ distribution}}
+\DoxyCodeLine{00121\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a409c9d5b2c41af03ae09835028b7a79d}{hashTriplet}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data,\ \textcolor{keywordtype}{size\_t}\ pos)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00122\ \ \ \ \ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{comment}{//\ Update\ hash\ table\ with\ better\ management\ for\ long\ chains}}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a029ab71d88804c1d2a3638991f3e9d27}{updateHashTable}}(std::unordered\_map<uint32\_t,\ std::vector<size\_t>>\&\ hashTable,\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data,\ \textcolor{keywordtype}{size\_t}\ pos)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00126\ \ \ \ \ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{comment}{//\ Find\ best\ match\ with\ improved\ search\ strategy}}
+\DoxyCodeLine{00128\ \ \ \ \ Match\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ac26c3bf317391f6f64fe45224d1f58e3}{findBestMatchAt}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data,\ \textcolor{keywordtype}{size\_t}\ pos,\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<uint32\_t,\ std::vector<size\_t>>\&\ hashTable)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00130\ \ \ \ \ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{comment}{//\ Advanced\ match\ scoring\ for\ better\ match\ selection}}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a2bf2651aa0e65088dea5bfd70211b8ae}{scoreMatch}}(\textcolor{keyword}{const}\ Match\&\ match)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00133\ \ \ \ \ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ length\ code\ for\ encoding}}
+\DoxyCodeLine{00135\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_aa8946d3cdf20060ebd1a1bdd7267fc25}{getLengthCode}}(\textcolor{keywordtype}{size\_t}\ length)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00136\ \ \ \ \ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{comment}{//\ Compress\ to\ intermediate\ symbol\ representation}}
+\DoxyCodeLine{00138\ \ \ \ \ std::vector<Lz77Symbol>\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_afb67b0b5c52961e40c2f3f8533972b8e}{compressToSymbols}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00139\ \ \ \ \ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//\ Encode\ symbols\ to\ bytes}}
+\DoxyCodeLine{00141\ \ \ \ \ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a4cd3a388a93c61ddf7c2dd18d5737f5e}{encodeSymbols}}(\textcolor{keyword}{const}\ std::vector<Lz77Symbol>\&\ symbols)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00142\ \ \ \ \ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{comment}{//\ Optimal\ parsing\ using\ dynamic\ programming}}
+\DoxyCodeLine{00144\ \ \ \ \ std::vector<Lz77Symbol>\ \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a4af2d1a9989dfb90e11fd5275cd89c4c}{optimalParse}}(}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data,}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ std::unordered\_map<uint32\_t,\ std::vector<size\_t>>\&\ hashTable)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00147\ \};}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \}\ \textcolor{comment}{//\ namespace\ compression}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ COMPRESSION\_LZ77COMPRESSOR\_HPP\ }}
+
+\end{DoxyCode}

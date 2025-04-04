@@ -109,78 +109,75 @@ $(function(){initNavTree('Crc32_8hpp_source.html',''); initResizable(true); });
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;cstddef&gt;</span> <span class="comment">// std::byte</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;array&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecompression.html">compression</a> {</div>
 <div class="foldopen" id="foldopen00008" data-start="{" data-end="}">
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="namespacecompression.html">    8</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecompression.html">compression</a> {</div>
-<div class="foldopen" id="foldopen00009" data-start="{" data-end="}">
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="namespacecompression_1_1utils.html">    9</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecompression_1_1utils.html">utils</a> {</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span></div>
-<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html">   14</a></span><span class="keyword">class </span><a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440">Crc32</a> {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">   16</a></span>    std::array&lt;uint32_t, 256&gt; <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">crc_table</a>;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#a8bc1cbb4d0d49a33b5d80cdbb33acbf3">   17</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> uint32_t <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a8bc1cbb4d0d49a33b5d80cdbb33acbf3">POLYNOMIAL</a> = 0xEDB88320; <span class="comment">// Standard CRC32 polynomial (reversed)</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="foldopen" id="foldopen00019" data-start="{" data-end="}">
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5">   19</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5">generateTable</a>() {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keywordflow">for</span> (uint32_t i = 0; i &lt; 256; ++i) {</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            uint32_t c = i;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0; j &lt; 8; ++j) {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                <span class="keywordflow">if</span> (c &amp; 1) {</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>                    c = <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a8bc1cbb4d0d49a33b5d80cdbb33acbf3">POLYNOMIAL</a> ^ (c &gt;&gt; 1);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                    c &gt;&gt;= 1;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                }</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            }</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">crc_table</a>[i] = c;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        }</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    }</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="namespacecompression_1_1utils.html">    8</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecompression_1_1utils.html">utils</a> {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span></div>
+<div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html">   13</a></span><span class="keyword">class </span><a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440">Crc32</a> {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">   15</a></span>    std::array&lt;uint32_t, 256&gt; <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">crc_table</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#a8bc1cbb4d0d49a33b5d80cdbb33acbf3">   16</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> uint32_t <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a8bc1cbb4d0d49a33b5d80cdbb33acbf3">POLYNOMIAL</a> = 0xEDB88320; <span class="comment">// Standard CRC32 polynomial (reversed)</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5">   18</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5">generateTable</a>() {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keywordflow">for</span> (uint32_t i = 0; i &lt; 256; ++i) {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            uint32_t c = i;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0; j &lt; 8; ++j) {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>                <span class="keywordflow">if</span> (c &amp; 1) {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                    c = <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a8bc1cbb4d0d49a33b5d80cdbb33acbf3">POLYNOMIAL</a> ^ (c &gt;&gt; 1);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                    c &gt;&gt;= 1;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                }</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            }</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">crc_table</a>[i] = c;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    }</div>
 </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00034" data-start="{" data-end="}">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440">   34</a></span>    <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440">Crc32</a>() {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5">generateTable</a>();</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    }</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440">   33</a></span>    <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440">Crc32</a>() {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5">generateTable</a>();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
 </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span></div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#aa762e902b9a39a2fb2b72ebfe70ead3f">   45</a></span>    uint32_t <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#aa762e902b9a39a2fb2b72ebfe70ead3f">calculate</a>(<span class="keyword">const</span> std::byte* data, <span class="keywordtype">size_t</span> size)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        uint32_t crc = 0xFFFFFFFF; <span class="comment">// Initial value</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; size; ++i) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            crc = <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">crc_table</a>[(crc ^ <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(data[i])) &amp; 0xFF] ^ (crc &gt;&gt; 8);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        }</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordflow">return</span> crc ^ 0xFFFFFFFF; <span class="comment">// Final XOR value</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    }</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span></div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#a377dd69a904487cc7fa3d738bbb59101">   44</a></span>    uint32_t <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#a377dd69a904487cc7fa3d738bbb59101">calculate</a>(<span class="keyword">const</span> uint8_t* data, <span class="keywordtype">size_t</span> size)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        uint32_t crc = 0xFFFFFFFF; <span class="comment">// Initial value</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; size; ++i) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            crc = <a class="code hl_variable" href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">crc_table</a>[(crc ^ data[i]) &amp; 0xFF] ^ (crc &gt;&gt; 8);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">return</span> crc ^ 0xFFFFFFFF; <span class="comment">// Final XOR value</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    }</div>
 </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
-<div class="foldopen" id="foldopen00059" data-start="{" data-end="}">
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#a4a3f94a141230fe83a11148e4291c9fa">   59</a></span>    uint32_t <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#a4a3f94a141230fe83a11148e4291c9fa">calculate</a>(<span class="keyword">const</span> std::vector&lt;std::byte&gt;&amp; data)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#aa762e902b9a39a2fb2b72ebfe70ead3f">calculate</a>(data.data(), data.size());</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    }</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classcompression_1_1utils_1_1Crc32.html#a1dec4c1fe6dd3e37fc17bb6b8c80d8ea">   58</a></span>    uint32_t <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#a1dec4c1fe6dd3e37fc17bb6b8c80d8ea">calculate</a>(<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&amp; data)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classcompression_1_1utils_1_1Crc32.html#a377dd69a904487cc7fa3d738bbb59101">calculate</a>(data.data(), data.size());</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }</div>
 </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>};</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>};</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">// Static instance for easy use</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="namespacecompression_1_1utils.html#a6e7c2c743b912267eb941e512c5e659e">   65</a></span><span class="keyword">inline</span> <span class="keyword">const</span> <a class="code hl_class" href="classcompression_1_1utils_1_1Crc32.html">Crc32</a> <a class="code hl_variable" href="namespacecompression_1_1utils.html#a6e7c2c743b912267eb941e512c5e659e">crc32Calculator</a>; </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>} <span class="comment">// namespace utils</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">// Static instance for easy use</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="namespacecompression_1_1utils.html#a6e7c2c743b912267eb941e512c5e659e">   64</a></span><span class="keyword">inline</span> <span class="keyword">const</span> <a class="code hl_class" href="classcompression_1_1utils_1_1Crc32.html">Crc32</a> <a class="code hl_variable" href="namespacecompression_1_1utils.html#a6e7c2c743b912267eb941e512c5e659e">crc32Calculator</a>; </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>} <span class="comment">// namespace utils</span></div>
 </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>} <span class="comment">// namespace compression </span></div>
-</div>
-<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html">compression::utils::Crc32</a></div><div class="ttdoc">Simple table-based CRC32 implementation.</div><div class="ttdef"><b>Definition</b> Crc32.hpp:14</div></div>
-<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_a4a3f94a141230fe83a11148e4291c9fa"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#a4a3f94a141230fe83a11148e4291c9fa">compression::utils::Crc32::calculate</a></div><div class="ttdeci">uint32_t calculate(const std::vector&lt; std::byte &gt; &amp;data) const</div><div class="ttdoc">Calculates the CRC32 checksum for a vector of bytes.</div><div class="ttdef"><b>Definition</b> Crc32.hpp:59</div></div>
-<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_a6d51011f10173ebe76d45e1714ccddc1"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">compression::utils::Crc32::crc_table</a></div><div class="ttdeci">std::array&lt; uint32_t, 256 &gt; crc_table</div><div class="ttdef"><b>Definition</b> Crc32.hpp:16</div></div>
-<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_a755211e39df7779b1ead8050402b1ce5"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5">compression::utils::Crc32::generateTable</a></div><div class="ttdeci">void generateTable()</div><div class="ttdef"><b>Definition</b> Crc32.hpp:19</div></div>
-<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_a8bc1cbb4d0d49a33b5d80cdbb33acbf3"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#a8bc1cbb4d0d49a33b5d80cdbb33acbf3">compression::utils::Crc32::POLYNOMIAL</a></div><div class="ttdeci">static constexpr uint32_t POLYNOMIAL</div><div class="ttdef"><b>Definition</b> Crc32.hpp:17</div></div>
-<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_aa762e902b9a39a2fb2b72ebfe70ead3f"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#aa762e902b9a39a2fb2b72ebfe70ead3f">compression::utils::Crc32::calculate</a></div><div class="ttdeci">uint32_t calculate(const std::byte *data, size_t size) const</div><div class="ttdoc">Calculates the CRC32 checksum for a block of data.</div><div class="ttdef"><b>Definition</b> Crc32.hpp:45</div></div>
-<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_aea71ca2d8532b0bd0b7e6d49a1fca440"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440">compression::utils::Crc32::Crc32</a></div><div class="ttdeci">Crc32()</div><div class="ttdef"><b>Definition</b> Crc32.hpp:34</div></div>
-<div class="ttc" id="anamespacecompression_1_1utils_html"><div class="ttname"><a href="namespacecompression_1_1utils.html">compression::utils</a></div><div class="ttdef"><b>Definition</b> Crc32.hpp:9</div></div>
-<div class="ttc" id="anamespacecompression_1_1utils_html_a6e7c2c743b912267eb941e512c5e659e"><div class="ttname"><a href="namespacecompression_1_1utils.html#a6e7c2c743b912267eb941e512c5e659e">compression::utils::crc32Calculator</a></div><div class="ttdeci">const Crc32 crc32Calculator</div><div class="ttdef"><b>Definition</b> Crc32.hpp:65</div></div>
-<div class="ttc" id="anamespacecompression_html"><div class="ttname"><a href="namespacecompression.html">compression</a></div><div class="ttdef"><b>Definition</b> Crc32.hpp:8</div></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>} <span class="comment">// namespace compression </span></div>
+<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html">compression::utils::Crc32</a></div><div class="ttdoc">Simple table-based CRC32 implementation.</div><div class="ttdef"><b>Definition</b> Crc32.hpp:13</div></div>
+<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_a1dec4c1fe6dd3e37fc17bb6b8c80d8ea"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#a1dec4c1fe6dd3e37fc17bb6b8c80d8ea">compression::utils::Crc32::calculate</a></div><div class="ttdeci">uint32_t calculate(const std::vector&lt; uint8_t &gt; &amp;data) const</div><div class="ttdoc">Calculates the CRC32 checksum for a vector of bytes.</div><div class="ttdef"><b>Definition</b> Crc32.hpp:58</div></div>
+<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_a377dd69a904487cc7fa3d738bbb59101"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#a377dd69a904487cc7fa3d738bbb59101">compression::utils::Crc32::calculate</a></div><div class="ttdeci">uint32_t calculate(const uint8_t *data, size_t size) const</div><div class="ttdoc">Calculates the CRC32 checksum for a block of data.</div><div class="ttdef"><b>Definition</b> Crc32.hpp:44</div></div>
+<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_a6d51011f10173ebe76d45e1714ccddc1"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1">compression::utils::Crc32::crc_table</a></div><div class="ttdeci">std::array&lt; uint32_t, 256 &gt; crc_table</div><div class="ttdef"><b>Definition</b> Crc32.hpp:15</div></div>
+<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_a755211e39df7779b1ead8050402b1ce5"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5">compression::utils::Crc32::generateTable</a></div><div class="ttdeci">void generateTable()</div><div class="ttdef"><b>Definition</b> Crc32.hpp:18</div></div>
+<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_a8bc1cbb4d0d49a33b5d80cdbb33acbf3"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#a8bc1cbb4d0d49a33b5d80cdbb33acbf3">compression::utils::Crc32::POLYNOMIAL</a></div><div class="ttdeci">static constexpr uint32_t POLYNOMIAL</div><div class="ttdef"><b>Definition</b> Crc32.hpp:16</div></div>
+<div class="ttc" id="aclasscompression_1_1utils_1_1Crc32_html_aea71ca2d8532b0bd0b7e6d49a1fca440"><div class="ttname"><a href="classcompression_1_1utils_1_1Crc32.html#aea71ca2d8532b0bd0b7e6d49a1fca440">compression::utils::Crc32::Crc32</a></div><div class="ttdeci">Crc32()</div><div class="ttdef"><b>Definition</b> Crc32.hpp:33</div></div>
+<div class="ttc" id="anamespacecompression_1_1utils_html"><div class="ttname"><a href="namespacecompression_1_1utils.html">compression::utils</a></div><div class="ttdef"><b>Definition</b> Crc32.hpp:8</div></div>
+<div class="ttc" id="anamespacecompression_1_1utils_html_a6e7c2c743b912267eb941e512c5e659e"><div class="ttname"><a href="namespacecompression_1_1utils.html#a6e7c2c743b912267eb941e512c5e659e">compression::utils::crc32Calculator</a></div><div class="ttdeci">const Crc32 crc32Calculator</div><div class="ttdef"><b>Definition</b> Crc32.hpp:64</div></div>
+<div class="ttc" id="anamespacecompression_html"><div class="ttname"><a href="namespacecompression.html">compression</a></div><div class="ttdef"><b>Definition</b> BitIO.hpp:7</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

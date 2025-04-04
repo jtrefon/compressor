@@ -1,0 +1,106 @@
+\doxysection{Bit\+IO.\+hpp}
+\hypertarget{BitIO_8hpp_source}{}\label{BitIO_8hpp_source}\index{include/compression/BitIO.hpp@{include/compression/BitIO.hpp}}
+\mbox{\hyperlink{BitIO_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacecompression}{compression}}\ \{}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1BitIO}{BitIO}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a727c9cceb6896f1d0f77cdabb75bad3f}{BitWriter}}\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a727c9cceb6896f1d0f77cdabb75bad3f}{BitWriter}}()\ :\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a0027e60f338b3027ae059da8eca08d91}{buffer\_}}\{\},\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_aa407c686fb2f499c84369526735821c5}{bitPosition\_}}(0)\ \{\}}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_af8a1dc19ff15c374a46670a33f6620eb}{writeBit}}(\textcolor{keywordtype}{bool}\ bit)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ bytePos\ =\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_aa407c686fb2f499c84369526735821c5}{bitPosition\_}}\ /\ 8;}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ bitPos\ =\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_aa407c686fb2f499c84369526735821c5}{bitPosition\_}}\ \%\ 8;}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Expand\ buffer\ if\ needed}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (bytePos\ >=\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a0027e60f338b3027ae059da8eca08d91}{buffer\_}}.size())\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a0027e60f338b3027ae059da8eca08d91}{buffer\_}}.push\_back(0);}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ the\ bit}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (bit)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a0027e60f338b3027ae059da8eca08d91}{buffer\_}}[bytePos]\ |=\ (1\ <<\ (7\ -\/\ bitPos));}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_aa407c686fb2f499c84369526735821c5}{bitPosition\_}}++;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a31429c07a0c51f3e9237ea852410ed3d}{writeBits}}(\textcolor{keyword}{const}\ std::vector<bool>\&\ bits)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{bool}\ bit\ :\ bits)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_af8a1dc19ff15c374a46670a33f6620eb}{writeBit}}(bit);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a9c9d7a6568de2b3a62c10e6096bed2a5}{writeNumber}}(uint32\_t\ value,\ uint8\_t\ numBits)\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (numBits\ >\ 32)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::invalid\_argument(\textcolor{stringliteral}{"{}Cannot\ write\ more\ than\ 32\ bits"{}});}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ numBits\ -\/\ 1;\ i\ >=\ 0;\ i-\/-\/)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_af8a1dc19ff15c374a46670a33f6620eb}{writeBit}}((value\ >>\ i)\ \&\ 1);}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a30ef96acd7d4eeb7f62a01393b53363b}{getBuffer}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a0027e60f338b3027ae059da8eca08d91}{buffer\_}};}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a0027e60f338b3027ae059da8eca08d91}{buffer\_}};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_aa407c686fb2f499c84369526735821c5}{bitPosition\_}};}
+\DoxyCodeLine{00088\ \ \ \ \ \};}
+\DoxyCodeLine{00089\ \ \ \ \ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a8b7c75dff064edeac26e83829bbdb777}{BitReader}}\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a8b7c75dff064edeac26e83829bbdb777}{BitReader}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ buffer)\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_add913eb709a6a4e767f30b8b0d1f9331}{buffer\_}}(buffer),\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a5995ef8d118d768d27eb1cfb91de382c}{bytePos\_}}(0),\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a4232cd87f369f040e79dded8beb8a290}{bitPos\_}}(0)\ \{\}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_aec7923b8281aa6a97beadb0d93109dd3}{readBit}}()\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a89aa86c5571187730754a28266045463}{isEnd}}())\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::out\_of\_range(\textcolor{stringliteral}{"{}End\ of\ bit\ stream\ reached"{}});}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ bit\ =\ (\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_add913eb709a6a4e767f30b8b0d1f9331}{buffer\_}}[\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a5995ef8d118d768d27eb1cfb91de382c}{bytePos\_}}]\ \&\ (1\ <<\ (7\ -\/\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a4232cd87f369f040e79dded8beb8a290}{bitPos\_}})))\ !=\ 0;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Move\ to\ next\ bit}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a4232cd87f369f040e79dded8beb8a290}{bitPos\_}}++;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a4232cd87f369f040e79dded8beb8a290}{bitPos\_}}\ ==\ 8)\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a4232cd87f369f040e79dded8beb8a290}{bitPos\_}}\ =\ 0;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a5995ef8d118d768d27eb1cfb91de382c}{bytePos\_}}++;}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ bit;}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ uint32\_t\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a68e8ddc49d99913fef5fd71157b86122}{readBits}}(uint8\_t\ count)\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ result\ =\ 0;}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (uint8\_t\ i\ =\ 0;\ i\ <\ count;\ i++)\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ (result\ <<\ 1)\ |\ (\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_aec7923b8281aa6a97beadb0d93109dd3}{readBit}}()\ ?\ 1\ :\ 0);}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a89aa86c5571187730754a28266045463}{isEnd}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a5995ef8d118d768d27eb1cfb91de382c}{bytePos\_}}\ >=\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_add913eb709a6a4e767f30b8b0d1f9331}{buffer\_}}.size();}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_add913eb709a6a4e767f30b8b0d1f9331}{buffer\_}};}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a5995ef8d118d768d27eb1cfb91de382c}{bytePos\_}};}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ uint8\_t\ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a4232cd87f369f040e79dded8beb8a290}{bitPos\_}};}
+\DoxyCodeLine{00154\ \ \ \ \ \};}
+\DoxyCodeLine{00155\ \};}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \}\ \textcolor{comment}{//\ namespace\ compression\ }}
+
+\end{DoxyCode}

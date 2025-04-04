@@ -18,9 +18,9 @@ Inheritance diagram for compression\+::Rle\+Compressor\+:\begin{figure}[H]
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1RleCompressor_a02589a2b6cb906b7bb1e68825b55d020}{compress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1RleCompressor_a7859e06c9a9df4a9b9c8fd10c4bc445e}{compress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
 \begin{DoxyCompactList}\small\item\em Compresses data using RLE. \end{DoxyCompactList}\item 
-std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1RleCompressor_acd4958ea7d5299428c5333c9bde79c64}{decompress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1RleCompressor_aa2d47d81de95fbbe7bb07479a80751cd}{decompress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
 \begin{DoxyCompactList}\small\item\em Decompresses RLE encoded data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classcompression_1_1ICompressor}{compression\+::\+ICompressor}}}
 \begin{DoxyCompactItemize}
@@ -35,11 +35,11 @@ Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} using Run-\/\
 A simple RLE implementation. Note\+: This basic version might increase size for non-\/repetitive data. 
 
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classcompression_1_1RleCompressor_a02589a2b6cb906b7bb1e68825b55d020}\index{compression::RleCompressor@{compression::RleCompressor}!compress@{compress}}
+\Hypertarget{classcompression_1_1RleCompressor_a7859e06c9a9df4a9b9c8fd10c4bc445e}\index{compression::RleCompressor@{compression::RleCompressor}!compress@{compress}}
 \index{compress@{compress}!compression::RleCompressor@{compression::RleCompressor}}
 \doxysubsubsection{\texorpdfstring{compress()}{compress()}}
-{\footnotesize\ttfamily \label{classcompression_1_1RleCompressor_a02589a2b6cb906b7bb1e68825b55d020} 
-std\+::vector$<$ std\+::byte $>$ compression\+::\+Rle\+Compressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily \label{classcompression_1_1RleCompressor_a7859e06c9a9df4a9b9c8fd10c4bc445e} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Rle\+Compressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
@@ -51,17 +51,17 @@ Compresses data using RLE.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$std\+::byte$>$ The RLE compressed data. 
+std\+::vector$<$uint8\+\_\+t$>$ The RLE compressed data. 
 \end{DoxyReturn}
 
 
-Implements \mbox{\hyperlink{classcompression_1_1ICompressor_ac7412ce2b69c6a8aefbb4cec257e2a00}{compression\+::\+ICompressor}}.
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a8671d6084c1bf54b1dc440ad7ee7ee2f}{compression\+::\+ICompressor}}.
 
-\Hypertarget{classcompression_1_1RleCompressor_acd4958ea7d5299428c5333c9bde79c64}\index{compression::RleCompressor@{compression::RleCompressor}!decompress@{decompress}}
+\Hypertarget{classcompression_1_1RleCompressor_aa2d47d81de95fbbe7bb07479a80751cd}\index{compression::RleCompressor@{compression::RleCompressor}!decompress@{decompress}}
 \index{decompress@{decompress}!compression::RleCompressor@{compression::RleCompressor}}
 \doxysubsubsection{\texorpdfstring{decompress()}{decompress()}}
-{\footnotesize\ttfamily \label{classcompression_1_1RleCompressor_acd4958ea7d5299428c5333c9bde79c64} 
-std\+::vector$<$ std\+::byte $>$ compression\+::\+Rle\+Compressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily \label{classcompression_1_1RleCompressor_aa2d47d81de95fbbe7bb07479a80751cd} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Rle\+Compressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
@@ -73,7 +73,7 @@ Decompresses RLE encoded data.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$std\+::byte$>$ The original decompressed data. 
+std\+::vector$<$uint8\+\_\+t$>$ The original decompressed data. 
 \end{DoxyReturn}
 
 \begin{DoxyExceptions}{Exceptions}
@@ -82,7 +82,7 @@ std\+::vector$<$std\+::byte$>$ The original decompressed data.
 \end{DoxyExceptions}
 
 
-Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a0ca109c56d7c86bc66b5d984d0d65042}{compression\+::\+ICompressor}}.
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a3d02bbe3947a450e9df997495c5af718}{compression\+::\+ICompressor}}.
 
 
 

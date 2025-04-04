@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['header_5fsize_0',['HEADER_SIZE',['../namespacecompression_1_1format.html#aba5b49b42f55e79b68d089c9941c3a85',1,'compression::format']]],
-  ['huffman_5fcompressor_1',['HUFFMAN_COMPRESSOR',['../namespacecompression_1_1format.html#a285b07642e4e703bc65cdd22753a8e1caa76b2951546763da3e2c58a2a4b3e89e',1,'compression::format']]],
-  ['huffmancode_2',['HuffmanCode',['../classcompression_1_1HuffmanCompressor.html#a54d89945cf5ab41fffb5bf74c25f463e',1,'compression::HuffmanCompressor']]],
-  ['huffmancodemap_3',['HuffmanCodeMap',['../classcompression_1_1HuffmanCompressor.html#a0b6464c58783d9fcab73ed20a36a8b91',1,'compression::HuffmanCompressor']]],
-  ['huffmancompressor_4',['HuffmanCompressor',['../classcompression_1_1HuffmanCompressor.html',1,'compression']]],
-  ['huffmancompressor_2ecpp_5',['HuffmanCompressor.cpp',['../HuffmanCompressor_8cpp.html',1,'']]],
-  ['huffmancompressor_2ehpp_6',['HuffmanCompressor.hpp',['../HuffmanCompressor_8hpp.html',1,'']]],
-  ['huffmannode_7',['HuffmanNode',['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html',1,'compression::HuffmanCompressor::HuffmanNode'],['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a15bf4c7ef703de68eba1eb1feb4b24e3',1,'compression::HuffmanCompressor::HuffmanNode::HuffmanNode(std::byte d, uint64_t freq)'],['../structcompression_1_1HuffmanCompressor_1_1HuffmanNode.html#a88fbe488c1559b8f68e1e5e619812d94',1,'compression::HuffmanCompressor::HuffmanNode::HuffmanNode(std::unique_ptr&lt; HuffmanNode &gt; l, std::unique_ptr&lt; HuffmanNode &gt; r)']]]
+  ['generatecodes_0',['generateCodes',['../classcompression_1_1HuffmanCoder.html#a0e2fcecc567b22c9d4f59ec29308915b',1,'compression::HuffmanCoder::generateCodes()'],['../classcompression_1_1HuffmanCompressor.html#a5929c73922985f30e48a03a5110ae75f',1,'compression::HuffmanCompressor::generateCodes()']]],
+  ['generatetable_1',['generateTable',['../classcompression_1_1utils_1_1Crc32.html#a755211e39df7779b1ead8050402b1ce5',1,'compression::utils::Crc32']]],
+  ['getbuffer_2',['getBuffer',['../classcompression_1_1BitIO_1_1BitWriter.html#a30ef96acd7d4eeb7f62a01393b53363b',1,'compression::BitIO::BitWriter']]],
+  ['getcodelengths_3',['getCodeLengths',['../classcompression_1_1HuffmanCoder.html#aa6e6f43fa32f6e5f07c7e188fbd169c0',1,'compression::HuffmanCoder']]],
+  ['getlengthcode_4',['getLengthCode',['../classcompression_1_1Lz77Compressor.html#aa8946d3cdf20060ebd1a1bdd7267fc25',1,'compression::Lz77Compressor']]],
+  ['getlengthfromcode_5',['getLengthFromCode',['../classcompression_1_1Lz77Compressor.html#a6b2b17fb689f1c3b7f9d2b2102f13e98',1,'compression::Lz77Compressor']]]
 ];

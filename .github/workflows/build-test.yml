@@ -37,4 +37,14 @@ jobs:
 
     - name: Run tests
       working-directory: ./build # Run tests from the build directory
-      run: ctest --output-on-failure --verbose 
+      run: ctest --output-on-failure --verbose
+
+    - name: Run benchmark
+      working-directory: ./build # Run benchmark from the build directory
+      run: ./app/compression_benchmark
+
+    - name: Upload benchmark results
+      uses: actions/upload-artifact@v4
+      with:
+        name: benchmark-results
+        path: BENCHMARKS.md # Path relative to workspace root 

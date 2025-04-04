@@ -121,12 +121,12 @@ $(function(){initNavTree('classcompression_1_1utils_1_1Crc32.html',''); initResi
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aea71ca2d8532b0bd0b7e6d49a1fca440" id="r_aea71ca2d8532b0bd0b7e6d49a1fca440"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea71ca2d8532b0bd0b7e6d49a1fca440">Crc32</a> ()</td></tr>
 <tr class="separator:aea71ca2d8532b0bd0b7e6d49a1fca440"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa762e902b9a39a2fb2b72ebfe70ead3f" id="r_aa762e902b9a39a2fb2b72ebfe70ead3f"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa762e902b9a39a2fb2b72ebfe70ead3f">calculate</a> (const std::byte *data, size_t size) const</td></tr>
-<tr class="memdesc:aa762e902b9a39a2fb2b72ebfe70ead3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the CRC32 checksum for a block of data.  <br /></td></tr>
-<tr class="separator:aa762e902b9a39a2fb2b72ebfe70ead3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a3f94a141230fe83a11148e4291c9fa" id="r_a4a3f94a141230fe83a11148e4291c9fa"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a3f94a141230fe83a11148e4291c9fa">calculate</a> (const std::vector&lt; std::byte &gt; &amp;data) const</td></tr>
-<tr class="memdesc:a4a3f94a141230fe83a11148e4291c9fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the CRC32 checksum for a vector of bytes.  <br /></td></tr>
-<tr class="separator:a4a3f94a141230fe83a11148e4291c9fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a377dd69a904487cc7fa3d738bbb59101" id="r_a377dd69a904487cc7fa3d738bbb59101"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a377dd69a904487cc7fa3d738bbb59101">calculate</a> (const uint8_t *data, size_t size) const</td></tr>
+<tr class="memdesc:a377dd69a904487cc7fa3d738bbb59101"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the CRC32 checksum for a block of data.  <br /></td></tr>
+<tr class="separator:a377dd69a904487cc7fa3d738bbb59101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dec4c1fe6dd3e37fc17bb6b8c80d8ea" id="r_a1dec4c1fe6dd3e37fc17bb6b8c80d8ea"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1dec4c1fe6dd3e37fc17bb6b8c80d8ea">calculate</a> (const std::vector&lt; uint8_t &gt; &amp;data) const</td></tr>
+<tr class="memdesc:a1dec4c1fe6dd3e37fc17bb6b8c80d8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the CRC32 checksum for a vector of bytes.  <br /></td></tr>
+<tr class="separator:a1dec4c1fe6dd3e37fc17bb6b8c80d8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -172,8 +172,8 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa762e902b9a39a2fb2b72ebfe70ead3f" name="aa762e902b9a39a2fb2b72ebfe70ead3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa762e902b9a39a2fb2b72ebfe70ead3f">&#9670;&#160;</a></span>calculate() <span class="overload">[1/2]</span></h2>
+<a id="a1dec4c1fe6dd3e37fc17bb6b8c80d8ea" name="a1dec4c1fe6dd3e37fc17bb6b8c80d8ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dec4c1fe6dd3e37fc17bb6b8c80d8ea">&#9670;&#160;</a></span>calculate() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,7 +184,41 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">uint32_t compression::utils::Crc32::calculate </td>
           <td>(</td>
-          <td class="paramtype">const std::byte *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the CRC32 checksum for a vector of bytes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>The vector of bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The calculated CRC32 checksum. </dd></dl>
+
+</div>
+</div>
+<a id="a377dd69a904487cc7fa3d738bbb59101" name="a377dd69a904487cc7fa3d738bbb59101"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a377dd69a904487cc7fa3d738bbb59101">&#9670;&#160;</a></span>calculate() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t compression::utils::Crc32::calculate </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -204,40 +238,6 @@ Static Private Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">data</td><td>Pointer to the data buffer. </td></tr>
     <tr><td class="paramname">size</td><td>Size of the data buffer in bytes. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The calculated CRC32 checksum. </dd></dl>
-
-</div>
-</div>
-<a id="a4a3f94a141230fe83a11148e4291c9fa" name="a4a3f94a141230fe83a11148e4291c9fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a3f94a141230fe83a11148e4291c9fa">&#9670;&#160;</a></span>calculate() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t compression::utils::Crc32::calculate </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::byte &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates the CRC32 checksum for a vector of bytes. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data</td><td>The vector of bytes. </td></tr>
   </table>
   </dd>
 </dl>

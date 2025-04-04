@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['crc32calculator_0',['crc32Calculator',['../namespacecompression_1_1utils.html#a6e7c2c743b912267eb941e512c5e659e',1,'compression::utils']]],
-  ['crc_5ftable_1',['crc_table',['../classcompression_1_1utils_1_1Crc32.html#a6d51011f10173ebe76d45e1714ccddc1',1,'compression::utils::Crc32']]]
+  ['bitpos_5f_0',['bitPos_',['../classcompression_1_1BitIO_1_1BitReader.html#a4232cd87f369f040e79dded8beb8a290',1,'compression::BitIO::BitReader']]],
+  ['bitposition_5f_1',['bitPosition_',['../classcompression_1_1BitIO_1_1BitWriter.html#aa407c686fb2f499c84369526735821c5',1,'compression::BitIO::BitWriter']]],
+  ['buffer_5f_2',['buffer_',['../classcompression_1_1BitIO_1_1BitWriter.html#a0027e60f338b3027ae059da8eca08d91',1,'compression::BitIO::BitWriter::buffer_'],['../classcompression_1_1BitIO_1_1BitReader.html#add913eb709a6a4e767f30b8b0d1f9331',1,'compression::BitIO::BitReader::buffer_']]],
+  ['bytepos_5f_3',['bytePos_',['../classcompression_1_1BitIO_1_1BitReader.html#a5995ef8d118d768d27eb1cfb91de382c',1,'compression::BitIO::BitReader']]]
 ];

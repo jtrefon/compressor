@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <vector>
-#include <cstddef> // std::byte
 #include <array>
 
 namespace compression {
@@ -42,10 +41,10 @@ public:
      * @param size Size of the data buffer in bytes.
      * @return The calculated CRC32 checksum.
      */
-    uint32_t calculate(const std::byte* data, size_t size) const {
+    uint32_t calculate(const uint8_t* data, size_t size) const {
         uint32_t crc = 0xFFFFFFFF; // Initial value
         for (size_t i = 0; i < size; ++i) {
-            crc = crc_table[(crc ^ static_cast<uint8_t>(data[i])) & 0xFF] ^ (crc >> 8);
+            crc = crc_table[(crc ^ data[i]) & 0xFF] ^ (crc >> 8);
         }
         return crc ^ 0xFFFFFFFF; // Final XOR value
     }
@@ -56,7 +55,7 @@ public:
      * @param data The vector of bytes.
      * @return The calculated CRC32 checksum.
      */
-    uint32_t calculate(const std::vector<std::byte>& data) const {
+    uint32_t calculate(const std::vector<uint8_t>& data) const {
         return calculate(data.data(), data.size());
     }
 };

@@ -1,0 +1,125 @@
+\doxysection{compression\+::Bit\+IO\+::Bit\+Reader Class Reference}
+\hypertarget{classcompression_1_1BitIO_1_1BitReader}{}\label{classcompression_1_1BitIO_1_1BitReader}\index{compression::BitIO::BitReader@{compression::BitIO::BitReader}}
+
+
+Class for reading individual bits from a byte buffer.  
+
+
+
+
+{\ttfamily \#include $<$Bit\+IO.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a8b7c75dff064edeac26e83829bbdb777}{Bit\+Reader}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&buffer)
+\begin{DoxyCompactList}\small\item\em Constructor with a buffer. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_aec7923b8281aa6a97beadb0d93109dd3}{read\+Bit}} ()
+\begin{DoxyCompactList}\small\item\em Read a single bit. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a68e8ddc49d99913fef5fd71157b86122}{read\+Bits}} (uint8\+\_\+t count)
+\begin{DoxyCompactList}\small\item\em Read multiple bits and interpret as an unsigned integer. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a89aa86c5571187730754a28266045463}{is\+End}} () const
+\begin{DoxyCompactList}\small\item\em Check if we\textquotesingle{}ve reached the end of the stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_add913eb709a6a4e767f30b8b0d1f9331}{buffer\+\_\+}}
+\item 
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a5995ef8d118d768d27eb1cfb91de382c}{byte\+Pos\+\_\+}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader_a4232cd87f369f040e79dded8beb8a290}{bit\+Pos\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class for reading individual bits from a byte buffer. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcompression_1_1BitIO_1_1BitReader_a8b7c75dff064edeac26e83829bbdb777}\index{compression::BitIO::BitReader@{compression::BitIO::BitReader}!BitReader@{BitReader}}
+\index{BitReader@{BitReader}!compression::BitIO::BitReader@{compression::BitIO::BitReader}}
+\doxysubsubsection{\texorpdfstring{BitReader()}{BitReader()}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitReader_a8b7c75dff064edeac26e83829bbdb777} 
+compression\+::\+Bit\+IO\+::\+Bit\+Reader\+::\+Bit\+Reader (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{buffer}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Constructor with a buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The buffer to read bits from \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1BitIO_1_1BitReader_a89aa86c5571187730754a28266045463}\index{compression::BitIO::BitReader@{compression::BitIO::BitReader}!isEnd@{isEnd}}
+\index{isEnd@{isEnd}!compression::BitIO::BitReader@{compression::BitIO::BitReader}}
+\doxysubsubsection{\texorpdfstring{isEnd()}{isEnd()}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitReader_a89aa86c5571187730754a28266045463} 
+bool compression\+::\+Bit\+IO\+::\+Bit\+Reader\+::is\+End (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check if we\textquotesingle{}ve reached the end of the stream. 
+
+\begin{DoxyReturn}{Returns}
+bool true if at end, false otherwise 
+\end{DoxyReturn}
+\Hypertarget{classcompression_1_1BitIO_1_1BitReader_aec7923b8281aa6a97beadb0d93109dd3}\index{compression::BitIO::BitReader@{compression::BitIO::BitReader}!readBit@{readBit}}
+\index{readBit@{readBit}!compression::BitIO::BitReader@{compression::BitIO::BitReader}}
+\doxysubsubsection{\texorpdfstring{readBit()}{readBit()}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitReader_aec7923b8281aa6a97beadb0d93109dd3} 
+bool compression\+::\+Bit\+IO\+::\+Bit\+Reader\+::read\+Bit (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Read a single bit. 
+
+\begin{DoxyReturn}{Returns}
+bool true for 1, false for 0 
+\end{DoxyReturn}
+\Hypertarget{classcompression_1_1BitIO_1_1BitReader_a68e8ddc49d99913fef5fd71157b86122}\index{compression::BitIO::BitReader@{compression::BitIO::BitReader}!readBits@{readBits}}
+\index{readBits@{readBits}!compression::BitIO::BitReader@{compression::BitIO::BitReader}}
+\doxysubsubsection{\texorpdfstring{readBits()}{readBits()}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitReader_a68e8ddc49d99913fef5fd71157b86122} 
+uint32\+\_\+t compression\+::\+Bit\+IO\+::\+Bit\+Reader\+::read\+Bits (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{count}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Read multiple bits and interpret as an unsigned integer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em count} & Number of bits to read \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+uint32\+\_\+t The value read 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classcompression_1_1BitIO_1_1BitReader_a4232cd87f369f040e79dded8beb8a290}\index{compression::BitIO::BitReader@{compression::BitIO::BitReader}!bitPos\_@{bitPos\_}}
+\index{bitPos\_@{bitPos\_}!compression::BitIO::BitReader@{compression::BitIO::BitReader}}
+\doxysubsubsection{\texorpdfstring{bitPos\_}{bitPos\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitReader_a4232cd87f369f040e79dded8beb8a290} 
+uint8\+\_\+t compression\+::\+Bit\+IO\+::\+Bit\+Reader\+::bit\+Pos\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1BitIO_1_1BitReader_add913eb709a6a4e767f30b8b0d1f9331}\index{compression::BitIO::BitReader@{compression::BitIO::BitReader}!buffer\_@{buffer\_}}
+\index{buffer\_@{buffer\_}!compression::BitIO::BitReader@{compression::BitIO::BitReader}}
+\doxysubsubsection{\texorpdfstring{buffer\_}{buffer\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitReader_add913eb709a6a4e767f30b8b0d1f9331} 
+std\+::vector$<$uint8\+\_\+t$>$ compression\+::\+Bit\+IO\+::\+Bit\+Reader\+::buffer\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1BitIO_1_1BitReader_a5995ef8d118d768d27eb1cfb91de382c}\index{compression::BitIO::BitReader@{compression::BitIO::BitReader}!bytePos\_@{bytePos\_}}
+\index{bytePos\_@{bytePos\_}!compression::BitIO::BitReader@{compression::BitIO::BitReader}}
+\doxysubsubsection{\texorpdfstring{bytePos\_}{bytePos\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitReader_a5995ef8d118d768d27eb1cfb91de382c} 
+size\+\_\+t compression\+::\+Bit\+IO\+::\+Bit\+Reader\+::byte\+Pos\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{BitIO_8hpp}{Bit\+IO.\+hpp}}\end{DoxyCompactItemize}

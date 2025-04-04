@@ -1,0 +1,130 @@
+\doxysection{compression\+::Bit\+IO\+::Bit\+Writer Class Reference}
+\hypertarget{classcompression_1_1BitIO_1_1BitWriter}{}\label{classcompression_1_1BitIO_1_1BitWriter}\index{compression::BitIO::BitWriter@{compression::BitIO::BitWriter}}
+
+
+Class for writing individual bits to a byte buffer.  
+
+
+
+
+{\ttfamily \#include $<$Bit\+IO.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a727c9cceb6896f1d0f77cdabb75bad3f}{Bit\+Writer}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_af8a1dc19ff15c374a46670a33f6620eb}{write\+Bit}} (bool bit)
+\begin{DoxyCompactList}\small\item\em Write a single bit to the buffer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a31429c07a0c51f3e9237ea852410ed3d}{write\+Bits}} (const std\+::vector$<$ bool $>$ \&bits)
+\begin{DoxyCompactList}\small\item\em Write multiple bits to the buffer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a9c9d7a6568de2b3a62c10e6096bed2a5}{write\+Number}} (uint32\+\_\+t value, uint8\+\_\+t num\+Bits)
+\begin{DoxyCompactList}\small\item\em Write a number using a specific number of bits. \end{DoxyCompactList}\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a30ef96acd7d4eeb7f62a01393b53363b}{get\+Buffer}} () const
+\begin{DoxyCompactList}\small\item\em Get the current buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_a0027e60f338b3027ae059da8eca08d91}{buffer\+\_\+}}
+\item 
+size\+\_\+t \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter_aa407c686fb2f499c84369526735821c5}{bit\+Position\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class for writing individual bits to a byte buffer. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcompression_1_1BitIO_1_1BitWriter_a727c9cceb6896f1d0f77cdabb75bad3f}\index{compression::BitIO::BitWriter@{compression::BitIO::BitWriter}!BitWriter@{BitWriter}}
+\index{BitWriter@{BitWriter}!compression::BitIO::BitWriter@{compression::BitIO::BitWriter}}
+\doxysubsubsection{\texorpdfstring{BitWriter()}{BitWriter()}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitWriter_a727c9cceb6896f1d0f77cdabb75bad3f} 
+compression\+::\+Bit\+IO\+::\+Bit\+Writer\+::\+Bit\+Writer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Default constructor. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1BitIO_1_1BitWriter_a30ef96acd7d4eeb7f62a01393b53363b}\index{compression::BitIO::BitWriter@{compression::BitIO::BitWriter}!getBuffer@{getBuffer}}
+\index{getBuffer@{getBuffer}!compression::BitIO::BitWriter@{compression::BitIO::BitWriter}}
+\doxysubsubsection{\texorpdfstring{getBuffer()}{getBuffer()}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitWriter_a30ef96acd7d4eeb7f62a01393b53363b} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Bit\+IO\+::\+Bit\+Writer\+::get\+Buffer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the current buffer. 
+
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$uint8\+\_\+t$>$ The buffer containing written bits 
+\end{DoxyReturn}
+\Hypertarget{classcompression_1_1BitIO_1_1BitWriter_af8a1dc19ff15c374a46670a33f6620eb}\index{compression::BitIO::BitWriter@{compression::BitIO::BitWriter}!writeBit@{writeBit}}
+\index{writeBit@{writeBit}!compression::BitIO::BitWriter@{compression::BitIO::BitWriter}}
+\doxysubsubsection{\texorpdfstring{writeBit()}{writeBit()}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitWriter_af8a1dc19ff15c374a46670a33f6620eb} 
+void compression\+::\+Bit\+IO\+::\+Bit\+Writer\+::write\+Bit (\begin{DoxyParamCaption}\item[{bool}]{bit}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Write a single bit to the buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bit} & true for 1, false for 0 \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classcompression_1_1BitIO_1_1BitWriter_a31429c07a0c51f3e9237ea852410ed3d}\index{compression::BitIO::BitWriter@{compression::BitIO::BitWriter}!writeBits@{writeBits}}
+\index{writeBits@{writeBits}!compression::BitIO::BitWriter@{compression::BitIO::BitWriter}}
+\doxysubsubsection{\texorpdfstring{writeBits()}{writeBits()}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitWriter_a31429c07a0c51f3e9237ea852410ed3d} 
+void compression\+::\+Bit\+IO\+::\+Bit\+Writer\+::write\+Bits (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ bool $>$ \&}]{bits}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Write multiple bits to the buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bits} & Vector of bits to write \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classcompression_1_1BitIO_1_1BitWriter_a9c9d7a6568de2b3a62c10e6096bed2a5}\index{compression::BitIO::BitWriter@{compression::BitIO::BitWriter}!writeNumber@{writeNumber}}
+\index{writeNumber@{writeNumber}!compression::BitIO::BitWriter@{compression::BitIO::BitWriter}}
+\doxysubsubsection{\texorpdfstring{writeNumber()}{writeNumber()}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitWriter_a9c9d7a6568de2b3a62c10e6096bed2a5} 
+void compression\+::\+Bit\+IO\+::\+Bit\+Writer\+::write\+Number (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{value}{, }\item[{uint8\+\_\+t}]{num\+Bits}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Write a number using a specific number of bits. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The number to write \\
+\hline
+{\em num\+Bits} & Number of bits to use \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classcompression_1_1BitIO_1_1BitWriter_aa407c686fb2f499c84369526735821c5}\index{compression::BitIO::BitWriter@{compression::BitIO::BitWriter}!bitPosition\_@{bitPosition\_}}
+\index{bitPosition\_@{bitPosition\_}!compression::BitIO::BitWriter@{compression::BitIO::BitWriter}}
+\doxysubsubsection{\texorpdfstring{bitPosition\_}{bitPosition\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitWriter_aa407c686fb2f499c84369526735821c5} 
+size\+\_\+t compression\+::\+Bit\+IO\+::\+Bit\+Writer\+::bit\+Position\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1BitIO_1_1BitWriter_a0027e60f338b3027ae059da8eca08d91}\index{compression::BitIO::BitWriter@{compression::BitIO::BitWriter}!buffer\_@{buffer\_}}
+\index{buffer\_@{buffer\_}!compression::BitIO::BitWriter@{compression::BitIO::BitWriter}}
+\doxysubsubsection{\texorpdfstring{buffer\_}{buffer\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1BitIO_1_1BitWriter_a0027e60f338b3027ae059da8eca08d91} 
+std\+::vector$<$uint8\+\_\+t$>$ compression\+::\+Bit\+IO\+::\+Bit\+Writer\+::buffer\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{BitIO_8hpp}{Bit\+IO.\+hpp}}\end{DoxyCompactItemize}

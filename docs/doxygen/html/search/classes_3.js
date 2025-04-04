@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['icompressor_0',['ICompressor',['../classcompression_1_1ICompressor.html',1,'compression']]]
+  ['fileheader_0',['FileHeader',['../structcompression_1_1format_1_1FileHeader.html',1,'compression::format']]]
 ];

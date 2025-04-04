@@ -1,0 +1,71 @@
+\doxysection{compression\+::Huffman\+Decoder\+Node Struct Reference}
+\hypertarget{structcompression_1_1HuffmanDecoderNode}{}\label{structcompression_1_1HuffmanDecoderNode}\index{compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}}
+
+
+Huffman Decoding Tree Node.  
+
+
+
+
+{\ttfamily \#include $<$Deflate\+Compressor.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_ab0595651db232270856449ecc7273adf}{Huffman\+Decoder\+Node}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_a608ffbff344bd636d19cddd572fe9bdf}{symbol}} = 0
+\item 
+bool \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_a38350f94f1125ce68dbacb9b8dbcd9a2}{is\+Leaf}} = false
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} $>$ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_a72c6d3e15e30a99647f14ca39cdf788e}{left}} = nullptr
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} $>$ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_a09616eba4ca2e5be75168fd76c19e58e}{right}} = nullptr
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Huffman Decoding Tree Node. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structcompression_1_1HuffmanDecoderNode_ab0595651db232270856449ecc7273adf}\index{compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}!HuffmanDecoderNode@{HuffmanDecoderNode}}
+\index{HuffmanDecoderNode@{HuffmanDecoderNode}!compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}}
+\doxysubsubsection{\texorpdfstring{HuffmanDecoderNode()}{HuffmanDecoderNode()}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanDecoderNode_ab0595651db232270856449ecc7273adf} 
+compression\+::\+Huffman\+Decoder\+Node\+::\+Huffman\+Decoder\+Node (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structcompression_1_1HuffmanDecoderNode_a38350f94f1125ce68dbacb9b8dbcd9a2}\index{compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}!isLeaf@{isLeaf}}
+\index{isLeaf@{isLeaf}!compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}}
+\doxysubsubsection{\texorpdfstring{isLeaf}{isLeaf}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanDecoderNode_a38350f94f1125ce68dbacb9b8dbcd9a2} 
+bool compression\+::\+Huffman\+Decoder\+Node\+::is\+Leaf = false}
+
+\Hypertarget{structcompression_1_1HuffmanDecoderNode_a72c6d3e15e30a99647f14ca39cdf788e}\index{compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}!left@{left}}
+\index{left@{left}!compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}}
+\doxysubsubsection{\texorpdfstring{left}{left}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanDecoderNode_a72c6d3e15e30a99647f14ca39cdf788e} 
+std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}}$>$ compression\+::\+Huffman\+Decoder\+Node\+::left = nullptr}
+
+\Hypertarget{structcompression_1_1HuffmanDecoderNode_a09616eba4ca2e5be75168fd76c19e58e}\index{compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}!right@{right}}
+\index{right@{right}!compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}}
+\doxysubsubsection{\texorpdfstring{right}{right}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanDecoderNode_a09616eba4ca2e5be75168fd76c19e58e} 
+std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}}$>$ compression\+::\+Huffman\+Decoder\+Node\+::right = nullptr}
+
+\Hypertarget{structcompression_1_1HuffmanDecoderNode_a608ffbff344bd636d19cddd572fe9bdf}\index{compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}!symbol@{symbol}}
+\index{symbol@{symbol}!compression::HuffmanDecoderNode@{compression::HuffmanDecoderNode}}
+\doxysubsubsection{\texorpdfstring{symbol}{symbol}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanDecoderNode_a608ffbff344bd636d19cddd572fe9bdf} 
+uint32\+\_\+t compression\+::\+Huffman\+Decoder\+Node\+::symbol = 0}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{DeflateCompressor_8hpp}{Deflate\+Compressor.\+hpp}}\end{DoxyCompactItemize}

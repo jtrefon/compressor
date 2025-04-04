@@ -1,0 +1,205 @@
+\doxysection{compression\+::Deflate\+Compressor Class Reference}
+\hypertarget{classcompression_1_1DeflateCompressor}{}\label{classcompression_1_1DeflateCompressor}\index{compression::DeflateCompressor@{compression::DeflateCompressor}}
+
+
+Implements the Deflate compression algorithm.  
+
+
+
+
+{\ttfamily \#include $<$Deflate\+Compressor.\+hpp$>$}
+
+Inheritance diagram for compression\+::Deflate\+Compressor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classcompression_1_1DeflateCompressor}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcompression_1_1DeflateCompressor_a537d716c8ccd127ad2c1eeac55bb2c28}{Deflate\+Compressor}} ()
+\begin{DoxyCompactList}\small\item\em Construct a \doxylink{classcompression_1_1DeflateCompressor}{Deflate\+Compressor} with default settings. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcompression_1_1DeflateCompressor_a05f93b4d4202624a3fde7d348a25ab0d}{\texorpdfstring{$\sim$}{\string~}\+Deflate\+Compressor}} () override
+\begin{DoxyCompactList}\small\item\em Destructor with default implementation. \end{DoxyCompactList}\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a31d4adbb45b2ec7d80919f76cf766309}{compress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
+\begin{DoxyCompactList}\small\item\em Compresses data using the Deflate algorithm. \end{DoxyCompactList}\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a20412aae5569ea3f69ee05ed82f11a10}{decompress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
+\begin{DoxyCompactList}\small\item\em Decompresses data that was compressed with the Deflate algorithm. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classcompression_1_1ICompressor}{compression\+::\+ICompressor}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classcompression_1_1ICompressor_a3a2142d5686b5959e7a1a3d4c0eec8b8}{\texorpdfstring{$\sim$}{\string~}\+ICompressor}} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor. Essential for polymorphic behavior. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classcompression_1_1DeflateCompressor_aaafa2a386245c329623f5903d9b7c5ae}{build\+Frequency\+Maps}} (const std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Compressor\+::\+Lz77\+Symbol}} $>$ \&symbols, \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{Frequency\+Map}} \&lit\+Len\+Freq\+Map, \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{Frequency\+Map}} \&dist\+Freq\+Map) const
+\item 
+void \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a4ae0f2e0b0eb5885671db2065f935ff3}{encode\+Symbols}} (\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter}{Bit\+IO\+::\+Bit\+Writer}} \&bit\+Writer, const std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Compressor\+::\+Lz77\+Symbol}} $>$ \&symbols, const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&lit\+Len\+Code\+Map, const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&dist\+Code\+Map) const
+\item 
+void \mbox{\hyperlink{classcompression_1_1DeflateCompressor_afe387a738d22dc6c446dce9931870284}{write\+Dynamic\+Tables}} (\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter}{Bit\+IO\+::\+Bit\+Writer}} \&writer, const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&lit\+Len\+Codes, const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&dist\+Codes) const
+\item 
+std\+::pair$<$ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}}, \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} $>$ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_acfddfcbb59ca37a1c65ab142659761e9}{read\+Dynamic\+Tables}} (\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader}{Bit\+IO\+::\+Bit\+Reader}} \&reader) const
+\item 
+void \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a9f1be8b77c0008fb8988da158142afae}{decode\+Symbols}} (\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader}{Bit\+IO\+::\+Bit\+Reader}} \&reader, const \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} \&lit\+Len\+Tree\+Root, const \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} \&dist\+Tree\+Root, std\+::vector$<$ uint8\+\_\+t $>$ \&output) const
+\item 
+uint32\+\_\+t \mbox{\hyperlink{classcompression_1_1DeflateCompressor_aedd63af4fc0aa83844ab03ddea73a893}{decode\+Symbol}} (\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader}{Bit\+IO\+::\+Bit\+Reader}} \&bit\+Reader, const \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} \texorpdfstring{$\ast$}{*}root) const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1RleSymbol}{Rle\+Symbol}} $>$ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_ad6ce0356fb4cdaa7858188998a19edde}{run\+Length\+Encode\+Code\+Lengths}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&lengths) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classcompression_1_1Lz77Compressor}{Lz77\+Compressor}} $>$ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a5f242db4747130321f815c23abbaf46f}{lz77\+\_\+}}
+\item 
+\mbox{\hyperlink{classcompression_1_1HuffmanCoder}{Huffman\+Coder}} \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a1df9683f2b1a59299cac9ae5b98c931c}{huffman\+Coder\+\_\+}}
+\item 
+bool \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a3b94fe5dd4374e264b292bc65ca87768}{verbose\+\_\+}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implements the Deflate compression algorithm. 
+
+Deflate combines LZ77 compression with Huffman coding. This implementation currently uses an optimized LZ77 implementation and will be enhanced with Huffman coding in future versions. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcompression_1_1DeflateCompressor_a537d716c8ccd127ad2c1eeac55bb2c28}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!DeflateCompressor@{DeflateCompressor}}
+\index{DeflateCompressor@{DeflateCompressor}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{DeflateCompressor()}{DeflateCompressor()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_a537d716c8ccd127ad2c1eeac55bb2c28} 
+compression\+::\+Deflate\+Compressor\+::\+Deflate\+Compressor (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Construct a \doxylink{classcompression_1_1DeflateCompressor}{Deflate\+Compressor} with default settings. 
+
+Uses an optimized LZ77 compressor internally. \Hypertarget{classcompression_1_1DeflateCompressor_a05f93b4d4202624a3fde7d348a25ab0d}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!````~DeflateCompressor@{\texorpdfstring{$\sim$}{\string~}DeflateCompressor}}
+\index{````~DeflateCompressor@{\texorpdfstring{$\sim$}{\string~}DeflateCompressor}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}DeflateCompressor()}{\string~DeflateCompressor()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_a05f93b4d4202624a3fde7d348a25ab0d} 
+compression\+::\+Deflate\+Compressor\+::\texorpdfstring{$\sim$}{\string~}\+Deflate\+Compressor (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [default]}}
+
+
+
+Destructor with default implementation. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1DeflateCompressor_aaafa2a386245c329623f5903d9b7c5ae}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!buildFrequencyMaps@{buildFrequencyMaps}}
+\index{buildFrequencyMaps@{buildFrequencyMaps}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{buildFrequencyMaps()}{buildFrequencyMaps()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_aaafa2a386245c329623f5903d9b7c5ae} 
+void compression\+::\+Deflate\+Compressor\+::build\+Frequency\+Maps (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Compressor\+::\+Lz77\+Symbol}} $>$ \&}]{symbols}{, }\item[{\mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{Frequency\+Map}} \&}]{lit\+Len\+Freq\+Map}{, }\item[{\mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{Frequency\+Map}} \&}]{dist\+Freq\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_a31d4adbb45b2ec7d80919f76cf766309}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!compress@{compress}}
+\index{compress@{compress}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{compress()}{compress()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_a31d4adbb45b2ec7d80919f76cf766309} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Deflate\+Compressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Compresses data using the Deflate algorithm. 
+
+Currently uses an optimized LZ77 compression as the first step.
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & The data to compress. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The compressed data. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a8671d6084c1bf54b1dc440ad7ee7ee2f}{compression\+::\+ICompressor}}.
+
+\Hypertarget{classcompression_1_1DeflateCompressor_aedd63af4fc0aa83844ab03ddea73a893}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!decodeSymbol@{decodeSymbol}}
+\index{decodeSymbol@{decodeSymbol}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{decodeSymbol()}{decodeSymbol()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_aedd63af4fc0aa83844ab03ddea73a893} 
+uint32\+\_\+t compression\+::\+Deflate\+Compressor\+::decode\+Symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader}{Bit\+IO\+::\+Bit\+Reader}} \&}]{bit\+Reader}{, }\item[{const \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} \texorpdfstring{$\ast$}{*}}]{root}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_a9f1be8b77c0008fb8988da158142afae}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!decodeSymbols@{decodeSymbols}}
+\index{decodeSymbols@{decodeSymbols}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{decodeSymbols()}{decodeSymbols()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_a9f1be8b77c0008fb8988da158142afae} 
+void compression\+::\+Deflate\+Compressor\+::decode\+Symbols (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader}{Bit\+IO\+::\+Bit\+Reader}} \&}]{reader}{, }\item[{const \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} \&}]{lit\+Len\+Tree\+Root}{, }\item[{const \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} \&}]{dist\+Tree\+Root}{, }\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{output}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_a20412aae5569ea3f69ee05ed82f11a10}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!decompress@{decompress}}
+\index{decompress@{decompress}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{decompress()}{decompress()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_a20412aae5569ea3f69ee05ed82f11a10} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Deflate\+Compressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Decompresses data that was compressed with the Deflate algorithm. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & The compressed data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The decompressed data. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a3d02bbe3947a450e9df997495c5af718}{compression\+::\+ICompressor}}.
+
+\Hypertarget{classcompression_1_1DeflateCompressor_a4ae0f2e0b0eb5885671db2065f935ff3}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!encodeSymbols@{encodeSymbols}}
+\index{encodeSymbols@{encodeSymbols}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{encodeSymbols()}{encodeSymbols()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_a4ae0f2e0b0eb5885671db2065f935ff3} 
+void compression\+::\+Deflate\+Compressor\+::encode\+Symbols (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter}{Bit\+IO\+::\+Bit\+Writer}} \&}]{bit\+Writer}{, }\item[{const std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1Lz77Compressor_1_1Lz77Symbol}{Lz77\+Compressor\+::\+Lz77\+Symbol}} $>$ \&}]{symbols}{, }\item[{const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&}]{lit\+Len\+Code\+Map}{, }\item[{const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&}]{dist\+Code\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_acfddfcbb59ca37a1c65ab142659761e9}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!readDynamicTables@{readDynamicTables}}
+\index{readDynamicTables@{readDynamicTables}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{readDynamicTables()}{readDynamicTables()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_acfddfcbb59ca37a1c65ab142659761e9} 
+std\+::pair$<$ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}}, \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} $>$ compression\+::\+Deflate\+Compressor\+::read\+Dynamic\+Tables (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader}{Bit\+IO\+::\+Bit\+Reader}} \&}]{reader}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_ad6ce0356fb4cdaa7858188998a19edde}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!runLengthEncodeCodeLengths@{runLengthEncodeCodeLengths}}
+\index{runLengthEncodeCodeLengths@{runLengthEncodeCodeLengths}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{runLengthEncodeCodeLengths()}{runLengthEncodeCodeLengths()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_ad6ce0356fb4cdaa7858188998a19edde} 
+std\+::vector$<$ \mbox{\hyperlink{structcompression_1_1RleSymbol}{Rle\+Symbol}} $>$ compression\+::\+Deflate\+Compressor\+::run\+Length\+Encode\+Code\+Lengths (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{lengths}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_afe387a738d22dc6c446dce9931870284}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!writeDynamicTables@{writeDynamicTables}}
+\index{writeDynamicTables@{writeDynamicTables}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{writeDynamicTables()}{writeDynamicTables()}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_afe387a738d22dc6c446dce9931870284} 
+void compression\+::\+Deflate\+Compressor\+::write\+Dynamic\+Tables (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter}{Bit\+IO\+::\+Bit\+Writer}} \&}]{writer}{, }\item[{const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&}]{lit\+Len\+Codes}{, }\item[{const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&}]{dist\+Codes}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classcompression_1_1DeflateCompressor_a1df9683f2b1a59299cac9ae5b98c931c}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!huffmanCoder\_@{huffmanCoder\_}}
+\index{huffmanCoder\_@{huffmanCoder\_}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{huffmanCoder\_}{huffmanCoder\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_a1df9683f2b1a59299cac9ae5b98c931c} 
+\mbox{\hyperlink{classcompression_1_1HuffmanCoder}{Huffman\+Coder}} compression\+::\+Deflate\+Compressor\+::huffman\+Coder\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_a5f242db4747130321f815c23abbaf46f}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!lz77\_@{lz77\_}}
+\index{lz77\_@{lz77\_}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{lz77\_}{lz77\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_a5f242db4747130321f815c23abbaf46f} 
+std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{classcompression_1_1Lz77Compressor}{Lz77\+Compressor}}$>$ compression\+::\+Deflate\+Compressor\+::lz77\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classcompression_1_1DeflateCompressor_a3b94fe5dd4374e264b292bc65ca87768}\index{compression::DeflateCompressor@{compression::DeflateCompressor}!verbose\_@{verbose\_}}
+\index{verbose\_@{verbose\_}!compression::DeflateCompressor@{compression::DeflateCompressor}}
+\doxysubsubsection{\texorpdfstring{verbose\_}{verbose\_}}
+{\footnotesize\ttfamily \label{classcompression_1_1DeflateCompressor_a3b94fe5dd4374e264b292bc65ca87768} 
+bool compression\+::\+Deflate\+Compressor\+::verbose\+\_\+ = false\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{DeflateCompressor_8hpp}{Deflate\+Compressor.\+hpp}}\item 
+src/\mbox{\hyperlink{DeflateCompressor_8cpp}{Deflate\+Compressor.\+cpp}}\end{DoxyCompactItemize}

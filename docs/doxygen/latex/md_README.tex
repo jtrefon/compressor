@@ -4,7 +4,24 @@
 \Hypertarget{md_README_autotoc_md0}%
 
 
-This project aims to develop a cutting-\/edge file compression library focused on achieving high compression ratios for files at rest.\hypertarget{md_README_autotoc_md1}{}\doxysection{\texorpdfstring{Project Structure}{Project Structure}}\label{md_README_autotoc_md1}
+A high-\/performance file compression library implemented in C++ that provides multiple compression algorithms with a focus on achieving excellent compression ratios for files at rest.\hypertarget{md_README_autotoc_md1}{}\doxysection{\texorpdfstring{Features}{Features}}\label{md_README_autotoc_md1}
+
+\begin{DoxyItemize}
+\item Multiple compression algorithms\+:
+\begin{DoxyItemize}
+\item {\bfseries{Null Compressor}}\+: Reference implementation with no compression
+\item {\bfseries{RLE (Run-\/\+Length Encoding)}}\+: Simple compression for data with repeated patterns
+\item {\bfseries{Huffman Coding}}\+: Statistical compression using variable-\/length codes
+\item {\bfseries{LZ77}}\+: Dictionary-\/based compression using sliding window technique
+\item {\bfseries{Deflate}}\+: Combined LZ77 and Huffman coding (similar to gzip/zlib)
+\end{DoxyItemize}
+\item Optimized implementations\+:
+\begin{DoxyItemize}
+\item Fast hash-\/based string matching for LZ77
+\item Efficient bit-\/level encoding and decoding
+\item Robust error handling for corrupted data
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md2}{}\doxysection{\texorpdfstring{Project Structure}{Project Structure}}\label{md_README_autotoc_md2}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{compression/}
@@ -12,30 +29,187 @@ This project aims to develop a cutting-\/edge file compression library focused o
 \DoxyCodeLine{├──\ README.md\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Project\ overview\ (this\ file)}
 \DoxyCodeLine{├──\ .gitignore\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Git\ ignore\ rules}
 \DoxyCodeLine{├──\ include/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Public\ header\ files\ for\ the\ library}
-\DoxyCodeLine{│\ \ \ └──\ compression/}
-\DoxyCodeLine{│\ \ \ \ \ \ \ └──\ dummy.hpp\ \ \ \ \ \ \#\ Placeholder\ header}
-\DoxyCodeLine{├──\ src/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Source\ files\ for\ the\ library}
-\DoxyCodeLine{│\ \ \ └──\ CMakeLists.txt\ \ \ \ \ \#\ Library\ CMake\ configuration}
-\DoxyCodeLine{│\ \ \ \#\ *.cpp\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Library\ implementation\ files\ will\ go\ here}
-\DoxyCodeLine{├──\ app/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Source\ files\ for\ the\ example\ application}
-\DoxyCodeLine{│\ \ \ ├──\ CMakeLists.txt\ \ \ \ \ \#\ Application\ CMake\ configuration}
-\DoxyCodeLine{│\ \ \ └──\ main.cpp\ \ \ \ \ \ \ \ \ \ \ \#\ Application\ entry\ point}
+\DoxyCodeLine{│\ \ \ └──\ compression/\ \ \ \ \ \ \ \#\ Library\ public\ API\ headers}
+\DoxyCodeLine{├──\ src/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Source\ files\ for\ the\ library\ implementation}
+\DoxyCodeLine{├──\ app/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Source\ files\ for\ applications}
+\DoxyCodeLine{│\ \ \ ├──\ main.cpp\ \ \ \ \ \ \ \ \ \ \ \#\ Compression\ utility\ app}
+\DoxyCodeLine{│\ \ \ └──\ benchmark.cpp\ \ \ \ \ \ \#\ Benchmark\ application}
 \DoxyCodeLine{├──\ tests/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Unit\ and\ integration\ tests}
-\DoxyCodeLine{│\ \ \ ├──\ CMakeLists.txt\ \ \ \ \ \#\ Tests\ CMake\ configuration\ (includes\ GoogleTest)}
-\DoxyCodeLine{│\ \ \ └──\ main.cpp\ \ \ \ \ \ \ \ \ \ \ \#\ Test\ runner\ entry\ point}
-\DoxyCodeLine{├──\ docs/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Documentation\ files\ (e.g.,\ Doxygen\ config,\ Markdown)}
-\DoxyCodeLine{└──\ external/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Directory\ for\ external\ dependencies\ (if\ not\ managed\ by\ CMake)}
+\DoxyCodeLine{├──\ docs/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Documentation\ files}
+\DoxyCodeLine{└──\ data/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Test\ data\ for\ benchmarking}
 
 \end{DoxyCode}
-\hypertarget{md_README_autotoc_md2}{}\doxysection{\texorpdfstring{Building the Project}{Building the Project}}\label{md_README_autotoc_md2}
-This project uses CMake for building.
+\hypertarget{md_README_autotoc_md3}{}\doxysection{\texorpdfstring{Building the Project}{Building the Project}}\label{md_README_autotoc_md3}
+\hypertarget{md_README_autotoc_md4}{}\doxysubsection{\texorpdfstring{Prerequisites}{Prerequisites}}\label{md_README_autotoc_md4}
+
+\begin{DoxyItemize}
+\item C++17 compatible compiler (GCC 8+, Clang 7+, MSVC 2019+)
+\item CMake 3.\+14+
+\item Git (for downloading dependencies)
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md5}{}\doxysubsection{\texorpdfstring{Build Steps}{Build Steps}}\label{md_README_autotoc_md5}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Clone the repository\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/yourusername/compression.git}
+\DoxyCodeLine{cd\ compression}
+
+\end{DoxyCode}
+
+\item {\bfseries{Configure\+:}} Create a build directory and run CMake\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ build}
+\DoxyCodeLine{cd\ build}
+\DoxyCodeLine{cmake\ ..}
+
+\end{DoxyCode}
+
+\item {\bfseries{Build\+:}} Compile the library, applications, and tests\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/-\/build\ build}
+
+\end{DoxyCode}
+
+
+Or, for multi-\/core builds\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/-\/build\ build\ -\/j\$(nproc)}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md6}{}\doxysection{\texorpdfstring{Running Tests}{Running Tests}}\label{md_README_autotoc_md6}
+After building, run the tests to verify everything is working correctly\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ build}
+\DoxyCodeLine{./tests/compression\_tests}
+
+\end{DoxyCode}
+
+
+To run a specific test category\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./tests/compression\_tests\ -\/-\/gtest\_filter="{}Lz77CompressorTest.*"{}}
+
+\end{DoxyCode}
+
+
+Available test categories\+:
+\begin{DoxyItemize}
+\item {\ttfamily Null\+Compressor\+Test.\texorpdfstring{$\ast$}{*}}
+\item {\ttfamily Rle\+Compressor\+Test.\texorpdfstring{$\ast$}{*}}
+\item {\ttfamily Huffman\+Compressor\+Test.\texorpdfstring{$\ast$}{*}}
+\item {\ttfamily Lz77\+Compressor\+Test.\texorpdfstring{$\ast$}{*}}
+\item {\ttfamily Deflate\+Compressor\+Test.\texorpdfstring{$\ast$}{*}}
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md7}{}\doxysection{\texorpdfstring{Running Benchmarks}{Running Benchmarks}}\label{md_README_autotoc_md7}
+Benchmark different compression algorithms using the benchmark application\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ build}
+\DoxyCodeLine{./app/compression\_benchmark}
+
+\end{DoxyCode}
+
+
+The benchmark results will be displayed in the console and also written to a file named {\ttfamily BENCHMARKS.\+md} in the project root directory.
+
+The benchmark\+:
+\begin{DoxyItemize}
+\item Tests all implemented compression algorithms
+\item Reports original and compressed size
+\item Calculates compression ratio
+\item Measures compression and decompression time
+\item Uses real-\/world test data from the {\ttfamily data/} directory
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md8}{}\doxysection{\texorpdfstring{Usage Examples}{Usage Examples}}\label{md_README_autotoc_md8}
+\hypertarget{md_README_autotoc_md9}{}\doxysubsection{\texorpdfstring{Basic Library Usage}{Basic Library Usage}}\label{md_README_autotoc_md9}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{Lz77Compressor_8hpp}{compression/Lz77Compressor.hpp}}>}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int}\ main()\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ Create\ data\ to\ compress}}
+\DoxyCodeLine{\ \ \ \ std::vector<uint8\_t>\ data\ =\ \{\textcolor{charliteral}{'H'},\ \textcolor{charliteral}{'e'},\ \textcolor{charliteral}{'l'},\ \textcolor{charliteral}{'l'},\ \textcolor{charliteral}{'o'},\ \textcolor{charliteral}{','},\ \textcolor{charliteral}{'\ '},\ \textcolor{charliteral}{'w'},\ \textcolor{charliteral}{'o'},\ \textcolor{charliteral}{'r'},\ \textcolor{charliteral}{'l'},\ \textcolor{charliteral}{'d'},\ \textcolor{charliteral}{'!'}\};}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ Create\ compressor\ instance}}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{classcompression_1_1Lz77Compressor}{compression::Lz77Compressor}}\ compressor;}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ Compress\ data}}
+\DoxyCodeLine{\ \ \ \ std::vector<uint8\_t>\ compressed\ =\ compressor.\mbox{\hyperlink{classcompression_1_1Lz77Compressor_aac063f8811bfebfba7c8ce2fbb1ba895}{compress}}(data);}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ Decompress\ data}}
+\DoxyCodeLine{\ \ \ \ std::vector<uint8\_t>\ decompressed\ =\ compressor.\mbox{\hyperlink{classcompression_1_1Lz77Compressor_ad9bf31062c9afc053328b17c87589ddc}{decompress}}(compressed);}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ Check\ compression\ stats}}
+\DoxyCodeLine{\ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Original\ size:\ "{}}\ <<\ data.size()\ <<\ \textcolor{stringliteral}{"{}\ bytes\(\backslash\)n"{}};}
+\DoxyCodeLine{\ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Compressed\ size:\ "{}}\ <<\ compressed.size()\ <<\ \textcolor{stringliteral}{"{}\ bytes\(\backslash\)n"{}};}
+\DoxyCodeLine{\ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Compression\ ratio:\ "{}}\ <<\ (float)compressed.size()\ /\ data.size()\ *\ 100\ <<\ \textcolor{stringliteral}{"{}\%\(\backslash\)n"{}};}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md10}{}\doxysubsection{\texorpdfstring{Command-\/line Utility}{Command-\/line Utility}}\label{md_README_autotoc_md10}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Compress\ a\ file}
+\DoxyCodeLine{./app/compress\_app\ compress\ input.txt\ output.compressed}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Decompress\ a\ file}
+\DoxyCodeLine{./app/compress\_app\ decompress\ output.compressed\ restored.txt}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Choose\ a\ specific\ algorithm\ (null,\ rle,\ huffman,\ lz77,\ deflate)}
+\DoxyCodeLine{./app/compress\_app\ compress\ -\/-\/algorithm\ lz77\ input.txt\ output.compressed}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md11}{}\doxysection{\texorpdfstring{API Documentation}{API Documentation}}\label{md_README_autotoc_md11}
+The library offers a simple interface for compression operations\+:
+
+
+\begin{DoxyItemize}
+\item All compressors implement the {\ttfamily ICompressor} interface
+\item Main methods\+: {\ttfamily compress()} and {\ttfamily decompress()}
+\item Common parameters and return types for all algorithms
+\item Thread-\/safe implementations for concurrent use
+\end{DoxyItemize}
+
+Generate detailed API documentation with Doxygen\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/-\/build\ build\ -\/-\/target\ doc}
+
+\end{DoxyCode}
+
+
+Then open {\ttfamily build/docs/html/index.\+html} in your browser.\hypertarget{md_README_autotoc_md12}{}\doxysection{\texorpdfstring{Contributing}{Contributing}}\label{md_README_autotoc_md12}
+Contributions are welcome! Here\textquotesingle{}s how you can contribute\+:
 
 
 \begin{DoxyEnumerate}
-\item {\bfseries{Configure\+:}} Create a build directory and run CMake\+: {\ttfamily bash mkdir build cd build cmake .. }
-\item {\bfseries{Build\+:}} Compile the library, application, and tests\+: {\ttfamily bash cmake -\/-\/build . }
-\item {\bfseries{Run Tests\+:}} Execute the tests\+: {\ttfamily bash ctest }
-\item {\bfseries{Run Application\+:}} The application executable will be in the {\ttfamily build/app} directory\+: {\ttfamily bash ./app/compress\+\_\+app }
-\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md3}{}\doxysection{\texorpdfstring{Contributing}{Contributing}}\label{md_README_autotoc_md3}
-(Details on contributing guidelines will go here)\hypertarget{md_README_autotoc_md4}{}\doxysection{\texorpdfstring{License}{License}}\label{md_README_autotoc_md4}
-(License information will go here) 
+\item Fork the repository
+\item Create a feature branch ({\ttfamily git checkout -\/b feature/amazing-\/feature})
+\item Make your changes
+\item Run tests to ensure they pass ({\ttfamily ./tests/compression\+\_\+tests})
+\item Commit your changes (`git commit -\/m \textquotesingle{}Add amazing feature'{\ttfamily )}
+\item {\ttfamily Push to the branch (}git push origin feature/amazing-\/feature\`{})
+\item Open a Pull Request
+\end{DoxyEnumerate}
+
+Please ensure that your code follows the existing style, includes appropriate tests, and all tests pass.\hypertarget{md_README_autotoc_md13}{}\doxysection{\texorpdfstring{License}{License}}\label{md_README_autotoc_md13}
+This project is licensed under the GNU General Public License v3.\+0 (GPLv3) -\/ see the LICENSE file for details.
+
+The GPLv3 is a strong copyleft license that ensures the software and its derivatives remain free and open source. This means you can\+:
+
+
+\begin{DoxyItemize}
+\item Use the software for any purpose
+\item Study how the software works and modify it
+\item Redistribute the software
+\item Improve the software and release your improvements to the public
+\end{DoxyItemize}
+
+Any modifications or software that incorporates this code must also be released under the GPLv3. 

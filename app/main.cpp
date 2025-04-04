@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include <stdexcept>
-#include <cstddef> // For std::byte
+#include <cstdint> // For uint8_t (replacing std::byte)
 #include <map>
 #include <functional>
 #include <iterator> // For std::back_inserter
@@ -16,11 +16,12 @@
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/FileFormat.hpp> // Include the new header format definitions
 #include <compression/Crc32.hpp> // Include CRC32 utility
+#include <compression/Lz77Compressor.hpp>
 
 // --- Helper Functions --- 
 
 // Reads entire file into a vector of bytes
-std::vector<std::byte> readFile(const std::string& filename) {
+std::vector<uint8_t> readFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
     if (!file) {
         throw std::runtime_error("Cannot open file: " + filename);
@@ -28,7 +29,7 @@ std::vector<std::byte> readFile(const std::string& filename) {
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
 
-    std::vector<std::byte> buffer(static_cast<size_t>(size));
+    std::vector<uint8_t> buffer(static_cast<size_t>(size));
     if (!file.read(reinterpret_cast<char*>(buffer.data()), size)) {
         throw std::runtime_error("Error reading file: " + filename);
     }
@@ -36,7 +37,7 @@ std::vector<std::byte> readFile(const std::string& filename) {
 }
 
 // Writes a vector of bytes to a file
-void writeFile(const std::string& filename, const std::vector<std::byte>& data) {
+void writeFile(const std::string& filename, const std::vector<uint8_t>& data) {
     std::ofstream file(filename, std::ios::binary);
     if (!file) {
         throw std::runtime_error("Cannot open file for writing: " + filename);
@@ -58,6 +59,8 @@ std::unique_ptr<compression::ICompressor> createCompressor(compression::format::
             return std::make_unique<compression::NullCompressor>();
         case compression::format::AlgorithmID::HUFFMAN_COMPRESSOR:
             return std::make_unique<compression::HuffmanCompressor>();
+        case compression::format::AlgorithmID::LZ77_COMPRESSOR:
+            return std::make_unique<compression::Lz77Compressor>(32768, 3, 258, false, true, true);
         default:
             throw std::invalid_argument("Unknown or unsupported compression algorithm ID: " 
                                         + std::to_string(static_cast<uint8_t>(id)));
@@ -77,7 +80,7 @@ std::unique_ptr<compression::ICompressor> createCompressor(const std::string& st
 
 void printUsage(const char* appName) {
     std::cerr << "Usage: " << appName << " <compress|decompress> <strategy|ignored_on_decompress> <input_file> <output_file>\n"
-              << "Strategies: null, rle, huffman\n";
+              << "Strategies: null, rle, huffman, lz77\n";
 }
 
 int main(int argc, char* argv[]) {
@@ -105,7 +108,7 @@ int main(int argc, char* argv[]) {
 
             // 2. Read input file
             std::cout << "Reading input file: " << inputFile << "..." << std::endl;
-            std::vector<std::byte> originalData = readFile(inputFile);
+            std::vector<uint8_t> originalData = readFile(inputFile);
             std::cout << "Original size: " << originalData.size() << " bytes." << std::endl;
 
             // 3. Calculate CRC32 of original data
@@ -114,7 +117,7 @@ int main(int argc, char* argv[]) {
 
             // 4. Compress data
             std::cout << "Compressing using " << strategyName << " strategy..." << std::endl;
-            std::vector<std::byte> compressedData = compressor->compress(originalData);
+            std::vector<uint8_t> compressedData = compressor->compress(originalData);
             std::cout << "Compressed payload size: " << compressedData.size() << " bytes." << std::endl;
 
             // 5. Create and serialize header (including checksum)
@@ -122,11 +125,11 @@ int main(int argc, char* argv[]) {
             header.algorithmId = algoId;
             header.originalSize = originalData.size();
             header.originalChecksum = originalCRC; // Store calculated CRC
-            std::vector<std::byte> headerBytes = compression::format::serializeHeader(header);
+            std::vector<uint8_t> headerBytes = compression::format::serializeHeader(header);
             std::cout << "Header size: " << headerBytes.size() << " bytes." << std::endl;
 
             // 6. Concatenate header and compressed data
-            std::vector<std::byte> outputData;
+            std::vector<uint8_t> outputData;
             outputData.reserve(headerBytes.size() + compressedData.size());
             outputData.insert(outputData.end(), headerBytes.begin(), headerBytes.end());
             outputData.insert(outputData.end(), compressedData.begin(), compressedData.end());
@@ -139,7 +142,7 @@ int main(int argc, char* argv[]) {
         } else { // operation == "decompress"
             // 1. Read input file (contains header + payload)
             std::cout << "Reading input file: " << inputFile << "..." << std::endl;
-            std::vector<std::byte> inputData = readFile(inputFile);
+            std::vector<uint8_t> inputData = readFile(inputFile);
             std::cout << "Input size: " << inputData.size() << " bytes." << std::endl;
 
             // 2. Deserialize header
@@ -156,7 +159,7 @@ int main(int argc, char* argv[]) {
             auto compressor = createCompressor(header.algorithmId);
 
             // 4. Extract compressed payload
-            std::vector<std::byte> compressedPayload(
+            std::vector<uint8_t> compressedPayload(
                 inputData.begin() + compression::format::HEADER_SIZE, 
                 inputData.end()
             );
@@ -164,7 +167,7 @@ int main(int argc, char* argv[]) {
             
             // 5. Decompress data
             std::cout << "Decompressing using " << algoName << " strategy..." << std::endl;
-            std::vector<std::byte> outputData = compressor->decompress(compressedPayload);
+            std::vector<uint8_t> outputData = compressor->decompress(compressedPayload);
             std::cout << "Decompressed size: " << outputData.size() << " bytes." << std::endl;
 
             // 6. Verify original size

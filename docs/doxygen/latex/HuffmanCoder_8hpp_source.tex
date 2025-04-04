@@ -1,0 +1,70 @@
+\doxysection{Huffman\+Coder.\+hpp}
+\hypertarget{HuffmanCoder_8hpp_source}{}\label{HuffmanCoder_8hpp_source}\index{include/compression/HuffmanCoder.hpp@{include/compression/HuffmanCoder.hpp}}
+\mbox{\hyperlink{HuffmanCoder_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <queue>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacecompression}{compression}}\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ Forward\ declarations}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{HuffmanCode}}\ =\ std::vector<bool>;\ \textcolor{comment}{//\ Represents\ a\ single\ Huffman\ code}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\ =\ std::map<uint32\_t,\ HuffmanCode>;\ \textcolor{comment}{//\ Map\ symbol\ to\ code}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{FrequencyMap}}\ =\ std::map<uint32\_t,\ uint64\_t>;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1HuffmanCoder_a7e8b315d73d79c269f0cead70a17e538}{HuffmanCoder}}\ \{}
+\DoxyCodeLine{00027\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{classcompression_1_1HuffmanCoder_a7e8b315d73d79c269f0cead70a17e538}{HuffmanCoder}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\ \mbox{\hyperlink{classcompression_1_1HuffmanCoder_a2ec33b97f01afcab3ea869970369cada}{buildHuffmanCodes}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{FrequencyMap}}\&\ freqMap)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00048\ \ \ \ \ std::map<uint32\_t,\ uint8\_t>\ \mbox{\hyperlink{classcompression_1_1HuffmanCoder_a2474a176f00bea086508cb698c25cccf}{limitCodeLengths}}(}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::map<uint32\_t,\ uint8\_t>\&\ inputLengths,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ uint8\_t\ maxLength)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00058\ \ \ \ \ std::map<uint32\_t,\ uint8\_t>\ \mbox{\hyperlink{classcompression_1_1HuffmanCoder_aa6e6f43fa32f6e5f07c7e188fbd169c0}{getCodeLengths}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\&\ codeMap)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ Structure\ for\ Huffman\ tree\ nodes}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a9d048779fbe4fe0ca336b2469de70196}{HuffmanNode}}\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ uint32\_t\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a2e27c88f8f6d2dc9d5587d4731fdfb85}{symbol}};}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ uint64\_t\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_acbd929f09c074b554bddf03a9f8df439}{frequency}};}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ std::unique\_ptr<HuffmanNode>\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a10eaee61a3bb1f24d255eacb4f7382d2}{left}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ std::unique\_ptr<HuffmanNode>\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a34eeb80ca36a6b087fde24a90b72b52a}{right}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Leaf\ node\ constructor}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a9d048779fbe4fe0ca336b2469de70196}{HuffmanNode}}(uint32\_t\ sym,\ uint64\_t\ freq)\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a2e27c88f8f6d2dc9d5587d4731fdfb85}{symbol}}(sym),\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_acbd929f09c074b554bddf03a9f8df439}{frequency}}(freq)\ \{\}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Internal\ node\ constructor}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_ab062ea225857328ec281ffc152c44279}{HuffmanNode}}(std::unique\_ptr<HuffmanNode>\ l,\ std::unique\_ptr<HuffmanNode>\ r)}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a2e27c88f8f6d2dc9d5587d4731fdfb85}{symbol}}(0),\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_acbd929f09c074b554bddf03a9f8df439}{frequency}}(0),\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a10eaee61a3bb1f24d255eacb4f7382d2}{left}}(std::move(l)),\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a34eeb80ca36a6b087fde24a90b72b52a}{right}}(std::move(r))\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a10eaee61a3bb1f24d255eacb4f7382d2}{left}})\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_acbd929f09c074b554bddf03a9f8df439}{frequency}}\ +=\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a10eaee61a3bb1f24d255eacb4f7382d2}{left}}-\/>frequency;}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ if\ (\mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a34eeb80ca36a6b087fde24a90b72b52a}{right}})\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_acbd929f09c074b554bddf03a9f8df439}{frequency}}\ +=\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a34eeb80ca36a6b087fde24a90b72b52a}{right}}-\/>frequency;}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Is\ this\ a\ leaf\ node?}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_aa89c58b8723609b60cb5d755ab6f8cee}{isLeaf}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a10eaee61a3bb1f24d255eacb4f7382d2}{left}}\ ==\ \textcolor{keyword}{nullptr}\ \&\&\ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a34eeb80ca36a6b087fde24a90b72b52a}{right}}\ ==\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \ \ \ \ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00091\ \ \ \ \ std::unique\_ptr<HuffmanNode>\ \mbox{\hyperlink{classcompression_1_1HuffmanCoder_a741ead68d6ff4df8ec64fe5d80b4c283}{buildHuffmanTree}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{FrequencyMap}}\&\ freqMap)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1HuffmanCoder_a0e2fcecc567b22c9d4f59ec29308915b}{generateCodes}}(}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ HuffmanNode*\ node,}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{HuffmanCode}}\ prefix,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\&\ codeMap)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00104\ \};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \}\ \textcolor{comment}{//\ namespace\ compression\ }}
+
+\end{DoxyCode}

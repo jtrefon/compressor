@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rlecompressor_0',['RleCompressor',['../classcompression_1_1RleCompressor.html',1,'compression']]]
+  ['icompressor_0',['ICompressor',['../classcompression_1_1ICompressor.html',1,'compression']]]
 ];

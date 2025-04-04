@@ -1,0 +1,78 @@
+\doxysection{compression\+::Huffman\+Coder\+::Huffman\+Node Struct Reference}
+\hypertarget{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{}\label{structcompression_1_1HuffmanCoder_1_1HuffmanNode}\index{compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a9d048779fbe4fe0ca336b2469de70196}{Huffman\+Node}} (uint32\+\_\+t sym, uint64\+\_\+t freq)
+\item 
+\mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_ab062ea225857328ec281ffc152c44279}{Huffman\+Node}} (std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}} $>$ l, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}} $>$ r)
+\item 
+bool \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_aa89c58b8723609b60cb5d755ab6f8cee}{is\+Leaf}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a2e27c88f8f6d2dc9d5587d4731fdfb85}{symbol}}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_acbd929f09c074b554bddf03a9f8df439}{frequency}}
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}} $>$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a10eaee61a3bb1f24d255eacb4f7382d2}{left}} = nullptr
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}} $>$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a34eeb80ca36a6b087fde24a90b72b52a}{right}} = nullptr
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a9d048779fbe4fe0ca336b2469de70196}\index{compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}!HuffmanNode@{HuffmanNode}}
+\index{HuffmanNode@{HuffmanNode}!compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}}
+\doxysubsubsection{\texorpdfstring{HuffmanNode()}{HuffmanNode()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a9d048779fbe4fe0ca336b2469de70196} 
+compression\+::\+Huffman\+Coder\+::\+Huffman\+Node\+::\+Huffman\+Node (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{sym}{, }\item[{uint64\+\_\+t}]{freq}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{structcompression_1_1HuffmanCoder_1_1HuffmanNode_ab062ea225857328ec281ffc152c44279}\index{compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}!HuffmanNode@{HuffmanNode}}
+\index{HuffmanNode@{HuffmanNode}!compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}}
+\doxysubsubsection{\texorpdfstring{HuffmanNode()}{HuffmanNode()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanCoder_1_1HuffmanNode_ab062ea225857328ec281ffc152c44279} 
+compression\+::\+Huffman\+Coder\+::\+Huffman\+Node\+::\+Huffman\+Node (\begin{DoxyParamCaption}\item[{std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}} $>$}]{l}{, }\item[{std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}} $>$}]{r}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structcompression_1_1HuffmanCoder_1_1HuffmanNode_aa89c58b8723609b60cb5d755ab6f8cee}\index{compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}!isLeaf@{isLeaf}}
+\index{isLeaf@{isLeaf}!compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}}
+\doxysubsubsection{\texorpdfstring{isLeaf()}{isLeaf()}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanCoder_1_1HuffmanNode_aa89c58b8723609b60cb5d755ab6f8cee} 
+bool compression\+::\+Huffman\+Coder\+::\+Huffman\+Node\+::is\+Leaf (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structcompression_1_1HuffmanCoder_1_1HuffmanNode_acbd929f09c074b554bddf03a9f8df439}\index{compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}!frequency@{frequency}}
+\index{frequency@{frequency}!compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}}
+\doxysubsubsection{\texorpdfstring{frequency}{frequency}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanCoder_1_1HuffmanNode_acbd929f09c074b554bddf03a9f8df439} 
+uint64\+\_\+t compression\+::\+Huffman\+Coder\+::\+Huffman\+Node\+::frequency}
+
+\Hypertarget{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a10eaee61a3bb1f24d255eacb4f7382d2}\index{compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}!left@{left}}
+\index{left@{left}!compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}}
+\doxysubsubsection{\texorpdfstring{left}{left}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a10eaee61a3bb1f24d255eacb4f7382d2} 
+std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}}$>$ compression\+::\+Huffman\+Coder\+::\+Huffman\+Node\+::left = nullptr}
+
+\Hypertarget{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a34eeb80ca36a6b087fde24a90b72b52a}\index{compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}!right@{right}}
+\index{right@{right}!compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}}
+\doxysubsubsection{\texorpdfstring{right}{right}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a34eeb80ca36a6b087fde24a90b72b52a} 
+std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}}$>$ compression\+::\+Huffman\+Coder\+::\+Huffman\+Node\+::right = nullptr}
+
+\Hypertarget{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a2e27c88f8f6d2dc9d5587d4731fdfb85}\index{compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}!symbol@{symbol}}
+\index{symbol@{symbol}!compression::HuffmanCoder::HuffmanNode@{compression::HuffmanCoder::HuffmanNode}}
+\doxysubsubsection{\texorpdfstring{symbol}{symbol}}
+{\footnotesize\ttfamily \label{structcompression_1_1HuffmanCoder_1_1HuffmanNode_a2e27c88f8f6d2dc9d5587d4731fdfb85} 
+uint32\+\_\+t compression\+::\+Huffman\+Coder\+::\+Huffman\+Node\+::symbol}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{HuffmanCoder_8hpp}{Huffman\+Coder.\+hpp}}\end{DoxyCompactItemize}

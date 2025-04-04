@@ -119,9 +119,11 @@ Inheritance diagram for compression::ICompressor:</div>
  <div class="center">
   <img src="classcompression_1_1ICompressor.png" usemap="#compression::ICompressor_map" alt=""/>
   <map id="compression::ICompressor_map" name="compression::ICompressor_map">
-<area href="classcompression_1_1HuffmanCompressor.html" title="Implements ICompressor using Huffman coding." alt="compression::HuffmanCompressor" shape="rect" coords="0,56,204,80"/>
-<area href="classcompression_1_1NullCompressor.html" title="A Null Object implementation of ICompressor." alt="compression::NullCompressor" shape="rect" coords="214,56,418,80"/>
-<area href="classcompression_1_1RleCompressor.html" title="Implements ICompressor using Run-Length Encoding (RLE)." alt="compression::RleCompressor" shape="rect" coords="428,56,632,80"/>
+<area href="classcompression_1_1DeflateCompressor.html" title="Implements the Deflate compression algorithm." alt="compression::DeflateCompressor" shape="rect" coords="0,56,204,80"/>
+<area href="classcompression_1_1HuffmanCompressor.html" title="Implements ICompressor using Huffman coding." alt="compression::HuffmanCompressor" shape="rect" coords="214,56,418,80"/>
+<area href="classcompression_1_1Lz77Compressor.html" title="Implements LZ77 compression algorithm with advanced optimizations." alt="compression::Lz77Compressor" shape="rect" coords="428,56,632,80"/>
+<area href="classcompression_1_1NullCompressor.html" title="Implements ICompressor with a null compression algorithm." alt="compression::NullCompressor" shape="rect" coords="642,56,846,80"/>
+<area href="classcompression_1_1RleCompressor.html" title="Implements ICompressor using Run-Length Encoding (RLE)." alt="compression::RleCompressor" shape="rect" coords="856,56,1060,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -130,12 +132,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3a2142d5686b5959e7a1a3d4c0eec8b8" id="r_a3a2142d5686b5959e7a1a3d4c0eec8b8"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a2142d5686b5959e7a1a3d4c0eec8b8">~ICompressor</a> ()=default</td></tr>
 <tr class="memdesc:a3a2142d5686b5959e7a1a3d4c0eec8b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor. Essential for polymorphic behavior.  <br /></td></tr>
 <tr class="separator:a3a2142d5686b5959e7a1a3d4c0eec8b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7412ce2b69c6a8aefbb4cec257e2a00" id="r_ac7412ce2b69c6a8aefbb4cec257e2a00"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::byte &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac7412ce2b69c6a8aefbb4cec257e2a00">compress</a> (const std::vector&lt; std::byte &gt; &amp;data) const =0</td></tr>
-<tr class="memdesc:ac7412ce2b69c6a8aefbb4cec257e2a00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compresses the input data.  <br /></td></tr>
-<tr class="separator:ac7412ce2b69c6a8aefbb4cec257e2a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ca109c56d7c86bc66b5d984d0d65042" id="r_a0ca109c56d7c86bc66b5d984d0d65042"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::byte &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ca109c56d7c86bc66b5d984d0d65042">decompress</a> (const std::vector&lt; std::byte &gt; &amp;data) const =0</td></tr>
-<tr class="memdesc:a0ca109c56d7c86bc66b5d984d0d65042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompresses the input data.  <br /></td></tr>
-<tr class="separator:a0ca109c56d7c86bc66b5d984d0d65042"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8671d6084c1bf54b1dc440ad7ee7ee2f" id="r_a8671d6084c1bf54b1dc440ad7ee7ee2f"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8671d6084c1bf54b1dc440ad7ee7ee2f">compress</a> (const std::vector&lt; uint8_t &gt; &amp;data) const =0</td></tr>
+<tr class="memdesc:a8671d6084c1bf54b1dc440ad7ee7ee2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compresses the input data.  <br /></td></tr>
+<tr class="separator:a8671d6084c1bf54b1dc440ad7ee7ee2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d02bbe3947a450e9df997495c5af718" id="r_a3d02bbe3947a450e9df997495c5af718"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d02bbe3947a450e9df997495c5af718">decompress</a> (const std::vector&lt; uint8_t &gt; &amp;data) const =0</td></tr>
+<tr class="memdesc:a3d02bbe3947a450e9df997495c5af718"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompresses the input data.  <br /></td></tr>
+<tr class="separator:a3d02bbe3947a450e9df997495c5af718"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for compression and decompression algorithms. </p>
@@ -169,8 +171,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac7412ce2b69c6a8aefbb4cec257e2a00" name="ac7412ce2b69c6a8aefbb4cec257e2a00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7412ce2b69c6a8aefbb4cec257e2a00">&#9670;&#160;</a></span>compress()</h2>
+<a id="a8671d6084c1bf54b1dc440ad7ee7ee2f" name="a8671d6084c1bf54b1dc440ad7ee7ee2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8671d6084c1bf54b1dc440ad7ee7ee2f">&#9670;&#160;</a></span>compress()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,9 +181,9 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::vector&lt; std::byte &gt; compression::ICompressor::compress </td>
+          <td class="memname">virtual std::vector&lt; uint8_t &gt; compression::ICompressor::compress </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::byte &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -200,7 +202,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::byte&gt; The compressed data. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; The compressed data. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">std::runtime_error</td><td>or derived class on compression failure. </td></tr>
@@ -208,12 +210,12 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classcompression_1_1HuffmanCompressor.html#a17f6a8fbac7635e2910a2c04fa1f47a5">compression::HuffmanCompressor</a>, <a class="el" href="classcompression_1_1NullCompressor.html#a5c34873802b47ab77ea67dfbb034e427">compression::NullCompressor</a>, and <a class="el" href="classcompression_1_1RleCompressor.html#a02589a2b6cb906b7bb1e68825b55d020">compression::RleCompressor</a>.</p>
+<p>Implemented in <a class="el" href="classcompression_1_1DeflateCompressor.html#a31d4adbb45b2ec7d80919f76cf766309">compression::DeflateCompressor</a>, <a class="el" href="classcompression_1_1HuffmanCompressor.html#a27d90ba0f87694afffda3c005a96a6f5">compression::HuffmanCompressor</a>, <a class="el" href="classcompression_1_1Lz77Compressor.html#aac063f8811bfebfba7c8ce2fbb1ba895">compression::Lz77Compressor</a>, <a class="el" href="classcompression_1_1NullCompressor.html#a1568a73a2403c2d81caf317091e2bd70">compression::NullCompressor</a>, and <a class="el" href="classcompression_1_1RleCompressor.html#a7859e06c9a9df4a9b9c8fd10c4bc445e">compression::RleCompressor</a>.</p>
 
 </div>
 </div>
-<a id="a0ca109c56d7c86bc66b5d984d0d65042" name="a0ca109c56d7c86bc66b5d984d0d65042"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ca109c56d7c86bc66b5d984d0d65042">&#9670;&#160;</a></span>decompress()</h2>
+<a id="a3d02bbe3947a450e9df997495c5af718" name="a3d02bbe3947a450e9df997495c5af718"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d02bbe3947a450e9df997495c5af718">&#9670;&#160;</a></span>decompress()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,9 +224,9 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::vector&lt; std::byte &gt; compression::ICompressor::decompress </td>
+          <td class="memname">virtual std::vector&lt; uint8_t &gt; compression::ICompressor::decompress </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::byte &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -243,7 +245,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::byte&gt; The original decompressed data. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; The original decompressed data. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">std::runtime_error</td><td>or derived class on decompression failure. </td></tr>
@@ -251,7 +253,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classcompression_1_1HuffmanCompressor.html#a1f51be4cf4da7765cc4189958c204e3f">compression::HuffmanCompressor</a>, <a class="el" href="classcompression_1_1NullCompressor.html#aad42dcf1624f3d863df78314fe971571">compression::NullCompressor</a>, and <a class="el" href="classcompression_1_1RleCompressor.html#acd4958ea7d5299428c5333c9bde79c64">compression::RleCompressor</a>.</p>
+<p>Implemented in <a class="el" href="classcompression_1_1DeflateCompressor.html#a20412aae5569ea3f69ee05ed82f11a10">compression::DeflateCompressor</a>, <a class="el" href="classcompression_1_1HuffmanCompressor.html#a61bbc5bcd67b9a06f36fa4c21758e055">compression::HuffmanCompressor</a>, <a class="el" href="classcompression_1_1Lz77Compressor.html#ad9bf31062c9afc053328b17c87589ddc">compression::Lz77Compressor</a>, <a class="el" href="classcompression_1_1NullCompressor.html#ab0abd5fabe71687d41aaee516a252508">compression::NullCompressor</a>, and <a class="el" href="classcompression_1_1RleCompressor.html#aa2d47d81de95fbbe7bb07479a80751cd">compression::RleCompressor</a>.</p>
 
 </div>
 </div>
