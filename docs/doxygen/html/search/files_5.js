@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['lz77compressor_2ecpp_0',['Lz77Compressor.cpp',['../Lz77Compressor_8cpp.html',1,'']]],
-  ['lz77compressor_2ehpp_1',['Lz77Compressor.hpp',['../Lz77Compressor_8hpp.html',1,'']]]
+  ['icompressor_2ehpp_0',['ICompressor.hpp',['../ICompressor_8hpp.html',1,'']]]
 ];

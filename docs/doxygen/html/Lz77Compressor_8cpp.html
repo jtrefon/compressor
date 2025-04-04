@@ -108,12 +108,14 @@ $(function(){initNavTree('Lz77Compressor_8cpp.html',''); initResizable(true); })
   <div class="headertitle"><div class="title">Lz77Compressor.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="Lz77Compressor_8hpp_source.html">compression/Lz77Compressor.hpp</a>&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="Lz77Compressor_8hpp_source.html">compression/Lz77Compressor.hpp</a>&quot;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cstring&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
+<code>#include &lt;unordered_map&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -122,12 +124,12 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:abe2725705560eab73f9408871ab4544d" id="r_abe2725705560eab73f9408871ab4544d"><td class="memItemLeft" align="right" valign="top">constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression.html#abe2725705560eab73f9408871ab4544d">compression::MIN_MATCH_LENGTH</a> = 3</td></tr>
+<tr class="memitem:abe2725705560eab73f9408871ab4544d" id="r_abe2725705560eab73f9408871ab4544d"><td class="memItemLeft" align="right" valign="top">constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression.html#abe2725705560eab73f9408871ab4544d">compression::MIN_MATCH_LENGTH</a> = <a class="el" href="classcompression_1_1Lz77Compressor.html#a56863bb12c9b4aeff239dd28b5346990">Lz77Compressor::MIN_LEN</a></td></tr>
 <tr class="separator:abe2725705560eab73f9408871ab4544d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24aa9f9d9d040d4619254438593ac96b" id="r_a24aa9f9d9d040d4619254438593ac96b"><td class="memItemLeft" align="right" valign="top">constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression.html#a24aa9f9d9d040d4619254438593ac96b">compression::MAX_DISTANCE</a> = 4096</td></tr>
+<tr class="memitem:a8495a49d17ece58e9cd2ea9a6c180cef" id="r_a8495a49d17ece58e9cd2ea9a6c180cef"><td class="memItemLeft" align="right" valign="top">constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression.html#a8495a49d17ece58e9cd2ea9a6c180cef">compression::MAX_MATCH_LENGTH</a> = <a class="el" href="classcompression_1_1Lz77Compressor.html#af310a3723175f4c07e13231a807f302a">Lz77Compressor::MAX_LEN</a></td></tr>
+<tr class="separator:a8495a49d17ece58e9cd2ea9a6c180cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24aa9f9d9d040d4619254438593ac96b" id="r_a24aa9f9d9d040d4619254438593ac96b"><td class="memItemLeft" align="right" valign="top">constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression.html#a24aa9f9d9d040d4619254438593ac96b">compression::MAX_DISTANCE</a> = 32768</td></tr>
 <tr class="separator:a24aa9f9d9d040d4619254438593ac96b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04c1225f48c1d3356a96d56ba319cfc2" id="r_a04c1225f48c1d3356a96d56ba319cfc2"><td class="memItemLeft" align="right" valign="top">constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression.html#a04c1225f48c1d3356a96d56ba319cfc2">compression::MAX_LENGTH</a> = 32</td></tr>
-<tr class="separator:a04c1225f48c1d3356a96d56ba319cfc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

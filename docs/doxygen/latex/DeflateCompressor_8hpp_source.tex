@@ -1,0 +1,127 @@
+\doxysection{Deflate\+Compressor.\+hpp}
+\hypertarget{DeflateCompressor_8hpp_source}{}\label{DeflateCompressor_8hpp_source}\index{include/compression/DeflateCompressor.hpp@{include/compression/DeflateCompressor.hpp}}
+\mbox{\hyperlink{DeflateCompressor_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ COMPRESSION\_DEFLATECOMPRESSOR\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ COMPRESSION\_DEFLATECOMPRESSOR\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ICompressor_8hpp}{ICompressor.hpp}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{Lz77Compressor_8hpp}{Lz77Compressor.hpp}}"{}}\ \textcolor{comment}{//\ To\ get\ symbols}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{HuffmanCoder_8hpp}{HuffmanCoder.hpp}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{BitIO_8hpp}{BitIO.hpp}}"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <stdexcept>}\ \textcolor{comment}{//\ Include\ for\ potential\ exceptions}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <iostream>}\ \textcolor{comment}{//\ For\ verbose\ logging}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <algorithm>}\ \textcolor{comment}{//\ For\ std::min,\ std::max,\ std::sort}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <cmath>}\ \textcolor{comment}{//\ For\ log2\ (optional)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <limits>}\ \textcolor{comment}{//\ For\ numeric\_limits}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <cstddef>}\ \textcolor{comment}{//\ For\ byte}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacecompression}{compression}}\ \{}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcompression_1_1RleSymbol}{RleSymbol}}\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structcompression_1_1RleSymbol_af2d95a5c333655e78371629e587defcd}{symbol}};\ \textcolor{comment}{//\ 0-\/15\ (length),\ 16,\ 17,\ 18\ (repeat\ codes)}}
+\DoxyCodeLine{00028\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structcompression_1_1RleSymbol_aefd6635248d83f1609d538b1c7529897}{extraBitsValue}}\ =\ 0;\ \textcolor{comment}{//\ Value\ for\ the\ extra\ bits\ (if\ symbol\ 16,\ 17,\ 18)}}
+\DoxyCodeLine{00029\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structcompression_1_1RleSymbol_a981c9d5bb8b9c74af90edc09f0242ef5}{extraBitsCount}}\ =\ 0;\ \textcolor{comment}{//\ Number\ of\ extra\ bits\ (0,\ 2,\ 3,\ or\ 7)}}
+\DoxyCodeLine{00030\ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ Public\ Type\ Aliases\ (used\ by\ HuffmanCoder)}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{HuffmanCode}}\ =\ std::vector<bool>;\ \textcolor{comment}{//\ Represents\ a\ single\ Huffman\ code}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\ =\ std::map<uint32\_t,\ HuffmanCode>;\ \textcolor{comment}{//\ Map\ symbol\ to\ code}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{FrequencyMap}}\ =\ std::map<uint32\_t,\ uint64\_t>;}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_ab0595651db232270856449ecc7273adf}{HuffmanDecoderNode}}\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_a608ffbff344bd636d19cddd572fe9bdf}{symbol}}\ =\ 0;\ \textcolor{comment}{//\ Valid\ only\ if\ isLeaf\ is\ true}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_a38350f94f1125ce68dbacb9b8dbcd9a2}{isLeaf}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00043\ \ \ \ \ std::unique\_ptr<HuffmanDecoderNode>\ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_a72c6d3e15e30a99647f14ca39cdf788e}{left}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00044\ \ \ \ \ std::unique\_ptr<HuffmanDecoderNode>\ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_a09616eba4ca2e5be75168fd76c19e58e}{right}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode_ab0595651db232270856449ecc7273adf}{HuffmanDecoderNode}}()\ =\ \textcolor{keywordflow}{default};\ }
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ Function\ Declaration\ for\ Building\ Decoding\ Tree}}
+\DoxyCodeLine{00050\ std::unique\_ptr<HuffmanDecoderNode>\ \mbox{\hyperlink{namespacecompression_a674035059190e85c3d11e80d754c7251}{buildDecodingTree}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\&\ codeMap);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1ByteTypeAdapter}{ByteTypeAdapter}}\ \{}
+\DoxyCodeLine{00059\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ Convert\ byte\ type\ to\ uint8\_t}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{static}\ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter_aefe20e15923b47c133ce53e40f65a88c}{byteToUint8}}(\textcolor{keyword}{const}\ std::vector<unsigned\ char>\&\ bytes)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ std::vector<uint8\_t>\ result(bytes.size());}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ bytes.size();\ i++)\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ result[i]\ =\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}(bytes[i]);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ \ \ \ \ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ Convert\ uint8\_t\ to\ byte\ type}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{static}\ std::vector<unsigned\ char>\ \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter_aa4e4afbccf08dc73d6f15c34145e7fda}{uint8ToByte}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ std::vector<unsigned\ char>\ result(data.size());}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ data.size();\ i++)\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ result[i]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\textcolor{keyword}{>}(data[i]);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00076\ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1DeflateCompressor_a537d716c8ccd127ad2c1eeac55bb2c28}{DeflateCompressor}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classcompression_1_1ICompressor}{ICompressor}}\ \{}
+\DoxyCodeLine{00087\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00093\ \ \ \ \ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a537d716c8ccd127ad2c1eeac55bb2c28}{DeflateCompressor}}();}
+\DoxyCodeLine{00094\ \ \ \ \ }
+\DoxyCodeLine{00098\ \ \ \ \ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a05f93b4d4202624a3fde7d348a25ab0d}{\string~DeflateCompressor}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00099\ \ \ \ \ }
+\DoxyCodeLine{00108\ \ \ \ \ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a31d4adbb45b2ec7d80919f76cf766309}{compress}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00109\ \ \ \ \ }
+\DoxyCodeLine{00116\ \ \ \ \ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a20412aae5569ea3f69ee05ed82f11a10}{decompress}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ data)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/\ Internal\ Helpers\ -\/-\/-\/\ }}
+\DoxyCodeLine{00120\ \ \ \ \ }
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{comment}{//\ Function\ to\ build\ frequency\ maps\ for\ literal/length\ and\ distance\ symbols}}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_aaafa2a386245c329623f5903d9b7c5ae}{buildFrequencyMaps}}(}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<Lz77Compressor::Lz77Symbol>\&\ symbols,}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{FrequencyMap}}\&\ litLenFreqMap,}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{FrequencyMap}}\&\ distFreqMap)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{comment}{//\ Function\ to\ encode\ the\ LZ77\ symbols\ using\ the\ Huffman\ codes}}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a4ae0f2e0b0eb5885671db2065f935ff3}{encodeSymbols}}(}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter}{BitIO::BitWriter}}\&\ bitWriter,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<Lz77Compressor::Lz77Symbol>\&\ symbols,}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\&\ litLenCodeMap,}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\&\ distCodeMap)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{comment}{//\ Helper\ for\ writing\ dynamic\ tables\ according\ to\ Deflate\ spec}}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_afe387a738d22dc6c446dce9931870284}{writeDynamicTables}}(}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitWriter}{BitIO::BitWriter}}\&\ writer,\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\&\ litLenCodes,\ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{HuffmanCodeMap}}\&\ distCodes)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//\ Helper\ for\ reading\ dynamic\ tables\ according\ to\ Deflate\ spec}}
+\DoxyCodeLine{00141\ \ \ \ \ std::pair<HuffmanCodeMap,\ HuffmanCodeMap>\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_acfddfcbb59ca37a1c65ab142659761e9}{readDynamicTables}}(\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader}{BitIO::BitReader}}\&\ reader)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a9f1be8b77c0008fb8988da158142afae}{decodeSymbols}}(}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader}{BitIO::BitReader}}\&\ reader,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{HuffmanDecoderNode}}\&\ litLenTreeRoot,}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{HuffmanDecoderNode}}\&\ distTreeRoot,\ }
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ std::vector<uint8\_t>\&\ output)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ uint32\_t\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_aedd63af4fc0aa83844ab03ddea73a893}{decodeSymbol}}(\mbox{\hyperlink{classcompression_1_1BitIO_1_1BitReader}{BitIO::BitReader}}\&\ bitReader,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{HuffmanDecoderNode}}*\ root)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{comment}{//\ RLE\ Encoding\ for\ Code\ Lengths}}
+\DoxyCodeLine{00152\ \ \ \ \ std::vector<RleSymbol>\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_ad6ce0356fb4cdaa7858188998a19edde}{runLengthEncodeCodeLengths}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ lengths)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/\ Member\ Variables\ -\/-\/-\/\ }}
+\DoxyCodeLine{00155\ \ \ \ \ std::unique\_ptr<Lz77Compressor>\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a5f242db4747130321f815c23abbaf46f}{lz77\_}};\ \textcolor{comment}{//\ LZ77\ compressor}}
+\DoxyCodeLine{00156\ \ \ \ \ \mbox{\hyperlink{classcompression_1_1HuffmanCoder}{HuffmanCoder}}\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a1df9683f2b1a59299cac9ae5b98c931c}{huffmanCoder\_}};\ \textcolor{comment}{//\ Extracted\ Huffman\ coding\ logic}}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a3b94fe5dd4374e264b292bc65ca87768}{verbose\_}}\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Verbosity\ flag\ for\ debugging}}
+\DoxyCodeLine{00158\ \};}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \}\ \textcolor{comment}{//\ namespace\ compression}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ COMPRESSION\_DEFLATECOMPRESSOR\_HPP\ }}
+
+\end{DoxyCode}

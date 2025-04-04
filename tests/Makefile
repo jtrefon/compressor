@@ -185,6 +185,30 @@ compression_tests/fast:
 	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/compression_tests.dir/build.make tests/CMakeFiles/compression_tests.dir/build
 .PHONY : compression_tests/fast
 
+DeflateCompressorTest.o: DeflateCompressorTest.cpp.o
+.PHONY : DeflateCompressorTest.o
+
+# target to build an object file
+DeflateCompressorTest.cpp.o:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/compression_tests.dir/build.make tests/CMakeFiles/compression_tests.dir/DeflateCompressorTest.cpp.o
+.PHONY : DeflateCompressorTest.cpp.o
+
+DeflateCompressorTest.i: DeflateCompressorTest.cpp.i
+.PHONY : DeflateCompressorTest.i
+
+# target to preprocess a source file
+DeflateCompressorTest.cpp.i:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/compression_tests.dir/build.make tests/CMakeFiles/compression_tests.dir/DeflateCompressorTest.cpp.i
+.PHONY : DeflateCompressorTest.cpp.i
+
+DeflateCompressorTest.s: DeflateCompressorTest.cpp.s
+.PHONY : DeflateCompressorTest.s
+
+# target to generate assembly for a file
+DeflateCompressorTest.cpp.s:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/compression_tests.dir/build.make tests/CMakeFiles/compression_tests.dir/DeflateCompressorTest.cpp.s
+.PHONY : DeflateCompressorTest.cpp.s
+
 Lz77CompressorTest.o: Lz77CompressorTest.cpp.o
 .PHONY : Lz77CompressorTest.o
 
@@ -247,6 +271,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... compression_tests"
+	@echo "... DeflateCompressorTest.o"
+	@echo "... DeflateCompressorTest.i"
+	@echo "... DeflateCompressorTest.s"
 	@echo "... Lz77CompressorTest.o"
 	@echo "... Lz77CompressorTest.i"
 	@echo "... Lz77CompressorTest.s"

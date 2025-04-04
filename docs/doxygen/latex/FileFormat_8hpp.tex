@@ -1,6 +1,5 @@
 \doxysection{include/compression/\+File\+Format.hpp File Reference}
 \hypertarget{FileFormat_8hpp}{}\label{FileFormat_8hpp}\index{include/compression/FileFormat.hpp@{include/compression/FileFormat.hpp}}
-{\ttfamily \#include $<$cstddef$>$}\newline
 {\ttfamily \#include $<$cstdint$>$}\newline
 {\ttfamily \#include $<$array$>$}\newline
 {\ttfamily \#include $<$vector$>$}\newline
@@ -31,9 +30,9 @@ enum class \mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65c
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{namespacecompression_1_1format_af2e5c379a1e2209b89aa43f378312fda}{compression\+::format\+::serialize\+Header}} (const \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}} \&header)
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{namespacecompression_1_1format_ae8ea4c6ebe9f52ea2601c631bda13fbb}{compression\+::format\+::serialize\+Header}} (const \mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}} \&header)
 \begin{DoxyCompactList}\small\item\em Serializes the header data into a byte vector. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}} \mbox{\hyperlink{namespacecompression_1_1format_aa9249f407e0fb35b622faea563fcce88}{compression\+::format\+::deserialize\+Header}} (const std\+::vector$<$ std\+::byte $>$ \&buffer)
+\mbox{\hyperlink{structcompression_1_1format_1_1FileHeader}{File\+Header}} \mbox{\hyperlink{namespacecompression_1_1format_a9d543ebd8ca0de313b42e446e64b5b1a}{compression\+::format\+::deserialize\+Header}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&buffer)
 \begin{DoxyCompactList}\small\item\em Deserializes header data from a byte vector. \end{DoxyCompactList}\item 
 std\+::string \mbox{\hyperlink{namespacecompression_1_1format_a46dd00fcac1185f96800c379d67e1463}{compression\+::format\+::algorithm\+Id\+To\+String}} (\mbox{\hyperlink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID}} id)
 \begin{DoxyCompactList}\small\item\em Maps \doxylink{namespacecompression_1_1format_a285b07642e4e703bc65cdd22753a8e1c}{Algorithm\+ID} enum to a string representation. \end{DoxyCompactList}\item 
@@ -42,7 +41,7 @@ std\+::string \mbox{\hyperlink{namespacecompression_1_1format_a46dd00fcac1185f96
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-constexpr std\+::array$<$ std\+::byte, 4 $>$ \mbox{\hyperlink{namespacecompression_1_1format_aedd178bf1033c1d0612a578e00c227f1}{compression\+::format\+::\+MAGIC\+\_\+\+NUMBER}}
+constexpr std\+::array$<$ uint8\+\_\+t, 4 $>$ \mbox{\hyperlink{namespacecompression_1_1format_af9d5587df9f697f88d5a7b2aa90c16e6}{compression\+::format\+::\+MAGIC\+\_\+\+NUMBER}}
 \item 
 constexpr uint8\+\_\+t \mbox{\hyperlink{namespacecompression_1_1format_a2992ddc5d1be37cb786afb257128782c}{compression\+::format\+::\+FORMAT\+\_\+\+VERSION}} = 1
 \item 

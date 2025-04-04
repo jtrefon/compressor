@@ -25,16 +25,16 @@ struct \mbox{\hyperlink{structcompression_1_1HuffmanCompressor_1_1HuffmanNode}{H
 \item 
 using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{Huffman\+Code}} = std\+::vector$<$bool$>$
 \item 
-using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a0b6464c58783d9fcab73ed20a36a8b91}{Huffman\+Code\+Map}} = std\+::map$<$std\+::byte, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{Huffman\+Code}}$>$
+using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_afca0f4edf873c1011ca1e37eec6d8d17}{Huffman\+Code\+Map}} = std\+::map$<$uint8\+\_\+t, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{Huffman\+Code}}$>$
 \item 
-using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{Frequency\+Map}} = std\+::map$<$std\+::byte, uint64\+\_\+t$>$
+using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{Frequency\+Map}} = std\+::map$<$uint8\+\_\+t, uint64\+\_\+t$>$
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a17f6a8fbac7635e2910a2c04fa1f47a5}{compress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a27d90ba0f87694afffda3c005a96a6f5}{compress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
 \begin{DoxyCompactList}\small\item\em Compresses the input data. \end{DoxyCompactList}\item 
-std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a1f51be4cf4da7765cc4189958c204e3f}{decompress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a61bbc5bcd67b9a06f36fa4c21758e055}{decompress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
 \begin{DoxyCompactList}\small\item\em Decompresses the input data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classcompression_1_1ICompressor}{compression\+::\+ICompressor}}}
 \begin{DoxyCompactItemize}
@@ -44,15 +44,15 @@ virtual \mbox{\hyperlink{classcompression_1_1ICompressor_a3a2142d5686b5959e7a1a3
 \doxysubsubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{Frequency\+Map}} \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_acdbda6cefbc9d601869c2582a10e6ec6}{build\+Frequency\+Map}} (const std\+::vector$<$ std\+::byte $>$ \&data) const
+\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{Frequency\+Map}} \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a37e6989848a9d00460d263c70f8ecedc}{build\+Frequency\+Map}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const
 \item 
-std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCompressor_1_1HuffmanNode}{Huffman\+Node}} $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a7655d98e3bfcc08d25b92452079676e7}{build\+Huffman\+Tree}} (const \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{Frequency\+Map}} \&freq\+Map) const
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCompressor_1_1HuffmanNode}{Huffman\+Node}} $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a7655d98e3bfcc08d25b92452079676e7}{build\+Huffman\+Tree}} (const \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{Frequency\+Map}} \&freq\+Map) const
 \item 
-void \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a5929c73922985f30e48a03a5110ae75f}{generate\+Codes}} (const \mbox{\hyperlink{structcompression_1_1HuffmanCompressor_1_1HuffmanNode}{Huffman\+Node}} \texorpdfstring{$\ast$}{*}node, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{Huffman\+Code}} prefix, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a0b6464c58783d9fcab73ed20a36a8b91}{Huffman\+Code\+Map}} \&code\+Map) const
+void \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a5929c73922985f30e48a03a5110ae75f}{generate\+Codes}} (const \mbox{\hyperlink{structcompression_1_1HuffmanCompressor_1_1HuffmanNode}{Huffman\+Node}} \texorpdfstring{$\ast$}{*}node, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{Huffman\+Code}} prefix, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_afca0f4edf873c1011ca1e37eec6d8d17}{Huffman\+Code\+Map}} \&code\+Map) const
 \item 
-std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_aaf33ce47234d06fc372e9497bd2f2a7e}{serialize\+Frequency\+Map}} (const \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{Frequency\+Map}} \&freq\+Map) const
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_aced24ba0dddcce010044cc8e6cbf3534}{serialize\+Frequency\+Map}} (const \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{Frequency\+Map}} \&freq\+Map) const
 \item 
-\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{Frequency\+Map}} \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_ac342b6a1369f4d93ae243c768b17ee89}{deserialize\+Frequency\+Map}} (const std\+::vector$<$ std\+::byte $>$ \&buffer, size\+\_\+t \&offset) const
+\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{Frequency\+Map}} \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a09c1f9f1411f284d6710810cbb0759ae}{deserialize\+Frequency\+Map}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&buffer, size\+\_\+t \&offset) const
 \end{DoxyCompactItemize}
 
 
@@ -62,11 +62,11 @@ Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} using Huffman
 Uses canonical Huffman codes for potentially better efficiency. Requires transmitting frequency table or tree structure. 
 
 \doxysubsection{Member Typedef Documentation}
-\Hypertarget{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!FrequencyMap@{FrequencyMap}}
+\Hypertarget{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!FrequencyMap@{FrequencyMap}}
 \index{FrequencyMap@{FrequencyMap}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
 \doxysubsubsection{\texorpdfstring{FrequencyMap}{FrequencyMap}}
-{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92} 
-using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{compression\+::\+Huffman\+Compressor\+::\+Frequency\+Map}} = std\+::map$<$std\+::byte, uint64\+\_\+t$>$}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e} 
+using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{compression\+::\+Huffman\+Compressor\+::\+Frequency\+Map}} = std\+::map$<$uint8\+\_\+t, uint64\+\_\+t$>$}
 
 \Hypertarget{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!HuffmanCode@{HuffmanCode}}
 \index{HuffmanCode@{HuffmanCode}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
@@ -74,32 +74,32 @@ using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f5527
 {\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e} 
 using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{compression\+::\+Huffman\+Compressor\+::\+Huffman\+Code}} = std\+::vector$<$bool$>$}
 
-\Hypertarget{classcompression_1_1HuffmanCompressor_a0b6464c58783d9fcab73ed20a36a8b91}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!HuffmanCodeMap@{HuffmanCodeMap}}
+\Hypertarget{classcompression_1_1HuffmanCompressor_afca0f4edf873c1011ca1e37eec6d8d17}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!HuffmanCodeMap@{HuffmanCodeMap}}
 \index{HuffmanCodeMap@{HuffmanCodeMap}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
 \doxysubsubsection{\texorpdfstring{HuffmanCodeMap}{HuffmanCodeMap}}
-{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a0b6464c58783d9fcab73ed20a36a8b91} 
-using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a0b6464c58783d9fcab73ed20a36a8b91}{compression\+::\+Huffman\+Compressor\+::\+Huffman\+Code\+Map}} = std\+::map$<$std\+::byte, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{Huffman\+Code}}$>$}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_afca0f4edf873c1011ca1e37eec6d8d17} 
+using \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_afca0f4edf873c1011ca1e37eec6d8d17}{compression\+::\+Huffman\+Compressor\+::\+Huffman\+Code\+Map}} = std\+::map$<$uint8\+\_\+t, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{Huffman\+Code}}$>$}
 
 
 
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classcompression_1_1HuffmanCompressor_acdbda6cefbc9d601869c2582a10e6ec6}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!buildFrequencyMap@{buildFrequencyMap}}
+\Hypertarget{classcompression_1_1HuffmanCompressor_a37e6989848a9d00460d263c70f8ecedc}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!buildFrequencyMap@{buildFrequencyMap}}
 \index{buildFrequencyMap@{buildFrequencyMap}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
 \doxysubsubsection{\texorpdfstring{buildFrequencyMap()}{buildFrequencyMap()}}
-{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_acdbda6cefbc9d601869c2582a10e6ec6} 
-\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{Huffman\+Compressor\+::\+Frequency\+Map}} compression\+::\+Huffman\+Compressor\+::build\+Frequency\+Map (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a37e6989848a9d00460d263c70f8ecedc} 
+\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{Huffman\+Compressor\+::\+Frequency\+Map}} compression\+::\+Huffman\+Compressor\+::build\+Frequency\+Map (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
 \Hypertarget{classcompression_1_1HuffmanCompressor_a7655d98e3bfcc08d25b92452079676e7}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!buildHuffmanTree@{buildHuffmanTree}}
 \index{buildHuffmanTree@{buildHuffmanTree}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
 \doxysubsubsection{\texorpdfstring{buildHuffmanTree()}{buildHuffmanTree()}}
 {\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a7655d98e3bfcc08d25b92452079676e7} 
-std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCompressor_1_1HuffmanNode}{Huffman\+Compressor\+::\+Huffman\+Node}} $>$ compression\+::\+Huffman\+Compressor\+::build\+Huffman\+Tree (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{Frequency\+Map}} \&}]{freq\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCompressor_1_1HuffmanNode}{Huffman\+Compressor\+::\+Huffman\+Node}} $>$ compression\+::\+Huffman\+Compressor\+::build\+Huffman\+Tree (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{Frequency\+Map}} \&}]{freq\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
-\Hypertarget{classcompression_1_1HuffmanCompressor_a17f6a8fbac7635e2910a2c04fa1f47a5}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!compress@{compress}}
+\Hypertarget{classcompression_1_1HuffmanCompressor_a27d90ba0f87694afffda3c005a96a6f5}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!compress@{compress}}
 \index{compress@{compress}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
 \doxysubsubsection{\texorpdfstring{compress()}{compress()}}
-{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a17f6a8fbac7635e2910a2c04fa1f47a5} 
-std\+::vector$<$ std\+::byte $>$ compression\+::\+Huffman\+Compressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a27d90ba0f87694afffda3c005a96a6f5} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Huffman\+Compressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
@@ -113,7 +113,7 @@ Pure virtual function to be implemented by concrete strategies.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$std\+::byte$>$ The compressed data. 
+std\+::vector$<$uint8\+\_\+t$>$ The compressed data. 
 \end{DoxyReturn}
 
 \begin{DoxyExceptions}{Exceptions}
@@ -122,13 +122,13 @@ std\+::vector$<$std\+::byte$>$ The compressed data.
 \end{DoxyExceptions}
 
 
-Implements \mbox{\hyperlink{classcompression_1_1ICompressor_ac7412ce2b69c6a8aefbb4cec257e2a00}{compression\+::\+ICompressor}}.
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a8671d6084c1bf54b1dc440ad7ee7ee2f}{compression\+::\+ICompressor}}.
 
-\Hypertarget{classcompression_1_1HuffmanCompressor_a1f51be4cf4da7765cc4189958c204e3f}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!decompress@{decompress}}
+\Hypertarget{classcompression_1_1HuffmanCompressor_a61bbc5bcd67b9a06f36fa4c21758e055}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!decompress@{decompress}}
 \index{decompress@{decompress}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
 \doxysubsubsection{\texorpdfstring{decompress()}{decompress()}}
-{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a1f51be4cf4da7765cc4189958c204e3f} 
-std\+::vector$<$ std\+::byte $>$ compression\+::\+Huffman\+Compressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a61bbc5bcd67b9a06f36fa4c21758e055} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Huffman\+Compressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
@@ -142,7 +142,7 @@ Pure virtual function to be implemented by concrete strategies.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$std\+::byte$>$ The original decompressed data. 
+std\+::vector$<$uint8\+\_\+t$>$ The original decompressed data. 
 \end{DoxyReturn}
 
 \begin{DoxyExceptions}{Exceptions}
@@ -151,25 +151,25 @@ std\+::vector$<$std\+::byte$>$ The original decompressed data.
 \end{DoxyExceptions}
 
 
-Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a0ca109c56d7c86bc66b5d984d0d65042}{compression\+::\+ICompressor}}.
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a3d02bbe3947a450e9df997495c5af718}{compression\+::\+ICompressor}}.
 
-\Hypertarget{classcompression_1_1HuffmanCompressor_ac342b6a1369f4d93ae243c768b17ee89}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!deserializeFrequencyMap@{deserializeFrequencyMap}}
+\Hypertarget{classcompression_1_1HuffmanCompressor_a09c1f9f1411f284d6710810cbb0759ae}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!deserializeFrequencyMap@{deserializeFrequencyMap}}
 \index{deserializeFrequencyMap@{deserializeFrequencyMap}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
 \doxysubsubsection{\texorpdfstring{deserializeFrequencyMap()}{deserializeFrequencyMap()}}
-{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_ac342b6a1369f4d93ae243c768b17ee89} 
-\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{Huffman\+Compressor\+::\+Frequency\+Map}} compression\+::\+Huffman\+Compressor\+::deserialize\+Frequency\+Map (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{buffer}{, }\item[{size\+\_\+t \&}]{offset}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a09c1f9f1411f284d6710810cbb0759ae} 
+\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{Huffman\+Compressor\+::\+Frequency\+Map}} compression\+::\+Huffman\+Compressor\+::deserialize\+Frequency\+Map (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{buffer}{, }\item[{size\+\_\+t \&}]{offset}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
 \Hypertarget{classcompression_1_1HuffmanCompressor_a5929c73922985f30e48a03a5110ae75f}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!generateCodes@{generateCodes}}
 \index{generateCodes@{generateCodes}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
 \doxysubsubsection{\texorpdfstring{generateCodes()}{generateCodes()}}
 {\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_a5929c73922985f30e48a03a5110ae75f} 
-void compression\+::\+Huffman\+Compressor\+::generate\+Codes (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcompression_1_1HuffmanCompressor_1_1HuffmanNode}{Huffman\+Node}} \texorpdfstring{$\ast$}{*}}]{node}{, }\item[{\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{Huffman\+Code}}}]{prefix}{, }\item[{\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a0b6464c58783d9fcab73ed20a36a8b91}{Huffman\+Code\+Map}} \&}]{code\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+void compression\+::\+Huffman\+Compressor\+::generate\+Codes (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcompression_1_1HuffmanCompressor_1_1HuffmanNode}{Huffman\+Node}} \texorpdfstring{$\ast$}{*}}]{node}{, }\item[{\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a54d89945cf5ab41fffb5bf74c25f463e}{Huffman\+Code}}}]{prefix}{, }\item[{\mbox{\hyperlink{classcompression_1_1HuffmanCompressor_afca0f4edf873c1011ca1e37eec6d8d17}{Huffman\+Code\+Map}} \&}]{code\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
-\Hypertarget{classcompression_1_1HuffmanCompressor_aaf33ce47234d06fc372e9497bd2f2a7e}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!serializeFrequencyMap@{serializeFrequencyMap}}
+\Hypertarget{classcompression_1_1HuffmanCompressor_aced24ba0dddcce010044cc8e6cbf3534}\index{compression::HuffmanCompressor@{compression::HuffmanCompressor}!serializeFrequencyMap@{serializeFrequencyMap}}
 \index{serializeFrequencyMap@{serializeFrequencyMap}!compression::HuffmanCompressor@{compression::HuffmanCompressor}}
 \doxysubsubsection{\texorpdfstring{serializeFrequencyMap()}{serializeFrequencyMap()}}
-{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_aaf33ce47234d06fc372e9497bd2f2a7e} 
-std\+::vector$<$ std\+::byte $>$ compression\+::\+Huffman\+Compressor\+::serialize\+Frequency\+Map (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_af9e5132632ef5f552776057c654e2c92}{Frequency\+Map}} \&}]{freq\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCompressor_aced24ba0dddcce010044cc8e6cbf3534} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Huffman\+Compressor\+::serialize\+Frequency\+Map (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a25e455c5285df3e1b9b40e2b03c0d18e}{Frequency\+Map}} \&}]{freq\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
 
 
 

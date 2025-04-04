@@ -105,6 +105,7 @@ $(function(){initNavTree('classcompression_1_1Lz77Compressor.html',''); initResi
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
@@ -129,51 +130,87 @@ Inheritance diagram for compression::Lz77Compressor:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html">Lz77Symbol</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Match</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afec82f656800362f3b89802e190d7729" id="r_afec82f656800362f3b89802e190d7729"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afec82f656800362f3b89802e190d7729">Lz77Compressor</a> (size_t searchBufferSize=4096, size_t lookAheadBufferSize=32)</td></tr>
-<tr class="memdesc:afec82f656800362f3b89802e190d7729"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor using typical window sizes.  <br /></td></tr>
-<tr class="separator:afec82f656800362f3b89802e190d7729"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade1a7db2cd02903353e238db6abcaa14" id="r_ade1a7db2cd02903353e238db6abcaa14"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::byte &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade1a7db2cd02903353e238db6abcaa14">compress</a> (const std::vector&lt; std::byte &gt; &amp;data) const override</td></tr>
-<tr class="memdesc:ade1a7db2cd02903353e238db6abcaa14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compresses the input data.  <br /></td></tr>
-<tr class="separator:ade1a7db2cd02903353e238db6abcaa14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95d8e7c41db004225ea33c61182532e8" id="r_a95d8e7c41db004225ea33c61182532e8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::byte &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95d8e7c41db004225ea33c61182532e8">decompress</a> (const std::vector&lt; std::byte &gt; &amp;data) const override</td></tr>
-<tr class="memdesc:a95d8e7c41db004225ea33c61182532e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompresses the input data.  <br /></td></tr>
-<tr class="separator:a95d8e7c41db004225ea33c61182532e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2a5b9a67a4ba4a2907c69eab31d99cb" id="r_ab2a5b9a67a4ba4a2907c69eab31d99cb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2a5b9a67a4ba4a2907c69eab31d99cb">Lz77Compressor</a> (size_t searchBufferSize=32768, size_t lookAheadBufferSize=258, bool useGreedyParsing=false, bool useAdaptiveMinLength=true)</td></tr>
+<tr class="memdesc:ab2a5b9a67a4ba4a2907c69eab31d99cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor using typical window sizes.  <br /></td></tr>
+<tr class="separator:ab2a5b9a67a4ba4a2907c69eab31d99cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb67b0b5c52961e40c2f3f8533972b8e" id="r_afb67b0b5c52961e40c2f3f8533972b8e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html">Lz77Symbol</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb67b0b5c52961e40c2f3f8533972b8e">compressToSymbols</a> (const std::vector&lt; uint8_t &gt; &amp;data) const</td></tr>
+<tr class="separator:afb67b0b5c52961e40c2f3f8533972b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac063f8811bfebfba7c8ce2fbb1ba895" id="r_aac063f8811bfebfba7c8ce2fbb1ba895"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac063f8811bfebfba7c8ce2fbb1ba895">compress</a> (const std::vector&lt; uint8_t &gt; &amp;data) const override</td></tr>
+<tr class="memdesc:aac063f8811bfebfba7c8ce2fbb1ba895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compresses the input data.  <br /></td></tr>
+<tr class="separator:aac063f8811bfebfba7c8ce2fbb1ba895"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9bf31062c9afc053328b17c87589ddc" id="r_ad9bf31062c9afc053328b17c87589ddc"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9bf31062c9afc053328b17c87589ddc">decompress</a> (const std::vector&lt; uint8_t &gt; &amp;data) const override</td></tr>
+<tr class="memdesc:ad9bf31062c9afc053328b17c87589ddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompresses the input data.  <br /></td></tr>
+<tr class="separator:ad9bf31062c9afc053328b17c87589ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcompression_1_1ICompressor"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classcompression_1_1ICompressor')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcompression_1_1ICompressor.html">compression::ICompressor</a></td></tr>
 <tr class="memitem:a3a2142d5686b5959e7a1a3d4c0eec8b8 inherit pub_methods_classcompression_1_1ICompressor" id="r_a3a2142d5686b5959e7a1a3d4c0eec8b8"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1ICompressor.html#a3a2142d5686b5959e7a1a3d4c0eec8b8">~ICompressor</a> ()=default</td></tr>
 <tr class="memdesc:a3a2142d5686b5959e7a1a3d4c0eec8b8 inherit pub_methods_classcompression_1_1ICompressor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor. Essential for polymorphic behavior.  <br /></td></tr>
 <tr class="separator:a3a2142d5686b5959e7a1a3d4c0eec8b8 inherit pub_methods_classcompression_1_1ICompressor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ad691f0e538881d309fe200a57792fe47" id="r_ad691f0e538881d309fe200a57792fe47"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad691f0e538881d309fe200a57792fe47">getLengthCode</a> (size_t length)</td></tr>
+<tr class="separator:ad691f0e538881d309fe200a57792fe47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abde9c6e8d564ec6ebe62f8eec3d93024" id="r_abde9c6e8d564ec6ebe62f8eec3d93024"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abde9c6e8d564ec6ebe62f8eec3d93024">getLengthFromCode</a> (uint32_t code)</td></tr>
+<tr class="separator:abde9c6e8d564ec6ebe62f8eec3d93024"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a6aec0013aace3ea701f541cafbb671b0" id="r_a6aec0013aace3ea701f541cafbb671b0"><td class="memItemLeft" align="right" valign="top">static constexpr std::byte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6aec0013aace3ea701f541cafbb671b0">LITERAL_FLAG</a> {0}</td></tr>
-<tr class="separator:a6aec0013aace3ea701f541cafbb671b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab268bc363a451df2a297bedba2794de8" id="r_ab268bc363a451df2a297bedba2794de8"><td class="memItemLeft" align="right" valign="top">static constexpr std::byte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab268bc363a451df2a297bedba2794de8">PAIR_FLAG</a> {1}</td></tr>
-<tr class="separator:ab268bc363a451df2a297bedba2794de8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1592affc0c88b2f0c7329f79a9b4f6d2" id="r_a1592affc0c88b2f0c7329f79a9b4f6d2"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1592affc0c88b2f0c7329f79a9b4f6d2">EOB_SYMBOL</a> = 256</td></tr>
+<tr class="separator:a1592affc0c88b2f0c7329f79a9b4f6d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acca5a707d98ffc246584fb8f91bdc4ee" id="r_acca5a707d98ffc246584fb8f91bdc4ee"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acca5a707d98ffc246584fb8f91bdc4ee">LENGTH_CODE_BASE</a> = 257</td></tr>
+<tr class="separator:acca5a707d98ffc246584fb8f91bdc4ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56863bb12c9b4aeff239dd28b5346990" id="r_a56863bb12c9b4aeff239dd28b5346990"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56863bb12c9b4aeff239dd28b5346990">MIN_LEN</a> = 3</td></tr>
+<tr class="separator:a56863bb12c9b4aeff239dd28b5346990"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af310a3723175f4c07e13231a807f302a" id="r_af310a3723175f4c07e13231a807f302a"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af310a3723175f4c07e13231a807f302a">MAX_LEN</a> = 258</td></tr>
+<tr class="separator:af310a3723175f4c07e13231a807f302a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3aa1a8e5604f0364d3914e3e265872d" id="r_af3aa1a8e5604f0364d3914e3e265872d"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3aa1a8e5604f0364d3914e3e265872d">MAX_HASH_CHAIN_LENGTH</a> = 8192</td></tr>
+<tr class="separator:af3aa1a8e5604f0364d3914e3e265872d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adedc38c824232fb33b7b09b51f2480c2" id="r_adedc38c824232fb33b7b09b51f2480c2"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adedc38c824232fb33b7b09b51f2480c2">USE_HASH_CHAIN_LIMIT</a> = true</td></tr>
+<tr class="separator:adedc38c824232fb33b7b09b51f2480c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50539d1e8808f782d470085740f42cf9" id="r_a50539d1e8808f782d470085740f42cf9"><td class="memItemLeft" align="right" valign="top">static constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50539d1e8808f782d470085740f42cf9">MIN_MATCH_FOR_FAR_DISTANCE</a> = 5</td></tr>
+<tr class="separator:a50539d1e8808f782d470085740f42cf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67cc62980f2bcb35496eb20d303c3233" id="r_a67cc62980f2bcb35496eb20d303c3233"><td class="memItemLeft" align="right" valign="top">static constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67cc62980f2bcb35496eb20d303c3233">ADAPTIVE_MIN_LENGTH_CLOSE</a> = 3</td></tr>
+<tr class="separator:a67cc62980f2bcb35496eb20d303c3233"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b3a386c79b97e63224fdead20f33ef8" id="r_a3b3a386c79b97e63224fdead20f33ef8"><td class="memItemLeft" align="right" valign="top">static constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b3a386c79b97e63224fdead20f33ef8">ADAPTIVE_MIN_LENGTH_FAR</a> = 4</td></tr>
+<tr class="separator:a3b3a386c79b97e63224fdead20f33ef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cc6d02ed12875572484bd1cf81a8760" id="r_a7cc6d02ed12875572484bd1cf81a8760"><td class="memItemLeft" align="right" valign="top">static constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7cc6d02ed12875572484bd1cf81a8760">ADAPTIVE_MIN_LENGTH_VERY_FAR</a> = 5</td></tr>
+<tr class="separator:a7cc6d02ed12875572484bd1cf81a8760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:ad525ccedb61e823a7d4d290c1967656b" id="r_ad525ccedb61e823a7d4d290c1967656b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Match</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad525ccedb61e823a7d4d290c1967656b">findLongestMatch</a> (const std::vector&lt; std::byte &gt; &amp;data, size_t currentPosition, size_t searchBufferStart) const</td></tr>
-<tr class="memdesc:ad525ccedb61e823a7d4d290c1967656b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the longest match for the lookahead buffer within the search buffer.  <br /></td></tr>
-<tr class="separator:ad525ccedb61e823a7d4d290c1967656b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a280e027cc7a16ea5bdaaf4a56ebf0806" id="r_a280e027cc7a16ea5bdaaf4a56ebf0806"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a280e027cc7a16ea5bdaaf4a56ebf0806">getMinMatchLength</a> (size_t distance) const</td></tr>
+<tr class="separator:a280e027cc7a16ea5bdaaf4a56ebf0806"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac26c3bf317391f6f64fe45224d1f58e3" id="r_ac26c3bf317391f6f64fe45224d1f58e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Match</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac26c3bf317391f6f64fe45224d1f58e3">findBestMatchAt</a> (const std::vector&lt; uint8_t &gt; &amp;data, size_t pos, const std::unordered_map&lt; uint32_t, std::vector&lt; size_t &gt; &gt; &amp;hashTable) const</td></tr>
+<tr class="separator:ac26c3bf317391f6f64fe45224d1f58e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fafe3ff48fd9f7f8391a7e3ad132031" id="r_a6fafe3ff48fd9f7f8391a7e3ad132031"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fafe3ff48fd9f7f8391a7e3ad132031">extendMatch</a> (<a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Match</a> &amp;match, const std::vector&lt; uint8_t &gt; &amp;data, size_t currentPos, size_t matchPos) const</td></tr>
+<tr class="separator:a6fafe3ff48fd9f7f8391a7e3ad132031"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af699a7bbe8687ce2238008789f315642" id="r_af699a7bbe8687ce2238008789f315642"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af699a7bbe8687ce2238008789f315642">isMatchWorthUsing</a> (const <a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Match</a> &amp;match, size_t distance=0) const</td></tr>
+<tr class="separator:af699a7bbe8687ce2238008789f315642"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:ab1b2015b3553e917279b49a5a29dcd50" id="r_ab1b2015b3553e917279b49a5a29dcd50"><td class="memItemLeft" align="right" valign="top">const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1b2015b3553e917279b49a5a29dcd50">searchBufferSize_</a></td></tr>
-<tr class="separator:ab1b2015b3553e917279b49a5a29dcd50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb63405b028e2aa6a340cb6be3d8427d" id="r_afb63405b028e2aa6a340cb6be3d8427d"><td class="memItemLeft" align="right" valign="top">const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb63405b028e2aa6a340cb6be3d8427d">lookAheadBufferSize_</a></td></tr>
-<tr class="separator:afb63405b028e2aa6a340cb6be3d8427d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4abad90bb78c6d35eab7a603d1c77fd8" id="r_a4abad90bb78c6d35eab7a603d1c77fd8"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4abad90bb78c6d35eab7a603d1c77fd8">searchBufferSize_</a></td></tr>
+<tr class="separator:a4abad90bb78c6d35eab7a603d1c77fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24e9bf3b390b42a685dc31a8619066c9" id="r_a24e9bf3b390b42a685dc31a8619066c9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24e9bf3b390b42a685dc31a8619066c9">lookAheadBufferSize_</a></td></tr>
+<tr class="separator:a24e9bf3b390b42a685dc31a8619066c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8796f4b04ceefb3e603933202963972" id="r_aa8796f4b04ceefb3e603933202963972"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8796f4b04ceefb3e603933202963972">useGreedyParsing_</a></td></tr>
+<tr class="separator:aa8796f4b04ceefb3e603933202963972"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a705e908d53f844957721557060d970b5" id="r_a705e908d53f844957721557060d970b5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a705e908d53f844957721557060d970b5">useAdaptiveMinLength_</a></td></tr>
+<tr class="separator:a705e908d53f844957721557060d970b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements the LZ77 compression algorithm. </p>
 <p>LZ77 works by finding repeated sequences of data and replacing them with references (distance, length) to previous occurrences within a sliding window. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="afec82f656800362f3b89802e190d7729" name="afec82f656800362f3b89802e190d7729"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afec82f656800362f3b89802e190d7729">&#9670;&#160;</a></span>Lz77Compressor()</h2>
+<a id="ab2a5b9a67a4ba4a2907c69eab31d99cb" name="ab2a5b9a67a4ba4a2907c69eab31d99cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2a5b9a67a4ba4a2907c69eab31d99cb">&#9670;&#160;</a></span>Lz77Compressor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -181,23 +218,41 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">compression::Lz77Compressor::Lz77Compressor </td>
           <td>(</td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>searchBufferSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval">4096</span>, </td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>searchBufferSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval">32768</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>lookAheadBufferSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval">32</span>&#160;)</td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>lookAheadBufferSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval">258</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>useGreedyParsing</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>useAdaptiveMinLength</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Default constructor using typical window sizes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">searchBufferSize</td><td>Size of the search buffer (increased for better compression) </td></tr>
+    <tr><td class="paramname">lookAheadBufferSize</td><td>Size of the look-ahead buffer </td></tr>
+    <tr><td class="paramname">useGreedyParsing</td><td>When true, uses greedy parsing instead of lazy parsing </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ade1a7db2cd02903353e238db6abcaa14" name="ade1a7db2cd02903353e238db6abcaa14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade1a7db2cd02903353e238db6abcaa14">&#9670;&#160;</a></span>compress()</h2>
+<a id="aac063f8811bfebfba7c8ce2fbb1ba895" name="aac063f8811bfebfba7c8ce2fbb1ba895"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac063f8811bfebfba7c8ce2fbb1ba895">&#9670;&#160;</a></span>compress()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -206,9 +261,9 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; std::byte &gt; compression::Lz77Compressor::compress </td>
+          <td class="memname">std::vector&lt; uint8_t &gt; compression::Lz77Compressor::compress </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::byte &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -227,7 +282,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::byte&gt; The compressed data. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; The compressed data. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">std::runtime_error</td><td>or derived class on compression failure. </td></tr>
@@ -235,12 +290,29 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classcompression_1_1ICompressor.html#ac7412ce2b69c6a8aefbb4cec257e2a00">compression::ICompressor</a>.</p>
+<p>Implements <a class="el" href="classcompression_1_1ICompressor.html#a8671d6084c1bf54b1dc440ad7ee7ee2f">compression::ICompressor</a>.</p>
 
 </div>
 </div>
-<a id="a95d8e7c41db004225ea33c61182532e8" name="a95d8e7c41db004225ea33c61182532e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95d8e7c41db004225ea33c61182532e8">&#9670;&#160;</a></span>decompress()</h2>
+<a id="afb67b0b5c52961e40c2f3f8533972b8e" name="afb67b0b5c52961e40c2f3f8533972b8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb67b0b5c52961e40c2f3f8533972b8e">&#9670;&#160;</a></span>compressToSymbols()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html">Lz77Compressor::Lz77Symbol</a> &gt; compression::Lz77Compressor::compressToSymbols </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad9bf31062c9afc053328b17c87589ddc" name="ad9bf31062c9afc053328b17c87589ddc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9bf31062c9afc053328b17c87589ddc">&#9670;&#160;</a></span>decompress()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,9 +321,9 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; std::byte &gt; compression::Lz77Compressor::decompress </td>
+          <td class="memname">std::vector&lt; uint8_t &gt; compression::Lz77Compressor::decompress </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::byte &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -270,7 +342,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::byte&gt; The original decompressed data. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; The original decompressed data. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">std::runtime_error</td><td>or derived class on decompression failure. </td></tr>
@@ -278,12 +350,12 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classcompression_1_1ICompressor.html#a0ca109c56d7c86bc66b5d984d0d65042">compression::ICompressor</a>.</p>
+<p>Implements <a class="el" href="classcompression_1_1ICompressor.html#a3d02bbe3947a450e9df997495c5af718">compression::ICompressor</a>.</p>
 
 </div>
 </div>
-<a id="ad525ccedb61e823a7d4d290c1967656b" name="ad525ccedb61e823a7d4d290c1967656b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad525ccedb61e823a7d4d290c1967656b">&#9670;&#160;</a></span>findLongestMatch()</h2>
+<a id="a6fafe3ff48fd9f7f8391a7e3ad132031" name="a6fafe3ff48fd9f7f8391a7e3ad132031"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fafe3ff48fd9f7f8391a7e3ad132031">&#9670;&#160;</a></span>extendMatch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -292,19 +364,24 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Lz77Compressor::Match</a> compression::Lz77Compressor::findLongestMatch </td>
+          <td class="memname">void compression::Lz77Compressor::extendMatch </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::byte &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+          <td class="paramtype"><a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Match</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>match</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>currentPosition</em></span>, </td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>searchBufferStart</em></span>&#160;) const</td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>currentPos</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>matchPos</em></span>&#160;) const</td>
         </tr>
       </table>
   </td>
@@ -314,22 +391,149 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Finds the longest match for the lookahead buffer within the search buffer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data</td><td>The input data stream. </td></tr>
-    <tr><td class="paramname">currentPosition</td><td>The current position in the data stream (start of lookahead). </td></tr>
-    <tr><td class="paramname">searchBufferStart</td><td>The starting index of the search buffer. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Match</a> The best match found (distance &gt; 0 if a match was found). </dd></dl>
+</div>
+</div>
+<a id="ac26c3bf317391f6f64fe45224d1f58e3" name="ac26c3bf317391f6f64fe45224d1f58e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac26c3bf317391f6f64fe45224d1f58e3">&#9670;&#160;</a></span>findBestMatchAt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Lz77Compressor::Match</a> compression::Lz77Compressor::findBestMatchAt </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>pos</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_map&lt; uint32_t, std::vector&lt; size_t &gt; &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>hashTable</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad691f0e538881d309fe200a57792fe47" name="ad691f0e538881d309fe200a57792fe47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad691f0e538881d309fe200a57792fe47">&#9670;&#160;</a></span>getLengthCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint32_t compression::Lz77Compressor::getLengthCode </td>
+          <td>(</td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>length</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abde9c6e8d564ec6ebe62f8eec3d93024" name="abde9c6e8d564ec6ebe62f8eec3d93024"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abde9c6e8d564ec6ebe62f8eec3d93024">&#9670;&#160;</a></span>getLengthFromCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static size_t compression::Lz77Compressor::getLengthFromCode </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>code</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a280e027cc7a16ea5bdaaf4a56ebf0806" name="a280e027cc7a16ea5bdaaf4a56ebf0806"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a280e027cc7a16ea5bdaaf4a56ebf0806">&#9670;&#160;</a></span>getMinMatchLength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t compression::Lz77Compressor::getMinMatchLength </td>
+          <td>(</td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>distance</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af699a7bbe8687ce2238008789f315642" name="af699a7bbe8687ce2238008789f315642"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af699a7bbe8687ce2238008789f315642">&#9670;&#160;</a></span>isMatchWorthUsing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool compression::Lz77Compressor::isMatchWorthUsing </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcompression_1_1Lz77Compressor_1_1Match.html">Match</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>match</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>distance</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a6aec0013aace3ea701f541cafbb671b0" name="a6aec0013aace3ea701f541cafbb671b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6aec0013aace3ea701f541cafbb671b0">&#9670;&#160;</a></span>LITERAL_FLAG</h2>
+<a id="a67cc62980f2bcb35496eb20d303c3233" name="a67cc62980f2bcb35496eb20d303c3233"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67cc62980f2bcb35496eb20d303c3233">&#9670;&#160;</a></span>ADAPTIVE_MIN_LENGTH_CLOSE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -338,7 +542,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::byte compression::Lz77Compressor::LITERAL_FLAG {0}</td>
+          <td class="memname">size_t compression::Lz77Compressor::ADAPTIVE_MIN_LENGTH_CLOSE = 3</td>
         </tr>
       </table>
   </td>
@@ -350,8 +554,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="afb63405b028e2aa6a340cb6be3d8427d" name="afb63405b028e2aa6a340cb6be3d8427d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb63405b028e2aa6a340cb6be3d8427d">&#9670;&#160;</a></span>lookAheadBufferSize_</h2>
+<a id="a3b3a386c79b97e63224fdead20f33ef8" name="a3b3a386c79b97e63224fdead20f33ef8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b3a386c79b97e63224fdead20f33ef8">&#9670;&#160;</a></span>ADAPTIVE_MIN_LENGTH_FAR</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -360,7 +564,95 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const size_t compression::Lz77Compressor::lookAheadBufferSize_</td>
+          <td class="memname">size_t compression::Lz77Compressor::ADAPTIVE_MIN_LENGTH_FAR = 4</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7cc6d02ed12875572484bd1cf81a8760" name="a7cc6d02ed12875572484bd1cf81a8760"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cc6d02ed12875572484bd1cf81a8760">&#9670;&#160;</a></span>ADAPTIVE_MIN_LENGTH_VERY_FAR</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t compression::Lz77Compressor::ADAPTIVE_MIN_LENGTH_VERY_FAR = 5</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1592affc0c88b2f0c7329f79a9b4f6d2" name="a1592affc0c88b2f0c7329f79a9b4f6d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1592affc0c88b2f0c7329f79a9b4f6d2">&#9670;&#160;</a></span>EOB_SYMBOL</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t compression::Lz77Compressor::EOB_SYMBOL = 256</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acca5a707d98ffc246584fb8f91bdc4ee" name="acca5a707d98ffc246584fb8f91bdc4ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acca5a707d98ffc246584fb8f91bdc4ee">&#9670;&#160;</a></span>LENGTH_CODE_BASE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t compression::Lz77Compressor::LENGTH_CODE_BASE = 257</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a24e9bf3b390b42a685dc31a8619066c9" name="a24e9bf3b390b42a685dc31a8619066c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24e9bf3b390b42a685dc31a8619066c9">&#9670;&#160;</a></span>lookAheadBufferSize_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t compression::Lz77Compressor::lookAheadBufferSize_</td>
         </tr>
       </table>
   </td>
@@ -372,8 +664,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab268bc363a451df2a297bedba2794de8" name="ab268bc363a451df2a297bedba2794de8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab268bc363a451df2a297bedba2794de8">&#9670;&#160;</a></span>PAIR_FLAG</h2>
+<a id="af3aa1a8e5604f0364d3914e3e265872d" name="af3aa1a8e5604f0364d3914e3e265872d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3aa1a8e5604f0364d3914e3e265872d">&#9670;&#160;</a></span>MAX_HASH_CHAIN_LENGTH</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -382,7 +674,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::byte compression::Lz77Compressor::PAIR_FLAG {1}</td>
+          <td class="memname">uint32_t compression::Lz77Compressor::MAX_HASH_CHAIN_LENGTH = 8192</td>
         </tr>
       </table>
   </td>
@@ -394,8 +686,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab1b2015b3553e917279b49a5a29dcd50" name="ab1b2015b3553e917279b49a5a29dcd50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1b2015b3553e917279b49a5a29dcd50">&#9670;&#160;</a></span>searchBufferSize_</h2>
+<a id="af310a3723175f4c07e13231a807f302a" name="af310a3723175f4c07e13231a807f302a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af310a3723175f4c07e13231a807f302a">&#9670;&#160;</a></span>MAX_LEN</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -404,7 +696,139 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const size_t compression::Lz77Compressor::searchBufferSize_</td>
+          <td class="memname">uint32_t compression::Lz77Compressor::MAX_LEN = 258</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a56863bb12c9b4aeff239dd28b5346990" name="a56863bb12c9b4aeff239dd28b5346990"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56863bb12c9b4aeff239dd28b5346990">&#9670;&#160;</a></span>MIN_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t compression::Lz77Compressor::MIN_LEN = 3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a50539d1e8808f782d470085740f42cf9" name="a50539d1e8808f782d470085740f42cf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50539d1e8808f782d470085740f42cf9">&#9670;&#160;</a></span>MIN_MATCH_FOR_FAR_DISTANCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t compression::Lz77Compressor::MIN_MATCH_FOR_FAR_DISTANCE = 5</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4abad90bb78c6d35eab7a603d1c77fd8" name="a4abad90bb78c6d35eab7a603d1c77fd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4abad90bb78c6d35eab7a603d1c77fd8">&#9670;&#160;</a></span>searchBufferSize_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t compression::Lz77Compressor::searchBufferSize_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adedc38c824232fb33b7b09b51f2480c2" name="adedc38c824232fb33b7b09b51f2480c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adedc38c824232fb33b7b09b51f2480c2">&#9670;&#160;</a></span>USE_HASH_CHAIN_LIMIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool compression::Lz77Compressor::USE_HASH_CHAIN_LIMIT = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a705e908d53f844957721557060d970b5" name="a705e908d53f844957721557060d970b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a705e908d53f844957721557060d970b5">&#9670;&#160;</a></span>useAdaptiveMinLength_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool compression::Lz77Compressor::useAdaptiveMinLength_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa8796f4b04ceefb3e603933202963972" name="aa8796f4b04ceefb3e603933202963972"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8796f4b04ceefb3e603933202963972">&#9670;&#160;</a></span>useGreedyParsing_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool compression::Lz77Compressor::useGreedyParsing_</td>
         </tr>
       </table>
   </td>

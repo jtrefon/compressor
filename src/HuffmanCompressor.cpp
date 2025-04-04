@@ -1,6 +1,8 @@
-#include <compression/HuffmanCompressor.hpp>
+#include "compression/HuffmanCompressor.hpp"
+#include <bitset>
+#include <algorithm>
 #include <stdexcept>
-#include <algorithm> // for std::transform
+#include <sstream>
 #include <vector>
 #include <map>
 #include <queue>
@@ -117,350 +119,365 @@ uint64_t deserializeUint64(const std::vector<std::byte>& buffer, size_t& offset)
 
 // --- HuffmanCompressor Implementation --- 
 
-HuffmanCompressor::FrequencyMap 
-HuffmanCompressor::buildFrequencyMap(const std::vector<std::byte>& data) const {
+// Helper function to convert a byte to a bitset string representation for debugging
+static std::string byteToBitString(uint8_t byte) {
+    std::bitset<8> bits(byte);
+    return bits.to_string();
+}
+
+// Helper function to get the number of bits needed to represent a value
+static uint8_t bitsRequired(uint64_t value) {
+    if (value == 0) return 1; // Special case: need 1 bit to represent 0
+    
+    uint8_t bits = 0;
+    while (value > 0) {
+        value >>= 1;
+        bits++;
+    }
+    return bits;
+}
+
+// Helper for debugging: get node description (address + data)
+static std::string getNodeDesc(const HuffmanCompressor::HuffmanNode* node) {
+    if (!node) return "NULL";
+    std::stringstream ss;
+    ss << "Node@" << node << "(data=" << static_cast<int>(node->data) 
+       << ", freq=" << node->frequency << ")";
+    return ss.str();
+}
+
+// --- Frequency Map Construction ---
+HuffmanCompressor::FrequencyMap HuffmanCompressor::buildFrequencyMap(
+    const std::vector<uint8_t>& data) const {
     FrequencyMap freqMap;
-    for (std::byte b : data) {
-        freqMap[b]++;
+    
+    // Count occurrences of each byte
+    for (const auto& byte : data) {
+        freqMap[byte]++;
     }
-    // Ensure at least two distinct symbols if only one exists, 
-    // otherwise tree building fails. Add a dummy symbol with freq 0 if needed.
-    // A more robust solution might handle single-symbol files specially.
-    if (freqMap.size() == 1) {
-         freqMap[static_cast<std::byte>(0)] = 0; // Add dummy if only one symbol
-    }
+    
     return freqMap;
 }
 
-// buildHuffmanTree uses vector and sort instead of priority_queue
-std::unique_ptr<HuffmanCompressor::HuffmanNode> 
-HuffmanCompressor::buildHuffmanTree(const FrequencyMap& freqMap) const {
-    if (freqMap.empty()) return nullptr;
-
-    // Use a vector to store nodes, manage ownership directly
-    std::vector<std::unique_ptr<HuffmanNode>> nodes;
-    nodes.reserve(freqMap.size());
-
-    // Create leaf nodes 
-    for (const auto& pair : freqMap) {
-         // Only add nodes with non-zero frequency OR if it's the only node
-         if (pair.second > 0 || freqMap.size() == 1) { 
-             nodes.emplace_back(std::make_unique<HuffmanNode>(pair.first, pair.second));
-         }
+// --- Huffman Tree Construction ---
+// Custom comparator for the priority queue
+struct NodePtrGreater {
+    bool operator()(
+        const std::unique_ptr<HuffmanCompressor::HuffmanNode>& lhs, 
+        const std::unique_ptr<HuffmanCompressor::HuffmanNode>& rhs) const {
+        return lhs->frequency > rhs->frequency; // Min heap based on frequency
     }
+};
 
-    // Handle edge cases
-    if (nodes.empty()) return nullptr; 
+std::unique_ptr<HuffmanCompressor::HuffmanNode> HuffmanCompressor::buildHuffmanTree(
+    const FrequencyMap& freqMap) const {
     
-    if (nodes.size() == 1) {
-        // If only one node, create a dummy parent to ensure a binary structure
-        auto left = std::move(nodes[0]);
-        nodes.clear(); // Clear the vector as we are replacing its content
-        auto dummy_right = std::make_unique<HuffmanNode>(static_cast<std::byte>(0), 0);
-        nodes.emplace_back(std::make_unique<HuffmanNode>(std::move(left), std::move(dummy_right)));
-        // Fall through to return nodes[0] below
+    // Special case: empty input
+    if (freqMap.empty()) {
+        return nullptr;
     }
-
-    // Comparator for sorting unique_ptr<HuffmanNode> by frequency (descending for easy pop_back)
-    auto compareNodes = [](const std::unique_ptr<HuffmanNode>& a, const std::unique_ptr<HuffmanNode>& b) {
-        return a->frequency > b->frequency; // Sort descending frequency
-    };
-
-    // Build the tree using vector and sort
-    while (nodes.size() > 1) {
-        // Sort by frequency (highest frequency at the end for std::pop_back)
-        std::sort(nodes.begin(), nodes.end(), compareNodes);
-
-        // Take the two lowest frequency nodes (now at the end after sorting descending)
-        auto right = std::move(nodes.back());
-        nodes.pop_back();
-        auto left = std::move(nodes.back());
-        nodes.pop_back();
-
-        // Create parent node, moving ownership
+    
+    // Special case: only one byte value in the input
+    if (freqMap.size() == 1) {
+        auto it = freqMap.begin();
+        auto node = std::make_unique<HuffmanNode>(it->first, it->second);
+        // For single-symbol files, we still need a proper tree structure
+        // Create a parent node with our symbol node as a child
+        auto root = std::make_unique<HuffmanNode>(nullptr, nullptr);
+        root->frequency = node->frequency;
+        root->left = std::move(node);
+        return root;
+    }
+    
+    // Priority queue containing the nodes of the Huffman tree
+    // Using min heap based on frequency
+    using MinHeap = std::priority_queue<
+        std::unique_ptr<HuffmanNode>, 
+        std::vector<std::unique_ptr<HuffmanNode>>, 
+        NodePtrGreater
+    >;
+    
+    MinHeap pq;
+    
+    // Create a leaf node for each symbol and add it to the priority queue
+    for (const auto& [byte, freq] : freqMap) {
+        pq.push(std::make_unique<HuffmanNode>(byte, freq));
+    }
+    
+    // While there is more than one node in the queue
+    while (pq.size() > 1) {
+        // Extract the two nodes with lowest frequency
+        auto left = std::move(const_cast<std::unique_ptr<HuffmanNode>&>(pq.top()));
+        pq.pop();
+        
+        auto right = std::move(const_cast<std::unique_ptr<HuffmanNode>&>(pq.top()));
+        pq.pop();
+        
+        // Create a new internal node with these two nodes as children
+        // and with frequency equal to the sum of their frequencies
         auto parent = std::make_unique<HuffmanNode>(std::move(left), std::move(right));
         
-        // Add parent back to the vector
-        nodes.emplace_back(std::move(parent));
-        // No need to re-sort immediately if we always process the lowest pair
+        // Add the new node to the priority queue
+        pq.push(std::move(parent));
     }
-
-    // The final node in the vector is the root
-    // Move ownership out of the vector before returning
-    if (nodes.empty()) { // Should not happen if logic is correct
-         throw std::logic_error("Node vector became empty during tree build.");
-    }
-    return std::move(nodes[0]);
+    
+    // The remaining node is the root node of the Huffman tree
+    return std::move(const_cast<std::unique_ptr<HuffmanNode>&>(pq.top()));
 }
 
+// --- Code Generation ---
 void HuffmanCompressor::generateCodes(
-    const HuffmanNode* node, HuffmanCode prefix, HuffmanCodeMap& codeMap) const 
-{
+    const HuffmanNode* node, 
+    HuffmanCode prefix, 
+    HuffmanCodeMap& codeMap) const {
+    
     if (!node) return;
-
-    // Leaf node: store the code
+    
+    // Check if this is a leaf node
     if (!node->left && !node->right) {
-        if (prefix.empty()) {
-             if(node->frequency > 0) { 
-                  prefix.push_back(false); 
-             } else {
-                 return;
-             }
-        }
-        if (node->frequency > 0 || codeMap.empty()) { 
-            codeMap[node->data] = prefix;
-        }
+        // Assign code to symbol
+        codeMap[node->data] = prefix;
         return;
     }
-
-    // Traverse left (append 0)
+    
+    // Recursive traversal to build codes
     if (node->left) {
-        prefix.push_back(false);
-        generateCodes(node->left.get(), prefix, codeMap);
-        prefix.pop_back();
+        // Add 0 for left branch
+        HuffmanCode leftCode = prefix;
+        leftCode.push_back(false);
+        generateCodes(node->left.get(), leftCode, codeMap);
     }
-
-    // Traverse right (append 1)
+    
     if (node->right) {
-        prefix.push_back(true);
-        generateCodes(node->right.get(), prefix, codeMap);
-        prefix.pop_back();
+        // Add 1 for right branch
+        HuffmanCode rightCode = prefix;
+        rightCode.push_back(true);
+        generateCodes(node->right.get(), rightCode, codeMap);
     }
 }
 
-std::vector<std::byte> 
-HuffmanCompressor::serializeFrequencyMap(const FrequencyMap& freqMap) const {
-    std::vector<std::byte> buffer;
-    buffer.reserve(FREQ_MAP_SIZE_FIELD_SIZE + freqMap.size() * FREQ_MAP_ENTRY_SIZE);
-    uint16_t mapSize = static_cast<uint16_t>(freqMap.size());
-    buffer.push_back(static_cast<std::byte>(mapSize & 0xFF));
-    buffer.push_back(static_cast<std::byte>((mapSize >> 8) & 0xFF));
-    for (const auto& pair : freqMap) {
-        buffer.push_back(pair.first);
-        serializeUint64(pair.second, buffer);
+// --- Serialization of Frequency Map ---
+std::vector<uint8_t> HuffmanCompressor::serializeFrequencyMap(
+    const FrequencyMap& freqMap) const {
+    
+    std::vector<uint8_t> serialized;
+    
+    // Format: 
+    // - Byte: Number of entries (max 256)
+    // - For each entry:
+    //   - Byte: Symbol
+    //   - VarInt: Frequency
+    
+    // Number of entries (max 256 for byte values)
+    serialized.push_back(static_cast<uint8_t>(freqMap.size()));
+    
+    // For each symbol and its frequency
+    for (const auto& [symbol, frequency] : freqMap) {
+        // Symbol (byte value)
+        serialized.push_back(symbol);
+        
+        // Frequency (variable-length encoding)
+        // Store 7 bits per byte, high bit = "more bytes follow"
+        uint64_t value = frequency;
+        do {
+            uint8_t byte = value & 0x7F; // Get 7 bits
+            value >>= 7;  // Shift for next 7 bits
+            if (value > 0) byte |= 0x80; // Set high bit if more data follows
+            serialized.push_back(byte);
+        } while (value > 0);
     }
-    return buffer;
+    
+    return serialized;
 }
 
-HuffmanCompressor::FrequencyMap 
-HuffmanCompressor::deserializeFrequencyMap(const std::vector<std::byte>& buffer, size_t& offset) const {
-    if (offset + FREQ_MAP_SIZE_FIELD_SIZE > buffer.size()) {
-        throw std::runtime_error("Buffer too small for frequency map size field.");
-    }
-    uint16_t mapSize = static_cast<uint16_t>(buffer[offset++]);
-    mapSize |= (static_cast<uint16_t>(buffer[offset++]) << 8);
+// --- Deserialization of Frequency Map ---
+HuffmanCompressor::FrequencyMap HuffmanCompressor::deserializeFrequencyMap(
+    const std::vector<uint8_t>& buffer, 
+    size_t& offset) const {
+    
     FrequencyMap freqMap;
-    if (offset + mapSize * FREQ_MAP_ENTRY_SIZE > buffer.size()) {
-         throw std::runtime_error("Buffer too small for frequency map entries.");
+    
+    // Check buffer size
+    if (offset >= buffer.size()) {
+        throw std::runtime_error("Buffer ended unexpectedly during map deserialization");
     }
-    for (uint16_t i = 0; i < mapSize; ++i) {
-        std::byte b = buffer[offset++];
-        uint64_t freq = deserializeUint64(buffer, offset);
-        freqMap[b] = freq;
+    
+    // Get count of entries
+    uint8_t count = buffer[offset++];
+    
+    // Process each entry
+    for (uint8_t i = 0; i < count; i++) {
+        // Check buffer size
+        if (offset + 1 >= buffer.size()) {
+            throw std::runtime_error("Buffer ended unexpectedly during map entry deserialization");
+        }
+        
+        // Read symbol
+        uint8_t symbol = buffer[offset++];
+        
+        // Read frequency (variable-length encoded)
+        uint64_t frequency = 0;
+        uint8_t shift = 0;
+        
+        while (offset < buffer.size()) {
+            uint8_t byte = buffer[offset++];
+            frequency |= (static_cast<uint64_t>(byte & 0x7F) << shift);
+            shift += 7;
+            
+            // Check if this is the last byte of the value
+            if ((byte & 0x80) == 0) break;
+        }
+        
+        // Store in the map
+        freqMap[symbol] = frequency;
     }
+    
     return freqMap;
 }
 
-
-// compress needs to be non-const now because buildHuffmanTree is non-const
-std::vector<std::byte> HuffmanCompressor::compress(const std::vector<std::byte>& data) const {
-    if (data.empty()) return {};
-
-    // 1. Build frequency map
-    FrequencyMap freqMap = buildFrequencyMap(data);
-    // Add dummy node if needed for tree construction (only if exactly one symbol exists)
-    bool added_dummy = false;
-    FrequencyMap treeBuildFreqMap = freqMap; // Copy for tree building
-    if (treeBuildFreqMap.size() == 1 && treeBuildFreqMap.begin()->second > 0) { // Check if single node is real
-         treeBuildFreqMap[static_cast<std::byte>(0)] = 0; 
-         added_dummy = true;
-    } else if (treeBuildFreqMap.empty() && !data.empty()){ // Should not happen
-         throw std::runtime_error("Frequency map empty for non-empty data.");
-    }
-    if (treeBuildFreqMap.empty()) return {}; // Input data was truly empty
-
-    // 2. Serialize frequency map (original map)
-    std::vector<std::byte> freqMapBytes = serializeFrequencyMap(freqMap);
-
-    // 3. Build Huffman tree (using map possibly containing dummy)
-    std::unique_ptr<HuffmanNode> root = buildHuffmanTree(treeBuildFreqMap);
-    if (!root) { 
-         if (freqMap.empty()) return {}; // Truly empty input
-         else throw std::runtime_error("Failed to build Huffman tree for non-empty data.");
-    }
-
-    // 4. Generate Huffman codes
-    HuffmanCodeMap codeMap;
-    generateCodes(root.get(), {}, codeMap);
+// --- Main Compression Function ---
+std::vector<uint8_t> HuffmanCompressor::compress(
+    const std::vector<uint8_t>& data) const {
     
-    // Handle single symbol case explicitly after generating codes
-    if (codeMap.empty() && !freqMap.empty()) {
-        if (freqMap.size() == 1) {
-            codeMap[freqMap.begin()->first] = {false};
-        } else if (!data.empty()) {
-            throw std::runtime_error("Failed to generate codes for non-empty data (multi-symbol).");
-        }
-    }
-
-    // 5. Encode data using codes
-    std::vector<std::byte> encodedData;
-    encodedData.reserve(freqMapBytes.size() + sizeof(uint64_t) + data.size() + 100);
-    encodedData.insert(encodedData.end(), freqMapBytes.begin(), freqMapBytes.end());
-    size_t bitCountOffset = encodedData.size();
-    serializeUint64(0, encodedData); // Placeholder for bit count
-
-    BitWriter writer(encodedData);
-    uint64_t totalBitsWritten = 0;
-    for (std::byte b : data) {
-        auto it = codeMap.find(b);
-        if (it == codeMap.end()) {
-             // This might happen if single-symbol case wasn't handled correctly
-             if (codeMap.size() == 1 && freqMap.size() == 1 && b == freqMap.begin()->first) {
-                  it = codeMap.find(b); 
-             } 
-             if (it == codeMap.end()) { 
-                  throw std::runtime_error("Could not find Huffman code for byte during encoding.");
-             }
-        }
-        const auto& code = it->second;
-        writer.writeCode(code);
-        totalBitsWritten += code.size();
-    }
-    writer.flush();
-    
-    // Overwrite the placeholder bit count
-    size_t currentOffset = bitCountOffset;
-    std::vector<std::byte> bitCountBuffer;
-    serializeUint64(totalBitsWritten, bitCountBuffer);
-    for(size_t i=0; i < sizeof(uint64_t); ++i) {
-        if(currentOffset + i < encodedData.size()) { 
-           encodedData[currentOffset + i] = bitCountBuffer[i];
-        } else {
-            throw std::runtime_error("Buffer overrun when writing bit count.");
-        }
-    }
-
-    return encodedData;
-}
-
-// decompress needs to be non-const now because buildHuffmanTree is non-const
-std::vector<std::byte> HuffmanCompressor::decompress(const std::vector<std::byte>& data) const {
-     if (data.empty()) return {};
-
-    size_t offset = 0;
-
-    // 1. Deserialize frequency map
-    FrequencyMap freqMap = deserializeFrequencyMap(data, offset);
-    
-     // Add dummy node if needed for tree reconstruction (matches logic in compress)
-     FrequencyMap treeBuildFreqMap = freqMap; // Copy for tree building
-     bool added_dummy = false;
-     if (treeBuildFreqMap.size() == 1 && treeBuildFreqMap.begin()->second > 0) {
-          treeBuildFreqMap[static_cast<std::byte>(0)] = 0;
-          added_dummy = true;
-     }
-     
-    if (treeBuildFreqMap.empty()) { 
+    // Handle empty input
+    if (data.empty()) {
         return {};
     }
     
-    // 2. Read total number of bits to decode
-    uint64_t totalBitsToRead = deserializeUint64(data, offset);
+    // 1. Build frequency map
+    FrequencyMap freqMap = buildFrequencyMap(data);
     
-    // Check if the original file was logically empty 
-    if (totalBitsToRead == 0) { 
-        bool onlyDummy = true;
-        for(const auto& pair : freqMap) { // Check original map
-            if (pair.second > 0) { 
-                 onlyDummy = false;
-                 break;
+    // 2. Build Huffman tree
+    auto treeRoot = buildHuffmanTree(freqMap);
+    
+    // 3. Generate codes for each symbol
+    HuffmanCodeMap codeMap;
+    generateCodes(treeRoot.get(), {}, codeMap);
+    
+    // 4. Serialize the frequency map
+    std::vector<uint8_t> result = serializeFrequencyMap(freqMap);
+    
+    // 5. Write the compressed data
+    std::vector<bool> encodedBits;
+    
+    // Pre-allocate enough space for encoded bits (rough estimate)
+    encodedBits.reserve(data.size() * 8); // Worst case: no compression
+    
+    // Encode each symbol
+    for (const auto& byte : data) {
+        const auto& code = codeMap[byte];
+        encodedBits.insert(encodedBits.end(), code.begin(), code.end());
+    }
+    
+    // Convert bits to bytes (8 bits per byte)
+    size_t fullByteCount = encodedBits.size() / 8;
+    uint8_t remainingBits = encodedBits.size() % 8;
+    
+    // Add number of bits in the last byte
+    result.push_back(remainingBits);
+    
+    // Process full bytes
+    for (size_t i = 0; i < fullByteCount; i++) {
+        uint8_t byte = 0;
+        for (size_t bit = 0; bit < 8; bit++) {
+            if (encodedBits[i * 8 + bit]) {
+                byte |= (1 << (7 - bit));
             }
         }
-        if (onlyDummy) return {}; 
+        result.push_back(byte);
     }
-
-    // 3. Rebuild Huffman tree
-    std::unique_ptr<HuffmanNode> root = buildHuffmanTree(treeBuildFreqMap);
-     if (!root) { 
-         return {};
-     }
-     
-    // 4. Decode data using the tree and bit reader
-    std::vector<std::byte> decompressedData;
-    decompressedData.reserve(data.size()); 
-
-    BitReader reader(data, offset, totalBitsToRead);
-    const HuffmanNode* currentNode = root.get();
-    uint64_t bitsReadCount = 0;
-
-    // Handle single-node tree case explicitly
-    if (!root->left && !root->right) {
-         // This case implies the original data had only one symbol type.
-         // The tree root node holds that symbol.
-         if (totalBitsToRead > 0) { 
-              if (root->frequency == 0) {
-                   // This was the dummy node - indicates original was empty or invalid state?
-                   // If totalBitsToRead > 0, this is an error.
-                   throw std::runtime_error("Decoding error: Attempting to decode bits with only a dummy node.");
-              }
-              // Replicate the single byte originalSize times.
-              // We need originalSize from the main file header for this.
-              // CANNOT reliably determine size just from bitsRead / code length here.
-              // Fallback: Assume each bit corresponds to one symbol (incorrect for real Huffman)
-              // Let's rely on the main loop structure which should handle this.
-             // For a single node tree, any bit read (must be 0) leads back to the root.
-             for (uint64_t i=0; i < totalBitsToRead; ++i) {
-                 bool success = false;
-                 bool bit = reader.readBit(success);
-                 if (!success || bit) { 
-                     throw std::runtime_error("Decoding error: Invalid bit for single-node tree (expected 0).");
-                 }
-                 decompressedData.push_back(root->data);
-                 bitsReadCount++;
-             }
-         }
-    } else {
-        // Normal decoding loop for multi-node trees
-        while (bitsReadCount < totalBitsToRead) {
-             if (!currentNode) { 
-                 throw std::runtime_error("Decoding error: Reached null node unexpectedly.");
-             }
-             
-            if (!currentNode->left && !currentNode->right) {
-                decompressedData.push_back(currentNode->data);
-                currentNode = root.get(); 
-                 if (bitsReadCount >= totalBitsToRead) break; 
-            }
-            
-            bool success = false;
-            bool bit = reader.readBit(success);
-            if (!success) {
-                 if (bitsReadCount == totalBitsToRead && currentNode && !currentNode->left && !currentNode->right) {
-                     break; 
-                 }
-                 throw std::runtime_error("Decoding error: Failed to read expected bit. Bits read: " + std::to_string(bitsReadCount) + "/" + std::to_string(totalBitsToRead));
-            }
-            bitsReadCount++;
-
-            if (bit) { 
-                currentNode = currentNode->right.get();
-            } else { 
-                currentNode = currentNode->left.get();
-            }
-            
-            if (bitsReadCount == totalBitsToRead && currentNode && !currentNode->left && !currentNode->right) {
-                 decompressedData.push_back(currentNode->data);
-                 break; 
+    
+    // Process remaining bits (if any)
+    if (remainingBits > 0) {
+        uint8_t byte = 0;
+        for (size_t bit = 0; bit < remainingBits; bit++) {
+            if (encodedBits[fullByteCount * 8 + bit]) {
+                byte |= (1 << (7 - bit));
             }
         }
+        result.push_back(byte);
     }
+    
+    return result;
+}
 
-    // Final check on bits read
-    if (reader.getBitsRead() != totalBitsToRead) {
-         std::cerr << "Warning: Read " << reader.getBitsRead() << " bits, but expected " << totalBitsToRead << std::endl;
+// --- Main Decompression Function ---
+std::vector<uint8_t> HuffmanCompressor::decompress(
+    const std::vector<uint8_t>& data) const {
+    
+    // Handle empty input
+    if (data.empty()) {
+        return {};
     }
-
-    return decompressedData;
+    
+    // 1. Read the frequency map
+    size_t offset = 0;
+    FrequencyMap freqMap = deserializeFrequencyMap(data, offset);
+    
+    // 2. Rebuild the Huffman tree
+    auto treeRoot = buildHuffmanTree(freqMap);
+    
+    // 3. Validate the data
+    if (offset >= data.size()) {
+        throw std::runtime_error("Unexpected end of compressed data");
+    }
+    
+    // 4. Get bit count in last byte
+    uint8_t lastByteBits = data[offset++];
+    if (lastByteBits > 7) {
+        throw std::runtime_error("Invalid bit count in last byte (must be 0-7)");
+    }
+    
+    // 5. Calculate total number of bits in encoded data
+    size_t totalBits = (data.size() - offset - 1) * 8;
+    if (data.size() > offset) {
+        totalBits += lastByteBits;
+    }
+    
+    // 6. Decode the data
+    std::vector<uint8_t> result;
+    
+    // No encoded bits? Return empty result
+    if (totalBits == 0) {
+        return result;
+    }
+    
+    // Start at root node
+    const HuffmanNode* currentNode = treeRoot.get();
+    
+    // Process each bit
+    size_t bitsProcessed = 0;
+    while (bitsProcessed < totalBits) {
+        // Calculate byte index and bit position
+        size_t byteIndex = offset + bitsProcessed / 8;
+        uint8_t bitPos = 7 - (bitsProcessed % 8); // Most significant bit first
+        
+        // Get the bit
+        bool bit = (data[byteIndex] & (1 << bitPos)) != 0;
+        
+        // Follow the tree
+        currentNode = bit ? currentNode->right.get() : currentNode->left.get();
+        
+        // Check for null node (corrupted data)
+        if (!currentNode) {
+            throw std::runtime_error("Invalid Huffman code encountered");
+        }
+        
+        // If leaf node, output symbol and reset to root
+        if (!currentNode->left && !currentNode->right) {
+            result.push_back(currentNode->data);
+            currentNode = treeRoot.get();
+        }
+        
+        bitsProcessed++;
+    }
+    
+    // If we're not at the root, the data is incomplete
+    if (currentNode != treeRoot.get() && currentNode->left && currentNode->right) {
+        throw std::runtime_error("Incomplete Huffman code at end of data");
+    }
+    
+    return result;
 }
 
 } // namespace compression

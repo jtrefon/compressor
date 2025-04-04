@@ -37,6 +37,7 @@ var NAVTREE =
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
+        [ "Typedefs", "namespacemembers_type.html", null ],
         [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
     ] ],
@@ -59,7 +60,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"Crc32_8hpp.html"
+"BitIO_8hpp.html",
+"structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#a2e27c88f8f6d2dc9d5587d4731fdfb85"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

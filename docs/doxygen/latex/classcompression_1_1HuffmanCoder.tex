@@ -1,0 +1,154 @@
+\doxysection{compression\+::Huffman\+Coder Class Reference}
+\hypertarget{classcompression_1_1HuffmanCoder}{}\label{classcompression_1_1HuffmanCoder}\index{compression::HuffmanCoder@{compression::HuffmanCoder}}
+
+
+Class that handles Huffman coding functionality.  
+
+
+
+
+{\ttfamily \#include $<$Huffman\+Coder.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcompression_1_1HuffmanCoder_a7e8b315d73d79c269f0cead70a17e538}{Huffman\+Coder}} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \mbox{\hyperlink{classcompression_1_1HuffmanCoder_a2ec33b97f01afcab3ea869970369cada}{build\+Huffman\+Codes}} (const \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{Frequency\+Map}} \&freq\+Map) const
+\begin{DoxyCompactList}\small\item\em Builds Huffman codes from a frequency map. \end{DoxyCompactList}\item 
+std\+::map$<$ uint32\+\_\+t, uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCoder_a2474a176f00bea086508cb698c25cccf}{limit\+Code\+Lengths}} (const std\+::map$<$ uint32\+\_\+t, uint8\+\_\+t $>$ \&input\+Lengths, uint8\+\_\+t max\+Length) const
+\begin{DoxyCompactList}\small\item\em Limits code lengths to a maximum value. \end{DoxyCompactList}\item 
+std\+::map$<$ uint32\+\_\+t, uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCoder_aa6e6f43fa32f6e5f07c7e188fbd169c0}{get\+Code\+Lengths}} (const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&code\+Map) const
+\begin{DoxyCompactList}\small\item\em Gets code lengths from a Huffman code map. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}} $>$ \mbox{\hyperlink{classcompression_1_1HuffmanCoder_a741ead68d6ff4df8ec64fe5d80b4c283}{build\+Huffman\+Tree}} (const \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{Frequency\+Map}} \&freq\+Map) const
+\begin{DoxyCompactList}\small\item\em Builds a Huffman tree from frequency data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcompression_1_1HuffmanCoder_a0e2fcecc567b22c9d4f59ec29308915b}{generate\+Codes}} (const \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}} \texorpdfstring{$\ast$}{*}node, \mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{Huffman\+Code}} prefix, \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&code\+Map) const
+\begin{DoxyCompactList}\small\item\em Generates Huffman codes by traversing the tree. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class that handles Huffman coding functionality. 
+
+This class implements the Strategy design pattern for Huffman coding operations. It provides methods to build Huffman codes from frequency data and work with Huffman trees. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcompression_1_1HuffmanCoder_a7e8b315d73d79c269f0cead70a17e538}\index{compression::HuffmanCoder@{compression::HuffmanCoder}!HuffmanCoder@{HuffmanCoder}}
+\index{HuffmanCoder@{HuffmanCoder}!compression::HuffmanCoder@{compression::HuffmanCoder}}
+\doxysubsubsection{\texorpdfstring{HuffmanCoder()}{HuffmanCoder()}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCoder_a7e8b315d73d79c269f0cead70a17e538} 
+compression\+::\+Huffman\+Coder\+::\+Huffman\+Coder (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+Default constructor. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1HuffmanCoder_a2ec33b97f01afcab3ea869970369cada}\index{compression::HuffmanCoder@{compression::HuffmanCoder}!buildHuffmanCodes@{buildHuffmanCodes}}
+\index{buildHuffmanCodes@{buildHuffmanCodes}!compression::HuffmanCoder@{compression::HuffmanCoder}}
+\doxysubsubsection{\texorpdfstring{buildHuffmanCodes()}{buildHuffmanCodes()}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCoder_a2ec33b97f01afcab3ea869970369cada} 
+\mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} compression\+::\+Huffman\+Coder\+::build\+Huffman\+Codes (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{Frequency\+Map}} \&}]{freq\+Map}{}\end{DoxyParamCaption}) const}
+
+
+
+Builds Huffman codes from a frequency map. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em freq\+Map} & Frequency map of symbols \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map} Map of symbols to their Huffman codes 
+\end{DoxyReturn}
+\Hypertarget{classcompression_1_1HuffmanCoder_a741ead68d6ff4df8ec64fe5d80b4c283}\index{compression::HuffmanCoder@{compression::HuffmanCoder}!buildHuffmanTree@{buildHuffmanTree}}
+\index{buildHuffmanTree@{buildHuffmanTree}!compression::HuffmanCoder@{compression::HuffmanCoder}}
+\doxysubsubsection{\texorpdfstring{buildHuffmanTree()}{buildHuffmanTree()}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCoder_a741ead68d6ff4df8ec64fe5d80b4c283} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Coder\+::\+Huffman\+Node}} $>$ compression\+::\+Huffman\+Coder\+::build\+Huffman\+Tree (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{Frequency\+Map}} \&}]{freq\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Builds a Huffman tree from frequency data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em freq\+Map} & Frequency map of symbols \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::unique\+\_\+ptr$<$\+Huffman\+Node$>$ Root of the Huffman tree 
+\end{DoxyReturn}
+\Hypertarget{classcompression_1_1HuffmanCoder_a0e2fcecc567b22c9d4f59ec29308915b}\index{compression::HuffmanCoder@{compression::HuffmanCoder}!generateCodes@{generateCodes}}
+\index{generateCodes@{generateCodes}!compression::HuffmanCoder@{compression::HuffmanCoder}}
+\doxysubsubsection{\texorpdfstring{generateCodes()}{generateCodes()}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCoder_a0e2fcecc567b22c9d4f59ec29308915b} 
+void compression\+::\+Huffman\+Coder\+::generate\+Codes (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcompression_1_1HuffmanCoder_1_1HuffmanNode}{Huffman\+Node}} \texorpdfstring{$\ast$}{*}}]{node}{, }\item[{\mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{Huffman\+Code}}}]{prefix}{, }\item[{\mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&}]{code\+Map}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Generates Huffman codes by traversing the tree. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & Current node in the tree \\
+\hline
+{\em prefix} & Current code prefix (path in the tree) \\
+\hline
+{\em code\+Map} & Output map to store symbol-\/to-\/code mappings \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classcompression_1_1HuffmanCoder_aa6e6f43fa32f6e5f07c7e188fbd169c0}\index{compression::HuffmanCoder@{compression::HuffmanCoder}!getCodeLengths@{getCodeLengths}}
+\index{getCodeLengths@{getCodeLengths}!compression::HuffmanCoder@{compression::HuffmanCoder}}
+\doxysubsubsection{\texorpdfstring{getCodeLengths()}{getCodeLengths()}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCoder_aa6e6f43fa32f6e5f07c7e188fbd169c0} 
+std\+::map$<$ uint32\+\_\+t, uint8\+\_\+t $>$ compression\+::\+Huffman\+Coder\+::get\+Code\+Lengths (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&}]{code\+Map}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets code lengths from a Huffman code map. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em code\+Map} & Map of symbols to their Huffman codes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::map$<$uint32\+\_\+t, uint8\+\_\+t$>$ Map of symbols to their code lengths 
+\end{DoxyReturn}
+\Hypertarget{classcompression_1_1HuffmanCoder_a2474a176f00bea086508cb698c25cccf}\index{compression::HuffmanCoder@{compression::HuffmanCoder}!limitCodeLengths@{limitCodeLengths}}
+\index{limitCodeLengths@{limitCodeLengths}!compression::HuffmanCoder@{compression::HuffmanCoder}}
+\doxysubsubsection{\texorpdfstring{limitCodeLengths()}{limitCodeLengths()}}
+{\footnotesize\ttfamily \label{classcompression_1_1HuffmanCoder_a2474a176f00bea086508cb698c25cccf} 
+std\+::map$<$ uint32\+\_\+t, uint8\+\_\+t $>$ compression\+::\+Huffman\+Coder\+::limit\+Code\+Lengths (\begin{DoxyParamCaption}\item[{const std\+::map$<$ uint32\+\_\+t, uint8\+\_\+t $>$ \&}]{input\+Lengths}{, }\item[{uint8\+\_\+t}]{max\+Length}{}\end{DoxyParamCaption}) const}
+
+
+
+Limits code lengths to a maximum value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+Lengths} & Map of symbols to their code lengths \\
+\hline
+{\em max\+Length} & Maximum allowed code length \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::map$<$uint32\+\_\+t, uint8\+\_\+t$>$ Adjusted code lengths 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{HuffmanCoder_8hpp}{Huffman\+Coder.\+hpp}}\item 
+src/\mbox{\hyperlink{HuffmanCoder_8cpp}{Huffman\+Coder.\+cpp}}\end{DoxyCompactItemize}

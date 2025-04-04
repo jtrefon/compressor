@@ -125,12 +125,12 @@ Inheritance diagram for compression::RleCompressor:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a02589a2b6cb906b7bb1e68825b55d020" id="r_a02589a2b6cb906b7bb1e68825b55d020"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::byte &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02589a2b6cb906b7bb1e68825b55d020">compress</a> (const std::vector&lt; std::byte &gt; &amp;data) const override</td></tr>
-<tr class="memdesc:a02589a2b6cb906b7bb1e68825b55d020"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compresses data using RLE.  <br /></td></tr>
-<tr class="separator:a02589a2b6cb906b7bb1e68825b55d020"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd4958ea7d5299428c5333c9bde79c64" id="r_acd4958ea7d5299428c5333c9bde79c64"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::byte &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd4958ea7d5299428c5333c9bde79c64">decompress</a> (const std::vector&lt; std::byte &gt; &amp;data) const override</td></tr>
-<tr class="memdesc:acd4958ea7d5299428c5333c9bde79c64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompresses RLE encoded data.  <br /></td></tr>
-<tr class="separator:acd4958ea7d5299428c5333c9bde79c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7859e06c9a9df4a9b9c8fd10c4bc445e" id="r_a7859e06c9a9df4a9b9c8fd10c4bc445e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7859e06c9a9df4a9b9c8fd10c4bc445e">compress</a> (const std::vector&lt; uint8_t &gt; &amp;data) const override</td></tr>
+<tr class="memdesc:a7859e06c9a9df4a9b9c8fd10c4bc445e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compresses data using RLE.  <br /></td></tr>
+<tr class="separator:a7859e06c9a9df4a9b9c8fd10c4bc445e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2d47d81de95fbbe7bb07479a80751cd" id="r_aa2d47d81de95fbbe7bb07479a80751cd"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2d47d81de95fbbe7bb07479a80751cd">decompress</a> (const std::vector&lt; uint8_t &gt; &amp;data) const override</td></tr>
+<tr class="memdesc:aa2d47d81de95fbbe7bb07479a80751cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompresses RLE encoded data.  <br /></td></tr>
+<tr class="separator:aa2d47d81de95fbbe7bb07479a80751cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcompression_1_1ICompressor"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classcompression_1_1ICompressor')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcompression_1_1ICompressor.html">compression::ICompressor</a></td></tr>
 <tr class="memitem:a3a2142d5686b5959e7a1a3d4c0eec8b8 inherit pub_methods_classcompression_1_1ICompressor" id="r_a3a2142d5686b5959e7a1a3d4c0eec8b8"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcompression_1_1ICompressor.html#a3a2142d5686b5959e7a1a3d4c0eec8b8">~ICompressor</a> ()=default</td></tr>
 <tr class="memdesc:a3a2142d5686b5959e7a1a3d4c0eec8b8 inherit pub_methods_classcompression_1_1ICompressor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor. Essential for polymorphic behavior.  <br /></td></tr>
@@ -140,8 +140,8 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Implements <a class="el" href="classcompression_1_1ICompressor.html" title="Interface for compression and decompression algorithms.">ICompressor</a> using Run-Length Encoding (RLE). </p>
 <p>A simple RLE implementation. Note: This basic version might increase size for non-repetitive data. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a02589a2b6cb906b7bb1e68825b55d020" name="a02589a2b6cb906b7bb1e68825b55d020"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02589a2b6cb906b7bb1e68825b55d020">&#9670;&#160;</a></span>compress()</h2>
+<a id="a7859e06c9a9df4a9b9c8fd10c4bc445e" name="a7859e06c9a9df4a9b9c8fd10c4bc445e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7859e06c9a9df4a9b9c8fd10c4bc445e">&#9670;&#160;</a></span>compress()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -150,9 +150,9 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; std::byte &gt; compression::RleCompressor::compress </td>
+          <td class="memname">std::vector&lt; uint8_t &gt; compression::RleCompressor::compress </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::byte &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -170,14 +170,14 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::byte&gt; The RLE compressed data. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; The RLE compressed data. </dd></dl>
 
-<p>Implements <a class="el" href="classcompression_1_1ICompressor.html#ac7412ce2b69c6a8aefbb4cec257e2a00">compression::ICompressor</a>.</p>
+<p>Implements <a class="el" href="classcompression_1_1ICompressor.html#a8671d6084c1bf54b1dc440ad7ee7ee2f">compression::ICompressor</a>.</p>
 
 </div>
 </div>
-<a id="acd4958ea7d5299428c5333c9bde79c64" name="acd4958ea7d5299428c5333c9bde79c64"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd4958ea7d5299428c5333c9bde79c64">&#9670;&#160;</a></span>decompress()</h2>
+<a id="aa2d47d81de95fbbe7bb07479a80751cd" name="aa2d47d81de95fbbe7bb07479a80751cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2d47d81de95fbbe7bb07479a80751cd">&#9670;&#160;</a></span>decompress()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -186,9 +186,9 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; std::byte &gt; compression::RleCompressor::decompress </td>
+          <td class="memname">std::vector&lt; uint8_t &gt; compression::RleCompressor::decompress </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::byte &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -206,7 +206,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::byte&gt; The original decompressed data. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; The original decompressed data. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">std::runtime_error</td><td>if the compressed data format is invalid. </td></tr>
@@ -214,7 +214,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classcompression_1_1ICompressor.html#a0ca109c56d7c86bc66b5d984d0d65042">compression::ICompressor</a>.</p>
+<p>Implements <a class="el" href="classcompression_1_1ICompressor.html#a3d02bbe3947a450e9df997495c5af718">compression::ICompressor</a>.</p>
 
 </div>
 </div>

@@ -4,28 +4,28 @@
 #include <compression/RleCompressor.hpp>
 #include <compression/HuffmanCompressor.hpp>
 #include <vector>
-#include <cstddef>
+#include <cstdint>
 #include <string>
 #include <algorithm>
 #include <iterator>
 #include <random> // For std::shuffle, std::mt19937
 #include <chrono> // For seeding random generator
 
-// Helper function to create vector<byte> from string
-std::vector<std::byte> stringToBytes(const std::string& str) {
-    std::vector<std::byte> bytes;
+// Helper function to create vector<uint8_t> from string
+std::vector<uint8_t> stringToBytes(const std::string& str) {
+    std::vector<uint8_t> bytes;
     bytes.reserve(str.size());
     std::transform(str.begin(), str.end(), std::back_inserter(bytes),
-                   [](char c) { return std::byte(c); });
+                   [](char c) { return static_cast<uint8_t>(c); });
     return bytes;
 }
 
-// Helper function to create vector<byte> from initializer list of ints
-std::vector<std::byte> bytesFromInts(std::initializer_list<int> ints) {
-    std::vector<std::byte> bytes;
+// Helper function to create vector<uint8_t> from initializer list of ints
+std::vector<uint8_t> bytesFromInts(std::initializer_list<int> ints) {
+    std::vector<uint8_t> bytes;
     bytes.reserve(ints.size());
     std::transform(ints.begin(), ints.end(), std::back_inserter(bytes),
-                   [](int i) { return std::byte(i); });
+                   [](int i) { return static_cast<uint8_t>(i); });
     return bytes;
 }
 
@@ -47,36 +47,36 @@ TEST(CompressionLibTest, DummyFunctionTest) {
 class NullCompressorTest : public ::testing::Test {
 protected:
     compression::NullCompressor compressor;
-    std::vector<std::byte> testData;
+    std::vector<uint8_t> testData;
 
     void SetUp() override {
         // Initialize test data
         std::string s = "Hello, world!";
         testData.resize(s.size());
         std::transform(s.begin(), s.end(), testData.begin(), [](char c) {
-            return std::byte(c);
+            return static_cast<uint8_t>(c);
         });
     }
 };
 
 TEST_F(NullCompressorTest, CompressReturnsOriginalData) {
-    std::vector<std::byte> compressedData = compressor.compress(testData);
+    std::vector<uint8_t> compressedData = compressor.compress(testData);
     ASSERT_EQ(compressedData.size(), testData.size());
     EXPECT_EQ(compressedData, testData);
 }
 
 TEST_F(NullCompressorTest, DecompressReturnsOriginalData) {
     // Since it's a null compressor, the 'compressed' data is the original
-    std::vector<std::byte> decompressedData = compressor.decompress(testData);
+    std::vector<uint8_t> decompressedData = compressor.decompress(testData);
     ASSERT_EQ(decompressedData.size(), testData.size());
     EXPECT_EQ(decompressedData, testData);
 }
 
 TEST_F(NullCompressorTest, EmptyData) {
-    std::vector<std::byte> emptyData;
-    std::vector<std::byte> compressedData = compressor.compress(emptyData);
+    std::vector<uint8_t> emptyData;
+    std::vector<uint8_t> compressedData = compressor.compress(emptyData);
     EXPECT_TRUE(compressedData.empty());
-    std::vector<std::byte> decompressedData = compressor.decompress(emptyData);
+    std::vector<uint8_t> decompressedData = compressor.decompress(emptyData);
     EXPECT_TRUE(decompressedData.empty());
 }
 
@@ -88,7 +88,7 @@ protected:
 };
 
 TEST_F(RleCompressorTest, EmptyData) {
-    std::vector<std::byte> emptyData;
+    std::vector<uint8_t> emptyData;
     auto compressed = compressor.compress(emptyData);
     EXPECT_TRUE(compressed.empty());
     auto decompressed = compressor.decompress(compressed);
@@ -169,15 +169,15 @@ protected:
     compression::HuffmanCompressor compressor;
 
     // Helper to check round trip
-    void testRoundTrip(const std::vector<std::byte>& data) {
+    void testRoundTrip(const std::vector<uint8_t>& data) {
         SCOPED_TRACE("Testing round trip with data size: " + std::to_string(data.size()));
-        std::vector<std::byte> compressed;
+        std::vector<uint8_t> compressed;
         ASSERT_NO_THROW(compressed = compressor.compress(data));
         
         // Basic check: compression shouldn't throw for valid input
         // We don't assert size reduction as Huffman can increase size for incompressible data
 
-        std::vector<std::byte> decompressed;
+        std::vector<uint8_t> decompressed;
         ASSERT_NO_THROW(decompressed = compressor.decompress(compressed));
         
         EXPECT_EQ(decompressed.size(), data.size());
@@ -186,7 +186,7 @@ protected:
 };
 
 TEST_F(HuffmanCompressorTest, EmptyData) {
-    std::vector<std::byte> emptyData;
+    std::vector<uint8_t> emptyData;
     testRoundTrip(emptyData);
     // Also test direct compress/decompress
     auto compressed = compressor.compress(emptyData);
@@ -216,14 +216,14 @@ TEST_F(HuffmanCompressorTest, LongerStringWithVaryingFreq) {
 }
 
 TEST_F(HuffmanCompressorTest, AllByteValues) {
-    std::vector<std::byte> allBytes;
+    std::vector<uint8_t> allBytes;
     allBytes.reserve(256);
     for (int i = 0; i < 256; ++i) {
-        allBytes.push_back(static_cast<std::byte>(i));
+        allBytes.push_back(static_cast<uint8_t>(i));
     }
     // Add some repetitions to make it compressible
     for (int i = 0; i < 128; ++i) {
-         allBytes.push_back(static_cast<std::byte>(i));
+         allBytes.push_back(static_cast<uint8_t>(i));
     }
     // Use std::shuffle instead of std::random_shuffle
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -237,8 +237,8 @@ TEST_F(HuffmanCompressorTest, IncompressibleData) {
 }
 
 TEST_F(HuffmanCompressorTest, DecompressEmptyData) {
-    std::vector<std::byte> emptyData;
-    std::vector<std::byte> decompressed;
+    std::vector<uint8_t> emptyData;
+    std::vector<uint8_t> decompressed;
     // Decompressing truly empty data should result in empty data
     ASSERT_NO_THROW(decompressed = compressor.decompress(emptyData));
     EXPECT_TRUE(decompressed.empty());
@@ -253,12 +253,12 @@ TEST_F(HuffmanCompressorTest, DecompressInvalidData_TooShortForHeader) {
 TEST_F(HuffmanCompressorTest, DecompressInvalidData_TruncatedPayload) {
     // Compress valid data first
     auto originalData = stringToBytes("some data");
-    std::vector<std::byte> compressed;
+    std::vector<uint8_t> compressed;
     ASSERT_NO_THROW(compressed = compressor.compress(originalData));
     ASSERT_GT(compressed.size(), 10); // Ensure it has some payload
 
     // Truncate the compressed data (remove last byte)
-    std::vector<std::byte> truncatedData(compressed.begin(), compressed.end() - 1);
+    std::vector<uint8_t> truncatedData(compressed.begin(), compressed.end() - 1);
     
     // Decompression should ideally throw due to missing bits or invalid final state
     EXPECT_THROW(compressor.decompress(truncatedData), std::runtime_error); 

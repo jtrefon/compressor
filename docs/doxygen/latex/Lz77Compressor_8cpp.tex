@@ -1,11 +1,13 @@
 \doxysection{src/\+Lz77\+Compressor.cpp File Reference}
 \hypertarget{Lz77Compressor_8cpp}{}\label{Lz77Compressor_8cpp}\index{src/Lz77Compressor.cpp@{src/Lz77Compressor.cpp}}
-{\ttfamily \#include $<$compression/\+Lz77\+Compressor.\+hpp$>$}\newline
+{\ttfamily \#include "{}compression/\+Lz77\+Compressor.\+hpp"{}}\newline
 {\ttfamily \#include $<$vector$>$}\newline
 {\ttfamily \#include $<$stdexcept$>$}\newline
 {\ttfamily \#include $<$algorithm$>$}\newline
 {\ttfamily \#include $<$cstring$>$}\newline
 {\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
 \doxysubsubsection*{Namespaces}
 \begin{DoxyCompactItemize}
 \item 
@@ -14,9 +16,9 @@ namespace \mbox{\hyperlink{namespacecompression}{compression}}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-constexpr size\+\_\+t \mbox{\hyperlink{namespacecompression_abe2725705560eab73f9408871ab4544d}{compression\+::\+MIN\+\_\+\+MATCH\+\_\+\+LENGTH}} = 3
+constexpr size\+\_\+t \mbox{\hyperlink{namespacecompression_abe2725705560eab73f9408871ab4544d}{compression\+::\+MIN\+\_\+\+MATCH\+\_\+\+LENGTH}} = \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a56863bb12c9b4aeff239dd28b5346990}{Lz77\+Compressor\+::\+MIN\+\_\+\+LEN}}
 \item 
-constexpr uint16\+\_\+t \mbox{\hyperlink{namespacecompression_a24aa9f9d9d040d4619254438593ac96b}{compression\+::\+MAX\+\_\+\+DISTANCE}} = 4096
+constexpr size\+\_\+t \mbox{\hyperlink{namespacecompression_a8495a49d17ece58e9cd2ea9a6c180cef}{compression\+::\+MAX\+\_\+\+MATCH\+\_\+\+LENGTH}} = \mbox{\hyperlink{classcompression_1_1Lz77Compressor_af310a3723175f4c07e13231a807f302a}{Lz77\+Compressor\+::\+MAX\+\_\+\+LEN}}
 \item 
-constexpr uint8\+\_\+t \mbox{\hyperlink{namespacecompression_a04c1225f48c1d3356a96d56ba319cfc2}{compression\+::\+MAX\+\_\+\+LENGTH}} = 32
+constexpr uint16\+\_\+t \mbox{\hyperlink{namespacecompression_a24aa9f9d9d040d4619254438593ac96b}{compression\+::\+MAX\+\_\+\+DISTANCE}} = 32768
 \end{DoxyCompactItemize}

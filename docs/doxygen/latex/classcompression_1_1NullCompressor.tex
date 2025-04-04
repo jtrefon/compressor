@@ -2,7 +2,7 @@
 \hypertarget{classcompression_1_1NullCompressor}{}\label{classcompression_1_1NullCompressor}\index{compression::NullCompressor@{compression::NullCompressor}}
 
 
-A Null Object implementation of \doxylink{classcompression_1_1ICompressor}{ICompressor}.  
+Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} with a null compression algorithm.  
 
 
 
@@ -18,10 +18,10 @@ Inheritance diagram for compression\+::Null\+Compressor\+:\begin{figure}[H]
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1NullCompressor_a5c34873802b47ab77ea67dfbb034e427}{compress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
-\begin{DoxyCompactList}\small\item\em Returns the input data without modification. \end{DoxyCompactList}\item 
-std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1NullCompressor_aad42dcf1624f3d863df78314fe971571}{decompress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const override
-\begin{DoxyCompactList}\small\item\em Returns the input data without modification. \end{DoxyCompactList}\end{DoxyCompactItemize}
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1NullCompressor_a1568a73a2403c2d81caf317091e2bd70}{compress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
+\begin{DoxyCompactList}\small\item\em Does not compress the data, simply returns the original. \end{DoxyCompactList}\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1NullCompressor_ab0abd5fabe71687d41aaee516a252508}{decompress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const override
+\begin{DoxyCompactList}\small\item\em Does not decompress, simply returns the original. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classcompression_1_1ICompressor}{compression\+::\+ICompressor}}}
 \begin{DoxyCompactItemize}
 \item 
@@ -30,42 +30,42 @@ virtual \mbox{\hyperlink{classcompression_1_1ICompressor_a3a2142d5686b5959e7a1a3
 
 
 \doxysubsection{Detailed Description}
-A Null Object implementation of \doxylink{classcompression_1_1ICompressor}{ICompressor}. 
+Implements \doxylink{classcompression_1_1ICompressor}{ICompressor} with a null compression algorithm. 
 
-This class implements the \doxylink{classcompression_1_1ICompressor}{ICompressor} interface but performs no actual compression or decompression. It simply returns the input data unchanged. 
+A simple implementation that does no compression -\/ just returns the original data. Useful for testing or as a baseline. 
 
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classcompression_1_1NullCompressor_a5c34873802b47ab77ea67dfbb034e427}\index{compression::NullCompressor@{compression::NullCompressor}!compress@{compress}}
+\Hypertarget{classcompression_1_1NullCompressor_a1568a73a2403c2d81caf317091e2bd70}\index{compression::NullCompressor@{compression::NullCompressor}!compress@{compress}}
 \index{compress@{compress}!compression::NullCompressor@{compression::NullCompressor}}
 \doxysubsubsection{\texorpdfstring{compress()}{compress()}}
-{\footnotesize\ttfamily \label{classcompression_1_1NullCompressor_a5c34873802b47ab77ea67dfbb034e427} 
-std\+::vector$<$ std\+::byte $>$ compression\+::\+Null\+Compressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily \label{classcompression_1_1NullCompressor_a1568a73a2403c2d81caf317091e2bd70} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Null\+Compressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-Returns the input data without modification. 
+Does not compress the data, simply returns the original. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em data} & The data to "{}compress"{}. \\
+{\em data} & The raw data to "{}compress"{}. \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$std\+::byte$>$ The unchanged input data. 
+std\+::vector$<$uint8\+\_\+t$>$ The original data. 
 \end{DoxyReturn}
 
 
-Implements \mbox{\hyperlink{classcompression_1_1ICompressor_ac7412ce2b69c6a8aefbb4cec257e2a00}{compression\+::\+ICompressor}}.
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a8671d6084c1bf54b1dc440ad7ee7ee2f}{compression\+::\+ICompressor}}.
 
-\Hypertarget{classcompression_1_1NullCompressor_aad42dcf1624f3d863df78314fe971571}\index{compression::NullCompressor@{compression::NullCompressor}!decompress@{decompress}}
+\Hypertarget{classcompression_1_1NullCompressor_ab0abd5fabe71687d41aaee516a252508}\index{compression::NullCompressor@{compression::NullCompressor}!decompress@{decompress}}
 \index{decompress@{decompress}!compression::NullCompressor@{compression::NullCompressor}}
 \doxysubsubsection{\texorpdfstring{decompress()}{decompress()}}
-{\footnotesize\ttfamily \label{classcompression_1_1NullCompressor_aad42dcf1624f3d863df78314fe971571} 
-std\+::vector$<$ std\+::byte $>$ compression\+::\+Null\+Compressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily \label{classcompression_1_1NullCompressor_ab0abd5fabe71687d41aaee516a252508} 
+std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Null\+Compressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
-Returns the input data without modification. 
+Does not decompress, simply returns the original. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -73,11 +73,11 @@ Returns the input data without modification.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$std\+::byte$>$ The unchanged input data. 
+std\+::vector$<$uint8\+\_\+t$>$ The original data. 
 \end{DoxyReturn}
 
 
-Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a0ca109c56d7c86bc66b5d984d0d65042}{compression\+::\+ICompressor}}.
+Implements \mbox{\hyperlink{classcompression_1_1ICompressor_a3d02bbe3947a450e9df997495c5af718}{compression\+::\+ICompressor}}.
 
 
 

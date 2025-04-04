@@ -1,0 +1,47 @@
+\doxysection{include/compression/\+Deflate\+Compressor.hpp File Reference}
+\hypertarget{DeflateCompressor_8hpp}{}\label{DeflateCompressor_8hpp}\index{include/compression/DeflateCompressor.hpp@{include/compression/DeflateCompressor.hpp}}
+{\ttfamily \#include "{}ICompressor.\+hpp"{}}\newline
+{\ttfamily \#include "{}Lz77\+Compressor.\+hpp"{}}\newline
+{\ttfamily \#include "{}Huffman\+Coder.\+hpp"{}}\newline
+{\ttfamily \#include "{}Bit\+IO.\+hpp"{}}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include $<$cstddef$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcompression_1_1RleSymbol}{compression\+::\+Rle\+Symbol}}
+\begin{DoxyCompactList}\small\item\em Helper structure for RLE of code lengths. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{compression\+::\+Huffman\+Decoder\+Node}}
+\begin{DoxyCompactList}\small\item\em Huffman Decoding Tree Node. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter}{compression\+::\+Byte\+Type\+Adapter}}
+\begin{DoxyCompactList}\small\item\em Adapter class to convert between uint8\+\_\+t and byte types. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcompression_1_1DeflateCompressor}{compression\+::\+Deflate\+Compressor}}
+\begin{DoxyCompactList}\small\item\em Implements the Deflate compression algorithm. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacecompression}{compression}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{compression\+::\+Huffman\+Code}} = std\+::vector$<$bool$>$
+\item 
+using \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{compression\+::\+Huffman\+Code\+Map}} = std\+::map$<$uint32\+\_\+t, \mbox{\hyperlink{namespacecompression_a6191838f076351c001e205cd68c21db1}{Huffman\+Code}}$>$
+\item 
+using \mbox{\hyperlink{namespacecompression_a9e79461baae39e11e6e4202300cf679d}{compression\+::\+Frequency\+Map}} = std\+::map$<$uint32\+\_\+t, uint64\+\_\+t$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structcompression_1_1HuffmanDecoderNode}{Huffman\+Decoder\+Node}} $>$ \mbox{\hyperlink{namespacecompression_a674035059190e85c3d11e80d754c7251}{compression\+::build\+Decoding\+Tree}} (const \mbox{\hyperlink{namespacecompression_a68cae564be86e0659bfcc1fa3d7680ee}{Huffman\+Code\+Map}} \&code\+Map)
+\end{DoxyCompactItemize}

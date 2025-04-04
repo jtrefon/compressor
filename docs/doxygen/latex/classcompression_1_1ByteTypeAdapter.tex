@@ -1,0 +1,60 @@
+\doxysection{compression\+::Byte\+Type\+Adapter Class Reference}
+\hypertarget{classcompression_1_1ByteTypeAdapter}{}\label{classcompression_1_1ByteTypeAdapter}\index{compression::ByteTypeAdapter@{compression::ByteTypeAdapter}}
+
+
+Adapter class to convert between uint8\+\_\+t and byte types.  
+
+
+
+
+{\ttfamily \#include $<$Byte\+Type\+Adapter.\+hpp$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter_ab3be0b03c9691417a3bfdfedfb97c49a}{bytes\+To\+Uint8}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&input)
+\item 
+static std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter_a67b67cc60e8a11eafe1b6496d11e7c5f}{uint8\+To\+Byte}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&input)
+\item 
+static std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter_aefe20e15923b47c133ce53e40f65a88c}{byte\+To\+Uint8}} (const std\+::vector$<$ unsigned char $>$ \&bytes)
+\item 
+static std\+::vector$<$ unsigned char $>$ \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter_aa4e4afbccf08dc73d6f15c34145e7fda}{uint8\+To\+Byte}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Adapter class to convert between uint8\+\_\+t and byte types. 
+
+This follows the Adapter pattern to handle the type conversion necessary between the interface and implementation. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcompression_1_1ByteTypeAdapter_ab3be0b03c9691417a3bfdfedfb97c49a}\index{compression::ByteTypeAdapter@{compression::ByteTypeAdapter}!bytesToUint8@{bytesToUint8}}
+\index{bytesToUint8@{bytesToUint8}!compression::ByteTypeAdapter@{compression::ByteTypeAdapter}}
+\doxysubsubsection{\texorpdfstring{bytesToUint8()}{bytesToUint8()}}
+{\footnotesize\ttfamily \label{classcompression_1_1ByteTypeAdapter_ab3be0b03c9691417a3bfdfedfb97c49a} 
+static std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Byte\+Type\+Adapter\+::bytes\+To\+Uint8 (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{input}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+\Hypertarget{classcompression_1_1ByteTypeAdapter_aefe20e15923b47c133ce53e40f65a88c}\index{compression::ByteTypeAdapter@{compression::ByteTypeAdapter}!byteToUint8@{byteToUint8}}
+\index{byteToUint8@{byteToUint8}!compression::ByteTypeAdapter@{compression::ByteTypeAdapter}}
+\doxysubsubsection{\texorpdfstring{byteToUint8()}{byteToUint8()}}
+{\footnotesize\ttfamily \label{classcompression_1_1ByteTypeAdapter_aefe20e15923b47c133ce53e40f65a88c} 
+static std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Byte\+Type\+Adapter\+::byte\+To\+Uint8 (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ unsigned char $>$ \&}]{bytes}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+\Hypertarget{classcompression_1_1ByteTypeAdapter_aa4e4afbccf08dc73d6f15c34145e7fda}\index{compression::ByteTypeAdapter@{compression::ByteTypeAdapter}!uint8ToByte@{uint8ToByte}}
+\index{uint8ToByte@{uint8ToByte}!compression::ByteTypeAdapter@{compression::ByteTypeAdapter}}
+\doxysubsubsection{\texorpdfstring{uint8ToByte()}{uint8ToByte()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classcompression_1_1ByteTypeAdapter_aa4e4afbccf08dc73d6f15c34145e7fda} 
+static std\+::vector$<$ unsigned char $>$ compression\+::\+Byte\+Type\+Adapter\+::uint8\+To\+Byte (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+\Hypertarget{classcompression_1_1ByteTypeAdapter_a67b67cc60e8a11eafe1b6496d11e7c5f}\index{compression::ByteTypeAdapter@{compression::ByteTypeAdapter}!uint8ToByte@{uint8ToByte}}
+\index{uint8ToByte@{uint8ToByte}!compression::ByteTypeAdapter@{compression::ByteTypeAdapter}}
+\doxysubsubsection{\texorpdfstring{uint8ToByte()}{uint8ToByte()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classcompression_1_1ByteTypeAdapter_a67b67cc60e8a11eafe1b6496d11e7c5f} 
+static std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+Byte\+Type\+Adapter\+::uint8\+To\+Byte (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{input}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/compression/\mbox{\hyperlink{ByteTypeAdapter_8hpp}{Byte\+Type\+Adapter.\+hpp}}\item 
+include/compression/\mbox{\hyperlink{DeflateCompressor_8hpp}{Deflate\+Compressor.\+hpp}}\end{DoxyCompactItemize}

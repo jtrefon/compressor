@@ -185,6 +185,44 @@ compress_app/fast:
 	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f app/CMakeFiles/compress_app.dir/build.make app/CMakeFiles/compress_app.dir/build
 .PHONY : compress_app/fast
 
+# Convenience name for target.
+app/CMakeFiles/compression_benchmark.dir/rule:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 app/CMakeFiles/compression_benchmark.dir/rule
+.PHONY : app/CMakeFiles/compression_benchmark.dir/rule
+
+# Convenience name for target.
+compression_benchmark: app/CMakeFiles/compression_benchmark.dir/rule
+.PHONY : compression_benchmark
+
+# fast build rule for target.
+compression_benchmark/fast:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f app/CMakeFiles/compression_benchmark.dir/build.make app/CMakeFiles/compression_benchmark.dir/build
+.PHONY : compression_benchmark/fast
+
+benchmark.o: benchmark.cpp.o
+.PHONY : benchmark.o
+
+# target to build an object file
+benchmark.cpp.o:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f app/CMakeFiles/compression_benchmark.dir/build.make app/CMakeFiles/compression_benchmark.dir/benchmark.cpp.o
+.PHONY : benchmark.cpp.o
+
+benchmark.i: benchmark.cpp.i
+.PHONY : benchmark.i
+
+# target to preprocess a source file
+benchmark.cpp.i:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f app/CMakeFiles/compression_benchmark.dir/build.make app/CMakeFiles/compression_benchmark.dir/benchmark.cpp.i
+.PHONY : benchmark.cpp.i
+
+benchmark.s: benchmark.cpp.s
+.PHONY : benchmark.s
+
+# target to generate assembly for a file
+benchmark.cpp.s:
+	cd /Users/jacektrefon/Projects/vibing/compression && $(MAKE) $(MAKESILENT) -f app/CMakeFiles/compression_benchmark.dir/build.make app/CMakeFiles/compression_benchmark.dir/benchmark.cpp.s
+.PHONY : benchmark.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -223,6 +261,10 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... compress_app"
+	@echo "... compression_benchmark"
+	@echo "... benchmark.o"
+	@echo "... benchmark.i"
+	@echo "... benchmark.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

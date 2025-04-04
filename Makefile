@@ -224,6 +224,19 @@ compress_app/fast:
 .PHONY : compress_app/fast
 
 #=============================================================================
+# Target rules for targets named compression_benchmark
+
+# Build rule for target.
+compression_benchmark: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 compression_benchmark
+.PHONY : compression_benchmark
+
+# fast build rule for target.
+compression_benchmark/fast:
+	$(MAKE) $(MAKESILENT) -f app/CMakeFiles/compression_benchmark.dir/build.make app/CMakeFiles/compression_benchmark.dir/build
+.PHONY : compression_benchmark/fast
+
+#=============================================================================
 # Target rules for targets named compression_tests
 
 # Build rule for target.
@@ -305,6 +318,7 @@ help:
 	@echo "... doc_clean"
 	@echo "... compress_app"
 	@echo "... compression"
+	@echo "... compression_benchmark"
 	@echo "... compression_tests"
 	@echo "... gmock"
 	@echo "... gmock_main"

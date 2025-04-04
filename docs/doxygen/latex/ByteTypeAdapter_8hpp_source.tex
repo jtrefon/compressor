@@ -1,0 +1,28 @@
+\doxysection{Byte\+Type\+Adapter.\+hpp}
+\hypertarget{ByteTypeAdapter_8hpp_source}{}\label{ByteTypeAdapter_8hpp_source}\index{include/compression/ByteTypeAdapter.hpp@{include/compression/ByteTypeAdapter.hpp}}
+\mbox{\hyperlink{ByteTypeAdapter_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacecompression}{compression}}\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Helper\ class\ to\ adapt\ between\ std::byte\ and\ other\ byte-\/like\ types\ (uint8\_t)}}
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classcompression_1_1ByteTypeAdapter}{ByteTypeAdapter}}\ \{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{comment}{//\ Convert\ std::vector<std::byte>\ to\ std::vector<uint8\_t>}}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{static}\ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter_ab3be0b03c9691417a3bfdfedfb97c49a}{bytesToUint8}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ input)\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ input;\ \textcolor{comment}{//\ No\ conversion\ needed\ anymore}}
+\DoxyCodeLine{00014\ \ \ \ \ \}}
+\DoxyCodeLine{00015\ \ \ \ \ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//\ Convert\ std::vector<uint8\_t>\ to\ std::vector<std::byte>}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{static}\ std::vector<uint8\_t>\ \mbox{\hyperlink{classcompression_1_1ByteTypeAdapter_a67b67cc60e8a11eafe1b6496d11e7c5f}{uint8ToByte}}(\textcolor{keyword}{const}\ std::vector<uint8\_t>\&\ input)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ input;\ \textcolor{comment}{//\ No\ conversion\ needed\ anymore}}
+\DoxyCodeLine{00019\ \ \ \ \ \}}
+\DoxyCodeLine{00020\ \};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \}\ \textcolor{comment}{//\ namespace\ compression\ }}
+
+\end{DoxyCode}

@@ -12,7 +12,7 @@ Interface for compression and decompression algorithms.
 Inheritance diagram for compression\+::ICompressor\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[height=1.320755cm]{classcompression_1_1ICompressor}
+\includegraphics[height=1.056604cm]{classcompression_1_1ICompressor}
 \end{center}
 \end{figure}
 \doxysubsubsection*{Public Member Functions}
@@ -20,9 +20,9 @@ Inheritance diagram for compression\+::ICompressor\+:\begin{figure}[H]
 \item 
 virtual \mbox{\hyperlink{classcompression_1_1ICompressor_a3a2142d5686b5959e7a1a3d4c0eec8b8}{\texorpdfstring{$\sim$}{\string~}\+ICompressor}} ()=default
 \begin{DoxyCompactList}\small\item\em Virtual destructor. Essential for polymorphic behavior. \end{DoxyCompactList}\item 
-virtual std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1ICompressor_ac7412ce2b69c6a8aefbb4cec257e2a00}{compress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const =0
+virtual std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1ICompressor_a8671d6084c1bf54b1dc440ad7ee7ee2f}{compress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const =0
 \begin{DoxyCompactList}\small\item\em Compresses the input data. \end{DoxyCompactList}\item 
-virtual std\+::vector$<$ std\+::byte $>$ \mbox{\hyperlink{classcompression_1_1ICompressor_a0ca109c56d7c86bc66b5d984d0d65042}{decompress}} (const std\+::vector$<$ std\+::byte $>$ \&data) const =0
+virtual std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classcompression_1_1ICompressor_a3d02bbe3947a450e9df997495c5af718}{decompress}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&data) const =0
 \begin{DoxyCompactList}\small\item\em Decompresses the input data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -45,11 +45,11 @@ Virtual destructor. Essential for polymorphic behavior.
 
 
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classcompression_1_1ICompressor_ac7412ce2b69c6a8aefbb4cec257e2a00}\index{compression::ICompressor@{compression::ICompressor}!compress@{compress}}
+\Hypertarget{classcompression_1_1ICompressor_a8671d6084c1bf54b1dc440ad7ee7ee2f}\index{compression::ICompressor@{compression::ICompressor}!compress@{compress}}
 \index{compress@{compress}!compression::ICompressor@{compression::ICompressor}}
 \doxysubsubsection{\texorpdfstring{compress()}{compress()}}
-{\footnotesize\ttfamily \label{classcompression_1_1ICompressor_ac7412ce2b69c6a8aefbb4cec257e2a00} 
-virtual std\+::vector$<$ std\+::byte $>$ compression\+::\+ICompressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily \label{classcompression_1_1ICompressor_a8671d6084c1bf54b1dc440ad7ee7ee2f} 
+virtual std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+ICompressor\+::compress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
@@ -63,7 +63,7 @@ Pure virtual function to be implemented by concrete strategies.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$std\+::byte$>$ The compressed data. 
+std\+::vector$<$uint8\+\_\+t$>$ The compressed data. 
 \end{DoxyReturn}
 
 \begin{DoxyExceptions}{Exceptions}
@@ -72,13 +72,13 @@ std\+::vector$<$std\+::byte$>$ The compressed data.
 \end{DoxyExceptions}
 
 
-Implemented in \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a17f6a8fbac7635e2910a2c04fa1f47a5}{compression\+::\+Huffman\+Compressor}}, \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ade1a7db2cd02903353e238db6abcaa14}{compression\+::\+Lz77\+Compressor}}, \mbox{\hyperlink{classcompression_1_1NullCompressor_a5c34873802b47ab77ea67dfbb034e427}{compression\+::\+Null\+Compressor}}, and \mbox{\hyperlink{classcompression_1_1RleCompressor_a02589a2b6cb906b7bb1e68825b55d020}{compression\+::\+Rle\+Compressor}}.
+Implemented in \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a31d4adbb45b2ec7d80919f76cf766309}{compression\+::\+Deflate\+Compressor}}, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a27d90ba0f87694afffda3c005a96a6f5}{compression\+::\+Huffman\+Compressor}}, \mbox{\hyperlink{classcompression_1_1Lz77Compressor_aac063f8811bfebfba7c8ce2fbb1ba895}{compression\+::\+Lz77\+Compressor}}, \mbox{\hyperlink{classcompression_1_1NullCompressor_a1568a73a2403c2d81caf317091e2bd70}{compression\+::\+Null\+Compressor}}, and \mbox{\hyperlink{classcompression_1_1RleCompressor_a7859e06c9a9df4a9b9c8fd10c4bc445e}{compression\+::\+Rle\+Compressor}}.
 
-\Hypertarget{classcompression_1_1ICompressor_a0ca109c56d7c86bc66b5d984d0d65042}\index{compression::ICompressor@{compression::ICompressor}!decompress@{decompress}}
+\Hypertarget{classcompression_1_1ICompressor_a3d02bbe3947a450e9df997495c5af718}\index{compression::ICompressor@{compression::ICompressor}!decompress@{decompress}}
 \index{decompress@{decompress}!compression::ICompressor@{compression::ICompressor}}
 \doxysubsubsection{\texorpdfstring{decompress()}{decompress()}}
-{\footnotesize\ttfamily \label{classcompression_1_1ICompressor_a0ca109c56d7c86bc66b5d984d0d65042} 
-virtual std\+::vector$<$ std\+::byte $>$ compression\+::\+ICompressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::byte $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily \label{classcompression_1_1ICompressor_a3d02bbe3947a450e9df997495c5af718} 
+virtual std\+::vector$<$ uint8\+\_\+t $>$ compression\+::\+ICompressor\+::decompress (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{data}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
@@ -92,7 +92,7 @@ Pure virtual function to be implemented by concrete strategies.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::vector$<$std\+::byte$>$ The original decompressed data. 
+std\+::vector$<$uint8\+\_\+t$>$ The original decompressed data. 
 \end{DoxyReturn}
 
 \begin{DoxyExceptions}{Exceptions}
@@ -101,7 +101,7 @@ std\+::vector$<$std\+::byte$>$ The original decompressed data.
 \end{DoxyExceptions}
 
 
-Implemented in \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a1f51be4cf4da7765cc4189958c204e3f}{compression\+::\+Huffman\+Compressor}}, \mbox{\hyperlink{classcompression_1_1Lz77Compressor_a95d8e7c41db004225ea33c61182532e8}{compression\+::\+Lz77\+Compressor}}, \mbox{\hyperlink{classcompression_1_1NullCompressor_aad42dcf1624f3d863df78314fe971571}{compression\+::\+Null\+Compressor}}, and \mbox{\hyperlink{classcompression_1_1RleCompressor_acd4958ea7d5299428c5333c9bde79c64}{compression\+::\+Rle\+Compressor}}.
+Implemented in \mbox{\hyperlink{classcompression_1_1DeflateCompressor_a20412aae5569ea3f69ee05ed82f11a10}{compression\+::\+Deflate\+Compressor}}, \mbox{\hyperlink{classcompression_1_1HuffmanCompressor_a61bbc5bcd67b9a06f36fa4c21758e055}{compression\+::\+Huffman\+Compressor}}, \mbox{\hyperlink{classcompression_1_1Lz77Compressor_ad9bf31062c9afc053328b17c87589ddc}{compression\+::\+Lz77\+Compressor}}, \mbox{\hyperlink{classcompression_1_1NullCompressor_ab0abd5fabe71687d41aaee516a252508}{compression\+::\+Null\+Compressor}}, and \mbox{\hyperlink{classcompression_1_1RleCompressor_aa2d47d81de95fbbe7bb07479a80751cd}{compression\+::\+Rle\+Compressor}}.
 
 
 

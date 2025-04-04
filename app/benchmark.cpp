@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <numeric> // std::accumulate (potentially needed later)
 #include <filesystem> // Requires C++17
+#include <sstream> // Include for stringstream
 
 // Include all compressor headers
 #include <compression/ICompressor.hpp>
@@ -15,18 +16,19 @@
 #include <compression/RleCompressor.hpp>
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/Lz77Compressor.hpp>
+#include <compression/DeflateCompressor.hpp>
 
 // --- Helper Functions ---
 
 // Reads a whole file into a byte vector
-std::vector<std::byte> readFile(const std::filesystem::path& filePath) {
+std::vector<uint8_t> readFile(const std::filesystem::path& filePath) {
     std::ifstream file(filePath, std::ios::binary | std::ios::ate);
     if (!file) {
         throw std::runtime_error("Cannot open file: " + filePath.string());
     }
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
-    std::vector<std::byte> buffer(size);
+    std::vector<uint8_t> buffer(size);
     if (!file.read(reinterpret_cast<char*>(buffer.data()), size)) {
          throw std::runtime_error("Error reading file: " + filePath.string());
     }
@@ -47,7 +49,7 @@ struct BenchmarkResult {
 BenchmarkResult runBenchmark(
     const std::string& name,
     const compression::ICompressor& compressor,
-    const std::vector<std::byte>& originalData)
+    const std::vector<uint8_t>& originalData)
 {
     BenchmarkResult result;
     result.algorithmName = name;
@@ -59,14 +61,14 @@ BenchmarkResult runBenchmark(
 
     // --- Time Compression ---
     auto startCompress = std::chrono::high_resolution_clock::now();
-    std::vector<std::byte> compressedData = compressor.compress(originalData);
+    std::vector<uint8_t> compressedData = compressor.compress(originalData);
     auto endCompress = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> compressDuration = endCompress - startCompress;
     result.compressionTimeMs = compressDuration.count();
     result.compressedSize = compressedData.size();
 
     // --- Time Decompression ---
-    std::vector<std::byte> decompressedData;
+    std::vector<uint8_t> decompressedData;
     double decompressDurationMs = 0.0;
      if (!compressedData.empty()) { // Avoid decompressing nothing if compression failed/returned empty
         try {
@@ -75,6 +77,11 @@ BenchmarkResult runBenchmark(
             auto endDecompress = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> decompressDuration = endDecompress - startDecompress;
             decompressDurationMs = decompressDuration.count();
+
+            // Trim any trailing null terminators from decompressed data before comparison
+            while (!decompressedData.empty() && decompressedData.back() == 0) {
+                decompressedData.pop_back();
+            }
 
             // Sanity check decompression
             if (decompressedData != originalData) {
@@ -127,7 +134,7 @@ int main() {
     // --- Rest of main function --- 
     std::cout << "Starting benchmark using file: " << dataFilePath << std::endl;
 
-    std::vector<std::byte> originalData;
+    std::vector<uint8_t> originalData;
     try {
         originalData = readFile(dataFilePath);
     } catch (const std::exception& e) {
@@ -147,6 +154,7 @@ int main() {
     compression::RleCompressor rleComp;
     compression::HuffmanCompressor huffmanComp;
     compression::Lz77Compressor lz77Comp; // Using default window sizes
+    compression::DeflateCompressor deflateComp; // Remove verbose logging flag for benchmarks
 
     // --- Run Benchmarks ---
     std::vector<BenchmarkResult> results;
@@ -154,6 +162,7 @@ int main() {
     results.push_back(runBenchmark("RLE", rleComp, originalData));
     results.push_back(runBenchmark("Huffman", huffmanComp, originalData));
     results.push_back(runBenchmark("LZ77", lz77Comp, originalData));
+    results.push_back(runBenchmark("Deflate", deflateComp, originalData));
 
     // --- Output Results ---
     std::cout << "\n--- Benchmark Results ---\n" << std::endl;

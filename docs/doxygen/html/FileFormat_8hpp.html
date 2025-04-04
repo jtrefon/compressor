@@ -111,8 +111,7 @@ $(function(){initNavTree('FileFormat_8hpp.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">FileFormat.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;cstddef&gt;</code><br />
-<code>#include &lt;cstdint&gt;</code><br />
+<div class="textblock"><code>#include &lt;cstdint&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
@@ -144,12 +143,12 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af2e5c379a1e2209b89aa43f378312fda" id="r_af2e5c379a1e2209b89aa43f378312fda"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::byte &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression_1_1format.html#af2e5c379a1e2209b89aa43f378312fda">compression::format::serializeHeader</a> (const <a class="el" href="structcompression_1_1format_1_1FileHeader.html">FileHeader</a> &amp;header)</td></tr>
-<tr class="memdesc:af2e5c379a1e2209b89aa43f378312fda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes the header data into a byte vector.  <br /></td></tr>
-<tr class="separator:af2e5c379a1e2209b89aa43f378312fda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9249f407e0fb35b622faea563fcce88" id="r_aa9249f407e0fb35b622faea563fcce88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcompression_1_1format_1_1FileHeader.html">FileHeader</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression_1_1format.html#aa9249f407e0fb35b622faea563fcce88">compression::format::deserializeHeader</a> (const std::vector&lt; std::byte &gt; &amp;buffer)</td></tr>
-<tr class="memdesc:aa9249f407e0fb35b622faea563fcce88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserializes header data from a byte vector.  <br /></td></tr>
-<tr class="separator:aa9249f407e0fb35b622faea563fcce88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8ea4c6ebe9f52ea2601c631bda13fbb" id="r_ae8ea4c6ebe9f52ea2601c631bda13fbb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression_1_1format.html#ae8ea4c6ebe9f52ea2601c631bda13fbb">compression::format::serializeHeader</a> (const <a class="el" href="structcompression_1_1format_1_1FileHeader.html">FileHeader</a> &amp;header)</td></tr>
+<tr class="memdesc:ae8ea4c6ebe9f52ea2601c631bda13fbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes the header data into a byte vector.  <br /></td></tr>
+<tr class="separator:ae8ea4c6ebe9f52ea2601c631bda13fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d543ebd8ca0de313b42e446e64b5b1a" id="r_a9d543ebd8ca0de313b42e446e64b5b1a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcompression_1_1format_1_1FileHeader.html">FileHeader</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression_1_1format.html#a9d543ebd8ca0de313b42e446e64b5b1a">compression::format::deserializeHeader</a> (const std::vector&lt; uint8_t &gt; &amp;buffer)</td></tr>
+<tr class="memdesc:a9d543ebd8ca0de313b42e446e64b5b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserializes header data from a byte vector.  <br /></td></tr>
+<tr class="separator:a9d543ebd8ca0de313b42e446e64b5b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46dd00fcac1185f96800c379d67e1463" id="r_a46dd00fcac1185f96800c379d67e1463"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression_1_1format.html#a46dd00fcac1185f96800c379d67e1463">compression::format::algorithmIdToString</a> (<a class="el" href="namespacecompression_1_1format.html#a285b07642e4e703bc65cdd22753a8e1c">AlgorithmID</a> id)</td></tr>
 <tr class="memdesc:a46dd00fcac1185f96800c379d67e1463"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps <a class="el" href="namespacecompression_1_1format.html#a285b07642e4e703bc65cdd22753a8e1c">AlgorithmID</a> enum to a string representation.  <br /></td></tr>
 <tr class="separator:a46dd00fcac1185f96800c379d67e1463"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,8 +158,8 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aedd178bf1033c1d0612a578e00c227f1" id="r_aedd178bf1033c1d0612a578e00c227f1"><td class="memItemLeft" align="right" valign="top">constexpr std::array&lt; std::byte, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression_1_1format.html#aedd178bf1033c1d0612a578e00c227f1">compression::format::MAGIC_NUMBER</a></td></tr>
-<tr class="separator:aedd178bf1033c1d0612a578e00c227f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9d5587df9f697f88d5a7b2aa90c16e6" id="r_af9d5587df9f697f88d5a7b2aa90c16e6"><td class="memItemLeft" align="right" valign="top">constexpr std::array&lt; uint8_t, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression_1_1format.html#af9d5587df9f697f88d5a7b2aa90c16e6">compression::format::MAGIC_NUMBER</a></td></tr>
+<tr class="separator:af9d5587df9f697f88d5a7b2aa90c16e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2992ddc5d1be37cb786afb257128782c" id="r_a2992ddc5d1be37cb786afb257128782c"><td class="memItemLeft" align="right" valign="top">constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression_1_1format.html#a2992ddc5d1be37cb786afb257128782c">compression::format::FORMAT_VERSION</a> = 1</td></tr>
 <tr class="separator:a2992ddc5d1be37cb786afb257128782c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba5b49b42f55e79b68d089c9941c3a85" id="r_aba5b49b42f55e79b68d089c9941c3a85"><td class="memItemLeft" align="right" valign="top">constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecompression_1_1format.html#aba5b49b42f55e79b68d089c9941c3a85">compression::format::HEADER_SIZE</a></td></tr>

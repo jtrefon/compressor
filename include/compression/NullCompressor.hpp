@@ -5,29 +5,28 @@
 namespace compression {
 
 /**
- * @brief A Null Object implementation of ICompressor.
+ * @brief Implements ICompressor with a null compression algorithm.
  *
- * This class implements the ICompressor interface but performs
- * no actual compression or decompression. It simply returns the
- * input data unchanged.
+ * A simple implementation that does no compression - just returns 
+ * the original data. Useful for testing or as a baseline.
  */
 class NullCompressor final : public ICompressor {
 public:
     /**
-     * @brief Returns the input data without modification.
+     * @brief Does not compress the data, simply returns the original.
      *
-     * @param data The data to "compress".
-     * @return std::vector<std::byte> The unchanged input data.
+     * @param data The raw data to "compress".
+     * @return std::vector<uint8_t> The original data.
      */
-    std::vector<std::byte> compress(const std::vector<std::byte>& data) const override;
+    std::vector<uint8_t> compress(const std::vector<uint8_t>& data) const override;
 
     /**
-     * @brief Returns the input data without modification.
+     * @brief Does not decompress, simply returns the original.
      *
      * @param data The data to "decompress".
-     * @return std::vector<std::byte> The unchanged input data.
+     * @return std::vector<uint8_t> The original data.
      */
-    std::vector<std::byte> decompress(const std::vector<std::byte>& data) const override;
+    std::vector<uint8_t> decompress(const std::vector<uint8_t>& data) const override;
 };
 
 } // namespace compression 

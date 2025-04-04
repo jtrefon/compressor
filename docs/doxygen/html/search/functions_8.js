@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['serializefrequencymap_0',['serializeFrequencyMap',['../classcompression_1_1HuffmanCompressor.html#aaf33ce47234d06fc372e9497bd2f2a7e',1,'compression::HuffmanCompressor']]],
-  ['serializeheader_1',['serializeHeader',['../namespacecompression_1_1format.html#af2e5c379a1e2209b89aa43f378312fda',1,'compression::format']]],
-  ['stringtoalgorithmid_2',['stringToAlgorithmId',['../namespacecompression_1_1format.html#a69529234368757ea5c5633aca84d07b3',1,'compression::format']]]
+  ['isend_0',['isEnd',['../classcompression_1_1BitIO_1_1BitReader.html#a89aa86c5571187730754a28266045463',1,'compression::BitIO::BitReader']]],
+  ['isleaf_1',['isLeaf',['../structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#aa89c58b8723609b60cb5d755ab6f8cee',1,'compression::HuffmanCoder::HuffmanNode']]],
+  ['isliteral_2',['isLiteral',['../structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html#af7d146fee8a4f6d18be5426942dcfad0',1,'compression::Lz77Compressor::Lz77Symbol']]],
+  ['ismatchworthusing_3',['isMatchWorthUsing',['../classcompression_1_1Lz77Compressor.html#af699a7bbe8687ce2238008789f315642',1,'compression::Lz77Compressor']]]
 ];
