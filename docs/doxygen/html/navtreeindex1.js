@@ -1,5 +1,9 @@
 var NAVTREEINDEX1 =
 {
+"structcompression_1_1HuffmanCoder_1_1HuffmanNode.html":[2,0,0,5,0],
+"structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#a10eaee61a3bb1f24d255eacb4f7382d2":[1,0,0,5,0,4],
+"structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#a10eaee61a3bb1f24d255eacb4f7382d2":[2,0,0,5,0,4],
+"structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#a2e27c88f8f6d2dc9d5587d4731fdfb85":[1,0,0,5,0,6],
 "structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#a2e27c88f8f6d2dc9d5587d4731fdfb85":[2,0,0,5,0,6],
 "structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#a34eeb80ca36a6b087fde24a90b72b52a":[1,0,0,5,0,5],
 "structcompression_1_1HuffmanCoder_1_1HuffmanNode.html#a34eeb80ca36a6b087fde24a90b72b52a":[2,0,0,5,0,5],

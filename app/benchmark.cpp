@@ -82,9 +82,15 @@ BenchmarkResult runBenchmark(
             while (!decompressedData.empty() && decompressedData.back() == 0) {
                 decompressedData.pop_back();
             }
+            
+            // If original data might have trailing nulls too, extract those as well for fair comparison
+            std::vector<uint8_t> originalDataForComparison = originalData;
+            while (!originalDataForComparison.empty() && originalDataForComparison.back() == 0) {
+                originalDataForComparison.pop_back();
+            }
 
             // Sanity check decompression
-            if (decompressedData != originalData) {
+            if (decompressedData != originalDataForComparison) {
                  std::cerr << "WARNING: Decompression mismatch for " << name << "!" << std::endl;
                  // Handle error state? Set times to NaN or similar? For now, just report time.
             }

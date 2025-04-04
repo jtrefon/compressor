@@ -16,13 +16,17 @@ namespace {
         if (pos + 2 >= dataSize) {
             return 0; // Not enough data for valid hash
         }
-        // Improved hash function with better distribution
+        
+        // Improved hash function with better distribution using the parameters from header
         uint32_t hash = (static_cast<uint32_t>(data[pos]) << 16) | 
                          (static_cast<uint32_t>(data[pos + 1]) << 8) | 
                          data[pos + 2];
         
-        // Basic mixing to improve distribution
-        hash = hash * 2654435761; // Knuth's multiplicative hash
+        // More sophisticated mixing to improve hash distribution
+        hash = hash * 2654435761U; // Knuth's multiplicative hash
+        hash ^= hash >> compression::Lz77Compressor::HASH_SHIFT;
+        hash &= compression::Lz77Compressor::HASH_MASK;
+        
         return hash;
     }
     
@@ -72,11 +76,14 @@ static constexpr uint8_t TEMP_LITERAL_RUN_FLAG = 3;
 static constexpr uint8_t TEMP_COMPACT_ENCODING_FLAG = 4;
 
 // Constructor (align default lookahead with MAX_LEN)
-Lz77Compressor::Lz77Compressor(size_t searchBufferSize, size_t lookAheadBufferSize, bool useGreedyParsing, bool useAdaptiveMinLength) :
+Lz77Compressor::Lz77Compressor(size_t searchBufferSize, size_t lookAheadBufferSize, 
+                               bool useGreedyParsing, bool useAdaptiveMinLength, 
+                               bool aggressiveMatching) :
     searchBufferSize_(std::min(searchBufferSize, static_cast<size_t>(MAX_DISTANCE))),
     lookAheadBufferSize_(std::min(lookAheadBufferSize, MAX_MATCH_LENGTH)),
     useGreedyParsing_(useGreedyParsing),
-    useAdaptiveMinLength_(useAdaptiveMinLength)
+    useAdaptiveMinLength_(useAdaptiveMinLength),
+    aggressiveMatching_(aggressiveMatching)
 {
     if (searchBufferSize_ == 0 || lookAheadBufferSize_ == 0) {
         throw std::invalid_argument("LZ77 buffer sizes cannot be zero.");
@@ -88,7 +95,7 @@ Lz77Compressor::Lz77Compressor(size_t searchBufferSize, size_t lookAheadBufferSi
 
 // Extend a match by comparing bytes directly beyond the initial match
 void Lz77Compressor::extendMatch(Match& match, const std::vector<uint8_t>& data, 
-                                 size_t currentPos, size_t matchPos) const {
+                               size_t currentPos, size_t matchPos) const {
     // Don't try to extend if we already have a full match
     if (match.length >= MAX_MATCH_LENGTH) {
         return;
@@ -118,7 +125,8 @@ void Lz77Compressor::extendMatch(Match& match, const std::vector<uint8_t>& data,
     
     size_t extraLength = 0;
     
-    // Byte-by-byte comparison (simple but reliable)
+    // Standard byte-by-byte exact matching (no mismatches allowed)
+    // We've removed the aggressive matching with mismatches to ensure exact decompression
     while (extraLength < maxExtendLength && 
            pCurrent[extraLength] == pMatch[extraLength]) {
         extraLength++;
@@ -151,9 +159,17 @@ Lz77Compressor::Match Lz77Compressor::findBestMatchAt(
         size_t currentSearchBufferStart = (pos > searchBufferSize_) ? (pos - searchBufferSize_) : 0;
         size_t checksPerformed = 0;
         
+        // Variables for best match tracking with improved scoring
+        float bestScore = 0.0f;
+        Match secondBestMatch; // Track second best match for more informed decisions
+        float secondBestScore = 0.0f;
+        
+        // Increase chain length for aggressive matching
+        size_t maxPositionsToCheck = aggressiveMatching_ ? MAX_HASH_CHAIN_LENGTH : (MAX_HASH_CHAIN_LENGTH / 2);
+        
         // Iterate backwards through potential positions (most recent first)
         for (auto rit = potentialPositions.rbegin(); 
-             rit != potentialPositions.rend() && checksPerformed < MAX_HASH_CHAIN_LENGTH; 
+             rit != potentialPositions.rend() && checksPerformed < maxPositionsToCheck; 
              ++rit, ++checksPerformed) {
             
             size_t potentialMatchPos = *rit;
@@ -208,34 +224,35 @@ Lz77Compressor::Match Lz77Compressor::findBestMatchAt(
                 
                 // Only consider this match if it's worth using based on compression benefit
                 if (isMatchWorthUsing(candidateMatch)) {
-                    // Apply a distance penalty based on logarithmic scale
-                    // The farther the match, the more bits needed to encode the distance
-                    float distancePenalty = 1.0f;
-                    
-                    if (distance < 128) {
-                        distancePenalty = 1.0f; // No penalty for close matches
-                    } else if (distance < 1024) {
-                        distancePenalty = 0.97f; // Small penalty
-                    } else if (distance < 4096) {
-                        distancePenalty = 0.94f; // Medium penalty
-                    } else {
-                        distancePenalty = 0.90f; // Larger penalty for far distances
-                    }
-                    
-                    // Calculate effective length with distance penalty
-                    size_t effectiveLength = static_cast<size_t>(currentMatchLength * distancePenalty);
+                    // Calculate match score using the new scoring function
+                    float matchScore = scoreMatch(candidateMatch);
                     
                     // If this match is better than our current best
-                    if (bestMatch.length == 0 || effectiveLength > bestMatch.length) {
-                        bestMatch.length = currentMatchLength;
-                        bestMatch.distance = distance;
+                    if (bestMatch.length == 0 || matchScore > bestScore) {
+                        // Move current best to second best
+                        secondBestMatch = bestMatch;
+                        secondBestScore = bestScore;
+                        
+                        // Update best match
+                        bestMatch = candidateMatch;
+                        bestScore = matchScore;
                         
                         // If we found a very good match, we might stop early
-                        if (bestMatch.length >= MAX_MATCH_LENGTH * 0.75) {
+                        if (bestMatch.length >= (MAX_MATCH_LENGTH * 0.85) && !aggressiveMatching_) {
                             break;
                         }
                     }
+                    // Keep track of the second best match
+                    else if (secondBestMatch.length == 0 || matchScore > secondBestScore) {
+                        secondBestMatch = candidateMatch;
+                        secondBestScore = matchScore;
+                    }
                 }
+            }
+            
+            // With aggressive matching, continue searching even after finding a good match
+            if (!aggressiveMatching_ && checksPerformed > 32 && bestMatch.length >= MIN_MATCH_LENGTH * 2) {
+                break; // Exit early for performance if we found a reasonably good match
             }
         }
     }
@@ -256,11 +273,12 @@ std::vector<Lz77Compressor::Lz77Symbol> Lz77Compressor::compressToSymbols(const 
     symbols.reserve(data.size() / 2); // Conservative estimate to avoid frequent reallocations
     std::unordered_map<uint32_t, std::vector<size_t>> hashTable;
     
-    // Reserve space in hash table to avoid rehashing
-    hashTable.reserve(8192);
+    // Reserve space in hash table to avoid rehashing - increased capacity for better hashing
+    hashTable.reserve(16384);
     
     // Build the initial hash table with a reasonable amount of positions
-    const size_t preloadLimit = std::min(size_t(4096), data.size());
+    // Increased preload for better compression at the start of the file
+    const size_t preloadLimit = std::min(size_t(8192), data.size());
     for (size_t i = 0; i + MIN_MATCH_LENGTH <= preloadLimit; i++) {
         updateHashTable(hashTable, data.data(), i, data.size(), MAX_HASH_CHAIN_LENGTH);
     }
@@ -283,10 +301,38 @@ std::vector<Lz77Compressor::Lz77Symbol> Lz77Compressor::compressToSymbols(const 
             // Try to find a match at the next position
             nextMatch = findBestMatchAt(data, currentPosition + 1, hashTable);
             
-            // Use lazy match if it's better by a significant margin
+            // Use lazy match if it's better by a significant margin - improved criteria
             if (nextMatch.length > match.length && 
-                nextMatch.compressionBenefit() > match.compressionBenefit() + 1) {  // Require a bit more benefit
+                (nextMatch.compressionBenefit() > match.compressionBenefit() + 1 || 
+                (aggressiveMatching_ && scoreMatch(nextMatch) > scoreMatch(match) * 1.1f))) {
                 useLazyMatch = true;
+            }
+        }
+        
+        // With aggressive matching, also check for better matches by skipping 2 bytes
+        if (aggressiveMatching_ && match.length >= MIN_MATCH_LENGTH && 
+            currentPosition + 2 < data.size() && !useLazyMatch) {
+            
+            Match nextNextMatch = findBestMatchAt(data, currentPosition + 2, hashTable);
+            
+            // Use two-byte lazy match if it's significantly better
+            if (nextNextMatch.length > match.length + 1 && 
+                nextNextMatch.compressionBenefit() > match.compressionBenefit() + 3) {
+                // Output two literals and then use the match later
+                for (int i = 0; i < 2 && currentPosition < data.size(); i++) {
+                    Lz77Symbol symbol;
+                    symbol.symbol = static_cast<uint32_t>(data[currentPosition]);
+                    symbol.literal = data[currentPosition];
+                    symbols.push_back(symbol);
+                    
+                    if (currentPosition + MIN_MATCH_LENGTH <= data.size()) {
+                        updateHashTable(hashTable, data.data(), currentPosition, data.size());
+                    }
+                    
+                    currentPosition++;
+                }
+                
+                continue; // Skip to next iteration to handle the better match
             }
         }
 
@@ -306,10 +352,13 @@ std::vector<Lz77Compressor::Lz77Symbol> Lz77Compressor::compressToSymbols(const 
             symbol.length = actualLength;
             symbols.push_back(symbol);
             
-            // Update hash table for skipped positions (limited to save time)
-            // Use a stride to update efficiently
-            const size_t stride = std::max(size_t(4), actualLength / 8);
-            for (size_t i = stride; i < actualLength; i += stride) {
+            // Update hash table for skipped positions more frequently
+            // Use a smaller stride to update the hash table more thoroughly
+            const size_t stride = aggressiveMatching_ ? 
+                                  std::max(size_t(2), actualLength / 16) : 
+                                  std::max(size_t(4), actualLength / 8);
+                                  
+            for (size_t i = 1; i < actualLength; i += stride) {
                 if (currentPosition + i + MIN_MATCH_LENGTH <= data.size()) {
                     updateHashTable(hashTable, data.data(), currentPosition + i, data.size());
                 }
@@ -379,8 +428,8 @@ std::vector<uint8_t> Lz77Compressor::compress(const std::vector<uint8_t>& data) 
                 j++;
             }
             
-            // For runs of 3+ literals, use the optimized run encoding
-            if (literalCount >= 3) {
+            // For runs of 2+ literals, use the optimized run encoding (changed from 3+ for better compression)
+            if (literalCount >= 2) {
                 result.push_back(TEMP_LITERAL_RUN_FLAG); // Special marker for literal runs
                 result.push_back(literalCount - 1); // 0-254 means 1-255 literals
                 
@@ -391,7 +440,7 @@ std::vector<uint8_t> Lz77Compressor::compress(const std::vector<uint8_t>& data) 
                 
                 i += literalCount;
             } else {
-                // Handle 1-2 literals with the standard encoding
+                // Handle single literal with the standard encoding
                 result.push_back(TEMP_LITERAL_FLAG);
                 result.push_back(symbols[i].literal);
                 i++;

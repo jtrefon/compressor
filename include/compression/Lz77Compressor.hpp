@@ -26,14 +26,19 @@ public:
     static constexpr uint32_t MAX_LEN = 258; // Corresponds to MAX_MATCH_LENGTH
     
     // Constants for improved compression
-    static constexpr uint32_t MAX_HASH_CHAIN_LENGTH = 8192; // Maximum positions to check in hash chain
+    static constexpr uint32_t MAX_HASH_CHAIN_LENGTH = 16384; // Increased from 8192 for better compression
     static constexpr bool USE_HASH_CHAIN_LIMIT = true; // Enable hash chain limit for speed vs compression trade-off
     static constexpr size_t MIN_MATCH_FOR_FAR_DISTANCE = 5; // Require longer matches for far distances
     
-    // Constants for adaptive minimum match length
+    // Constants for adaptive minimum match length - more aggressive thresholds for better compression
     static constexpr size_t ADAPTIVE_MIN_LENGTH_CLOSE = 3;  // Min length for nearby matches (< 4K)
     static constexpr size_t ADAPTIVE_MIN_LENGTH_FAR = 4;    // Min length for 4-16K distances
     static constexpr size_t ADAPTIVE_MIN_LENGTH_VERY_FAR = 5; // Min length for 16K+ distances
+    
+    // Advanced hash function parameters
+    static constexpr uint32_t HASH_BITS = 16; // Use 16-bit hash for better distribution
+    static constexpr uint32_t HASH_SHIFT = 5;  // Higher shift creates better hash distribution
+    static constexpr uint32_t HASH_MASK = (1 << HASH_BITS) - 1; // Mask for hash function
 
     // Helper to get length code from actual length
     static uint32_t getLengthCode(size_t length) {
@@ -61,13 +66,17 @@ public:
      * @param searchBufferSize Size of the search buffer (increased for better compression)
      * @param lookAheadBufferSize Size of the look-ahead buffer
      * @param useGreedyParsing When true, uses greedy parsing instead of lazy parsing
+     * @param useAdaptiveMinLength When true, adjusts minimum match length based on distance
+     * @param aggressiveMatching When true, uses more aggressive match finding (better compression but slower)
      */
-    Lz77Compressor(size_t searchBufferSize = 32768, size_t lookAheadBufferSize = 258, bool useGreedyParsing = false, 
-                  bool useAdaptiveMinLength = true);
+    Lz77Compressor(size_t searchBufferSize = 32768, 
+                  size_t lookAheadBufferSize = 258, 
+                  bool useGreedyParsing = false, 
+                  bool useAdaptiveMinLength = true,
+                  bool aggressiveMatching = true);
 
     // Generate a sequence of symbols (Literals 0-255, EOB 256, Length Codes 257+)
     // and associated distances for length codes.
-    // We might need a struct to return both symbols and distances.
     struct Lz77Symbol {
         uint32_t symbol;    // Literal (0-255), EOB (256), or Length Code (257+)
         uint32_t distance = 0;  // Distance for length codes (0 if literal)
@@ -90,6 +99,7 @@ private:
     size_t lookAheadBufferSize_;
     bool useGreedyParsing_; // Greedy vs lazy parsing
     bool useAdaptiveMinLength_; // Dynamically adjust min match length based on distance
+    bool aggressiveMatching_; // Use more aggressive match finding strategies
 
     // Simple structure to represent a match found in the search buffer
     struct Match {
@@ -105,6 +115,11 @@ private:
             // Calculate savings
             int literalCost = static_cast<int>(length) * 2;  // Cost if encoded as literals
             int matchCost = 5;  // Fixed cost of encoding match
+            
+            // For matches with small distance, we can use the more compact encoding
+            if (length <= 6 && distance < 1024) {
+                matchCost = 3; // More efficient encoding: flag + 16 bits
+            }
             
             // Calculate benefit (positive means savings)
             return literalCost - matchCost;
@@ -132,6 +147,21 @@ private:
         
     // Attempt to extend a match by comparing bytes directly, bypassing hash lookup
     void extendMatch(Match& match, const std::vector<uint8_t>& data, size_t currentPos, size_t matchPos) const;
+    
+    // Advanced match scoring for better compression decisions
+    float scoreMatch(const Match& match) const {
+        float score = static_cast<float>(match.length);
+        
+        // Give preference to shorter distances
+        if (match.distance < 128)
+            return score * 1.2f;  // Boost for very close matches
+        else if (match.distance < 1024)
+            return score * 1.1f;  // Small boost for close matches
+        else if (match.distance > 16384)
+            return score * 0.9f;  // Penalty for far matches
+            
+        return score;
+    }
         
     // Evaluate if a match is worth using based on distance and length
     bool isMatchWorthUsing(const Match& match, size_t distance = 0) const {
@@ -149,6 +179,11 @@ private:
         // Additional check for very short matches
         if (match.length == MIN_LEN && dist > 8192) {
             return false; // Minimum-length matches only for close distances
+        }
+        
+        // With aggressive matching, allow most matches that save space
+        if (aggressiveMatching_ && match.length >= minRequiredLength) {
+            return true;
         }
         
         return true;

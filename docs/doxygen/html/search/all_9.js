@@ -9,7 +9,7 @@ var searchData=
   ['literal_6',['literal',['../structcompression_1_1Lz77Compressor_1_1Lz77Symbol.html#a13a422f2470393e02ea3225a1d52f648',1,'compression::Lz77Compressor::Lz77Symbol']]],
   ['lookaheadbuffersize_5f_7',['lookAheadBufferSize_',['../classcompression_1_1Lz77Compressor.html#a24e9bf3b390b42a685dc31a8619066c9',1,'compression::Lz77Compressor']]],
   ['lz77_5f_8',['lz77_',['../classcompression_1_1DeflateCompressor.html#a5f242db4747130321f815c23abbaf46f',1,'compression::DeflateCompressor']]],
-  ['lz77compressor_9',['Lz77Compressor',['../classcompression_1_1Lz77Compressor.html',1,'compression::Lz77Compressor'],['../classcompression_1_1Lz77Compressor.html#ab2a5b9a67a4ba4a2907c69eab31d99cb',1,'compression::Lz77Compressor::Lz77Compressor()']]],
+  ['lz77compressor_9',['Lz77Compressor',['../classcompression_1_1Lz77Compressor.html',1,'compression::Lz77Compressor'],['../classcompression_1_1Lz77Compressor.html#a93c587f128a8c4bc6a35c03fd4737d16',1,'compression::Lz77Compressor::Lz77Compressor()']]],
   ['lz77compressor_2ecpp_10',['Lz77Compressor.cpp',['../Lz77Compressor_8cpp.html',1,'']]],
   ['lz77compressor_2ecpp_2eo_2ed_11',['Lz77Compressor.cpp.o.d',['../Lz77Compressor_8cpp_8o_8d.html',1,'']]],
   ['lz77compressor_2ehpp_12',['Lz77Compressor.hpp',['../Lz77Compressor_8hpp.html',1,'']]],
