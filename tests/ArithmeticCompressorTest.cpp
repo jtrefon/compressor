@@ -156,5 +156,44 @@ TEST_F(ArithmeticCompressorTest, InvalidInput) {
     EXPECT_THROW(compressor.decompress(invalidData), std::runtime_error);
 }
 
+// Test with binary data that should be compressible
+TEST_F(ArithmeticCompressorTest, BinaryData) {
+    // Create a vector to simulate binary data of an executable or other binary file
+    std::vector<uint8_t> binaryData;
+    
+    // 1. Add a really long section of zeros (common in binary files)
+    binaryData.insert(binaryData.end(), 5000, 0);
+    
+    // 2. Add a section of 0xFF bytes (common in binary files)
+    binaryData.insert(binaryData.end(), 3000, 0xFF);
+    
+    // 3. Add a repeating pattern section (common in structured data)
+    std::vector<uint8_t> pattern = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
+    for (int i = 0; i < 100; i++) {
+        binaryData.insert(binaryData.end(), pattern.begin(), pattern.end());
+    }
+    
+    // 4. Add another very long section of zeros
+    binaryData.insert(binaryData.end(), 2000, 0);
+    
+    // Print the size of the test data for debugging
+    std::cout << "Binary test data size: " << binaryData.size() << " bytes" << std::endl;
+    
+    // Compress the data
+    std::vector<uint8_t> compressed = compressor.compress(binaryData);
+    
+    // Calculate and print the compression ratio
+    double ratio = static_cast<double>(compressed.size()) / static_cast<double>(binaryData.size());
+    std::cout << "Binary compression ratio: " << ratio << std::endl;
+    
+    // Verify the ratio is reasonable (should be much better than 0.1 for this pattern-filled data)
+    ASSERT_LT(ratio, 0.1);
+    
+    // Decompress and verify
+    std::vector<uint8_t> decompressed = compressor.decompress(compressed);
+    ASSERT_EQ(decompressed.size(), binaryData.size());
+    ASSERT_EQ(decompressed, binaryData);
+}
+
 } // namespace test
 } // namespace compression 
