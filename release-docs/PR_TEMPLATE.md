@@ -46,4 +46,4 @@ The BWT algorithm is particularly effective for text compression.
 - [x] All tests are passing
 - [x] New tests added for new functionality
 - [x] Version numbers updated
-- [x] Release notes prepared 
+- [x] Release notes prepared
