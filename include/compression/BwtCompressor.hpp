@@ -57,11 +57,15 @@ public:
     /**
      * @brief Compresses data using the BWT algorithm
      * 
+     * The output format begins with the bytes "BWT", a version byte and a
+     * flags byte. Flag bit 0 indicates whether the block was further encoded
+     * with MTF/RLE/Huffman.
+     *
      * The compression pipeline is:
      * 1. Burrows-Wheeler Transform
      * 2. Move-To-Front Transform
-     * 3. Run-Length Encoding (optional)
-     * 4. Entropy coding (typically Huffman or Arithmetic)
+     * 3. Run-Length Encoding
+     * 4. Entropy coding (typically Huffman)
      * 
      * @param data The data to compress
      * @return The compressed data
@@ -71,9 +75,11 @@ public:
     /**
      * @brief Decompresses data that was compressed with the BWT algorithm
      * 
-     * The decompression pipeline is the reverse of compression:
+     * The decompression pipeline is the reverse of compression. If the
+     * header flag indicates no transformations were used, only the inverse
+     * Burrows-Wheeler Transform is applied. Otherwise:
      * 1. Entropy decoding
-     * 2. Run-Length decoding (if used)
+     * 2. Run-Length decoding
      * 3. Move-To-Front decoding
      * 4. Inverse Burrows-Wheeler Transform
      * 
