@@ -17,6 +17,10 @@ constexpr std::array<uint8_t, 4> MAGIC_NUMBER = {
 };
 constexpr uint8_t FORMAT_VERSION = 1;
 
+// --- BWT specific flags ---
+// Bit 0 set if the data block was entropy encoded after BWT (MTF/RLE/Huffman)
+constexpr uint8_t BWT_FLAG_TRANSFORMED = 0x01;
+
 // Algorithm IDs (extend this as new algorithms are added)
 enum class AlgorithmID : uint8_t {
     NULL_COMPRESSOR = 0,

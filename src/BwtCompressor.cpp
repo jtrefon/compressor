@@ -1,5 +1,6 @@
 #include "compression/BwtCompressor.hpp"
 #include "compression/HuffmanCompressor.hpp"
+#include "compression/FileFormat.hpp"
 #include <algorithm>
 #include <numeric>
 #include <stdexcept>
@@ -347,12 +348,18 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
     result.reserve(data.size()); // Reserve space for worst case
     
     // Header: [B][W][T][version][flags]
-    // Where version = 1, flags bit 0 = RLE enabled, bit 1-7 reserved
+    // Where version = 1,
+    //       flags bit 0 = data was transformed with MTF/RLE/Huffman
     result.push_back('B');
     result.push_back('W');
     result.push_back('T');
     result.push_back(1); // Version 1
-    result.push_back(1); // Flags: RLE enabled
+    uint8_t flags = 0;
+    bool useTransforms = data.size() >= 10;
+    if (useTransforms) {
+        flags |= format::BWT_FLAG_TRANSFORMED;
+    }
+    result.push_back(flags);
     
     // For very small inputs, process as a single block without further compression
     if (data.size() < 10) {
@@ -466,7 +473,7 @@ std::vector<uint8_t> BwtCompressor::decompress(const std::vector<uint8_t>& data)
         throw std::runtime_error("Unsupported BWT version: " + std::to_string(version));
     }
     
-    bool rleEnabled = (flags & 1) != 0;
+    bool transformed = (flags & format::BWT_FLAG_TRANSFORMED) != 0;
     
     std::vector<uint8_t> result;
     size_t pos = 5; // Start after header
@@ -497,23 +504,22 @@ std::vector<uint8_t> BwtCompressor::decompress(const std::vector<uint8_t>& data)
         std::vector<uint8_t> compressedBlock(data.begin() + pos, data.begin() + pos + blockSize);
         pos += blockSize;
         
-        // For very small blocks, they might be stored directly without additional compression
-        if (blockSize <= 10 && compressedBlock.size() == blockSize) {
-            // Apply inverse BWT directly
+        if (!transformed) {
+            // Block stored as plain BWT output without further compression
             auto decodedBlock = bwtDecode(compressedBlock, primaryIndex);
             result.insert(result.end(), decodedBlock.begin(), decodedBlock.end());
             continue;
         }
-        
+
         // Apply entropy decoding (Huffman)
         auto entropyDecodedBlock = entropyCompressor_->decompress(compressedBlock);
-        
-        // Apply Run-Length Decoding if enabled
-        auto rleDecodedBlock = rleEnabled ? runLengthDecode(entropyDecodedBlock) : entropyDecodedBlock;
-        
+
+        // Apply Run-Length Decoding
+        auto rleDecodedBlock = runLengthDecode(entropyDecodedBlock);
+
         // Apply Move-To-Front decoding
         auto mtfDecodedBlock = mtfCoder_.decode(rleDecodedBlock);
-        
+
         // Apply inverse Burrows-Wheeler Transform
         auto bwtDecodedBlock = bwtDecode(mtfDecodedBlock, primaryIndex);
         
