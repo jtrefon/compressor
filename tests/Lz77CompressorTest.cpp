@@ -196,16 +196,28 @@ TEST_F(Lz77CompressorTest, DecompressEmpty) {
 TEST_F(Lz77CompressorTest, DecompressTruncatedLiteralFlagOnly) {
     // For a single 0xFF byte, we might get nothing or a placeholder
     std::vector<uint8_t> compressed = {0xFF}; // Match marker with no data
-    std::vector<uint8_t> decompressed = compressor.decompress(compressed);
-    // Either way is acceptable - empty or containing placeholders
-    EXPECT_TRUE(decompressed.empty() || !decompressed.empty());
+    std::vector<uint8_t> decompressed;
+    ASSERT_NO_THROW({ decompressed = compressor.decompress(compressed); });
+
+    bool allPlaceholders =
+        !decompressed.empty() &&
+        std::all_of(decompressed.begin(), decompressed.end(),
+                     [](uint8_t b) { return b == '?'; });
+
+    EXPECT_TRUE(decompressed.empty() || allPlaceholders);
 }
 
 TEST_F(Lz77CompressorTest, DecompressTruncatedPairFlagOnly) {
     std::vector<uint8_t> compressed = {0xFF}; // Match marker with no data
-    std::vector<uint8_t> decompressed = compressor.decompress(compressed);
-    // Should handle this gracefully (no exception)
-    EXPECT_TRUE(!decompressed.empty() || decompressed.empty()); // Either has placeholders or is empty
+    std::vector<uint8_t> decompressed;
+    ASSERT_NO_THROW({ decompressed = compressor.decompress(compressed); });
+
+    bool allPlaceholders =
+        !decompressed.empty() &&
+        std::all_of(decompressed.begin(), decompressed.end(),
+                     [](uint8_t b) { return b == '?'; });
+
+    EXPECT_TRUE(decompressed.empty() || allPlaceholders);
 }
 
 TEST_F(Lz77CompressorTest, DecompressTruncatedPairMissingLength) {
@@ -213,9 +225,15 @@ TEST_F(Lz77CompressorTest, DecompressTruncatedPairMissingLength) {
         0xFF, // Match marker
         // Missing length and distance bytes
     };
-    std::vector<uint8_t> decompressed = compressor.decompress(compressed);
-    // Should handle this gracefully (no exception)
-    EXPECT_TRUE(!decompressed.empty() || decompressed.empty());
+    std::vector<uint8_t> decompressed;
+    ASSERT_NO_THROW({ decompressed = compressor.decompress(compressed); });
+
+    bool allPlaceholders =
+        !decompressed.empty() &&
+        std::all_of(decompressed.begin(), decompressed.end(),
+                     [](uint8_t b) { return b == '?'; });
+
+    EXPECT_TRUE(decompressed.empty() || allPlaceholders);
 }
 
 TEST_F(Lz77CompressorTest, DecompressTruncatedPairMissingDistHigh) {
@@ -225,9 +243,15 @@ TEST_F(Lz77CompressorTest, DecompressTruncatedPairMissingDistHigh) {
         10,   // Distance low byte
         // Missing Distance high byte
     };
-    std::vector<uint8_t> decompressed = compressor.decompress(compressed);
-    // Should handle this gracefully (no exception)
-    EXPECT_TRUE(!decompressed.empty() || decompressed.empty());
+    std::vector<uint8_t> decompressed;
+    ASSERT_NO_THROW({ decompressed = compressor.decompress(compressed); });
+
+    bool allPlaceholders =
+        !decompressed.empty() &&
+        std::all_of(decompressed.begin(), decompressed.end(),
+                     [](uint8_t b) { return b == '?'; });
+
+    EXPECT_TRUE(decompressed.empty() || allPlaceholders);
 }
 
 TEST_F(Lz77CompressorTest, DecompressInvalidFlag) {
