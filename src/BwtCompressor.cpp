@@ -270,13 +270,14 @@ std::vector<uint8_t> BwtCompressor::runLengthEncode(const std::vector<uint8_t>& 
                 result.push_back(currentByte);
                 result.push_back(static_cast<uint8_t>(runLength - 4));
                 
-                // Reset the run
+                // Reset the run counter and prepare for the next byte
                 runLength = 0;
-                
-                // If we're not at the end, prepare for the next byte
+
+                // If we're not at the end, set up for the next byte. We don't
+                // advance the loop index here because the for-loop increment
+                // will move to the correct position on the next iteration.
                 if (i < data.size() - 1) {
                     currentByte = data[i + 1];
-                    i++; // Skip the next byte as we've already processed it
                 }
             }
         } else {
