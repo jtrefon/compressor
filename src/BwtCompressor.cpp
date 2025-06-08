@@ -172,8 +172,8 @@ struct SuffixArray {
     }
 };
 
-BwtCompressor::BwtCompressor() 
-    : blockSize_(1024 * 1024), // 1MB block size by default
+BwtCompressor::BwtCompressor()
+    : blockSize_(8 * 1024 * 1024), // 8MB block size by default
       mtfCoder_(),
       entropyCompressor_(std::make_unique<HuffmanCompressor>()) {
 }
@@ -255,8 +255,8 @@ std::vector<uint8_t> BwtCompressor::runLengthEncode(const std::vector<uint8_t>& 
     std::vector<uint8_t> result;
     result.reserve(data.size()); // Reserve space for worst case
     
-    // Simple RLE: for runs of 4 or more identical bytes
-    // Use format: [0] [byte] [run length - 4]
+    // Simple RLE: for runs of 3 or more identical bytes
+    // Use format: [0] [byte] [run length - 3]
     uint8_t currentByte = data[0];
     uint32_t runLength = 1;
     
@@ -265,11 +265,11 @@ std::vector<uint8_t> BwtCompressor::runLengthEncode(const std::vector<uint8_t>& 
             ++runLength;
             
             // If we have a long run and reached the max run length or end of data
-            if (runLength >= 4 && (runLength == 259 || i == data.size() - 1)) {
+            if (runLength >= 3 && (runLength == 260 || i == data.size() - 1)) {
                 // Encode the run
                 result.push_back(0); // RLE marker
                 result.push_back(currentByte);
-                result.push_back(static_cast<uint8_t>(runLength - 4));
+                result.push_back(static_cast<uint8_t>(runLength - 3));
                 
                 // Reset the run counter and prepare for the next byte
                 runLength = 0;
@@ -283,10 +283,10 @@ std::vector<uint8_t> BwtCompressor::runLengthEncode(const std::vector<uint8_t>& 
             }
         } else {
             // If we had a run of 4 or more, encode it
-            if (runLength >= 4) {
+            if (runLength >= 3) {
                 result.push_back(0); // RLE marker
                 result.push_back(currentByte);
-                result.push_back(static_cast<uint8_t>(runLength - 4));
+                result.push_back(static_cast<uint8_t>(runLength - 3));
             } else {
                 // Otherwise, just output the bytes
                 for (uint32_t j = 0; j < runLength; ++j) {
@@ -301,7 +301,7 @@ std::vector<uint8_t> BwtCompressor::runLengthEncode(const std::vector<uint8_t>& 
     }
     
     // Handle any remaining bytes
-    if (runLength > 0 && runLength < 4) {
+    if (runLength > 0 && runLength < 3) {
         for (uint32_t j = 0; j < runLength; ++j) {
             result.push_back(currentByte);
         }
@@ -320,9 +320,9 @@ std::vector<uint8_t> BwtCompressor::runLengthDecode(const std::vector<uint8_t>& 
     
     for (size_t i = 0; i < data.size(); ++i) {
         if (data[i] == 0 && i + 2 < data.size()) {
-            // RLE block: [0] [byte] [run length - 4]
+            // RLE block: [0] [byte] [run length - 3]
             uint8_t byte = data[i + 1];
-            uint32_t runLength = data[i + 2] + 4; // Add 4 to get actual run length
+            uint32_t runLength = data[i + 2] + 3; // Add 3 to get actual run length
             
             for (uint32_t j = 0; j < runLength; ++j) {
                 result.push_back(byte);
