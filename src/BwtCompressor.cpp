@@ -1,5 +1,6 @@
 #include "compression/BwtCompressor.hpp"
 #include "compression/HuffmanCompressor.hpp"
+#include "compression/Lz77Compressor.hpp"
 #include "compression/FileFormat.hpp"
 #include <algorithm>
 #include <numeric>
@@ -356,8 +357,14 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
     result.push_back(1); // Version 1
     uint8_t flags = 0;
     bool useTransforms = data.size() >= 10;
+    bool applyLz77 = false;
     if (useTransforms) {
         flags |= format::BWT_FLAG_TRANSFORMED;
+        // Apply LZ77 only if data is mostly ASCII to avoid marker conflicts
+        applyLz77 = std::all_of(data.begin(), data.end(), [](uint8_t b){ return b < 128; });
+        if (applyLz77) {
+            flags |= format::BWT_FLAG_LZ77; // indicate additional LZ77 step
+        }
     }
     result.push_back(flags);
     
@@ -394,9 +401,17 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         auto mtfBlock = mtfCoder_.encode(bwtBlock);
         auto rleBlock = runLengthEncode(mtfBlock);
         auto compressedBlock = entropyCompressor_->compress(rleBlock);
-        
+
+        std::vector<uint8_t> finalBlock;
+        if (applyLz77) {
+            Lz77Compressor lz77;
+            finalBlock = lz77.compress(compressedBlock);
+        } else {
+            finalBlock = std::move(compressedBlock);
+        }
+
         // Write block size and primary index to result
-        uint32_t blockSize = static_cast<uint32_t>(compressedBlock.size());
+        uint32_t blockSize = static_cast<uint32_t>(finalBlock.size());
         result.push_back(static_cast<uint8_t>((blockSize >> 24) & 0xFF));
         result.push_back(static_cast<uint8_t>((blockSize >> 16) & 0xFF));
         result.push_back(static_cast<uint8_t>((blockSize >> 8) & 0xFF));
@@ -408,7 +423,7 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         result.push_back(static_cast<uint8_t>(primaryIndex & 0xFF));
         
         // Add the compressed block to the result
-        result.insert(result.end(), compressedBlock.begin(), compressedBlock.end());
+        result.insert(result.end(), finalBlock.begin(), finalBlock.end());
         
         return result;
     }
@@ -427,12 +442,20 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         
         // Apply Run-Length Encoding
         auto rleBlock = runLengthEncode(mtfBlock);
-        
+
         // Apply entropy coding (Huffman)
         auto compressedBlock = entropyCompressor_->compress(rleBlock);
-        
+
+        std::vector<uint8_t> finalBlock;
+        if (applyLz77) {
+            Lz77Compressor lz77;
+            finalBlock = lz77.compress(compressedBlock);
+        } else {
+            finalBlock = std::move(compressedBlock);
+        }
+
         // Write block size and primary index to result
-        uint32_t blockSize = static_cast<uint32_t>(compressedBlock.size());
+        uint32_t blockSize = static_cast<uint32_t>(finalBlock.size());
         result.push_back(static_cast<uint8_t>((blockSize >> 24) & 0xFF));
         result.push_back(static_cast<uint8_t>((blockSize >> 16) & 0xFF));
         result.push_back(static_cast<uint8_t>((blockSize >> 8) & 0xFF));
@@ -444,7 +467,7 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         result.push_back(static_cast<uint8_t>(primaryIndex & 0xFF));
         
         // Add the compressed block to the result
-        result.insert(result.end(), compressedBlock.begin(), compressedBlock.end());
+        result.insert(result.end(), finalBlock.begin(), finalBlock.end());
     }
     
     return result;
@@ -474,6 +497,7 @@ std::vector<uint8_t> BwtCompressor::decompress(const std::vector<uint8_t>& data)
     }
     
     bool transformed = (flags & format::BWT_FLAG_TRANSFORMED) != 0;
+    bool lz77Applied = (flags & format::BWT_FLAG_LZ77) != 0;
     
     std::vector<uint8_t> result;
     size_t pos = 5; // Start after header
@@ -511,8 +535,17 @@ std::vector<uint8_t> BwtCompressor::decompress(const std::vector<uint8_t>& data)
             continue;
         }
 
+        // If an extra LZ77 step was used, decode it first
+        std::vector<uint8_t> afterLz;
+        if (lz77Applied) {
+            Lz77Compressor lz77;
+            afterLz = lz77.decompress(compressedBlock);
+        } else {
+            afterLz = compressedBlock;
+        }
+
         // Apply entropy decoding (Huffman)
-        auto entropyDecodedBlock = entropyCompressor_->decompress(compressedBlock);
+        auto entropyDecodedBlock = entropyCompressor_->decompress(afterLz);
 
         // Apply Run-Length Decoding
         auto rleDecodedBlock = runLengthDecode(entropyDecodedBlock);

@@ -20,6 +20,8 @@ constexpr uint8_t FORMAT_VERSION = 1;
 // --- BWT specific flags ---
 // Bit 0 set if the data block was entropy encoded after BWT (MTF/RLE/Huffman)
 constexpr uint8_t BWT_FLAG_TRANSFORMED = 0x01;
+// Bit 1 set if the block was additionally LZ77 compressed
+constexpr uint8_t BWT_FLAG_LZ77 = 0x02;
 
 // Algorithm IDs (extend this as new algorithms are added)
 enum class AlgorithmID : uint8_t {
