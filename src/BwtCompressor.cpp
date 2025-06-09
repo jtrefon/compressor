@@ -398,7 +398,6 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         auto [bwtBlock, primaryIndex] = bwtEncode(data);
         auto mtfBlock = mtfCoder_.encode(bwtBlock);
         auto rleBlock = runLengthEncode(mtfBlock);
-
         // Compress without LZ77
         auto noLzBlock = entropyCompressor_->compress(rleBlock);
 
@@ -432,7 +431,6 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         if (usedLz) {
             result[4] |= format::BWT_FLAG_LZ77;
         }
-
         return result;
     }
 
