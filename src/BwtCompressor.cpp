@@ -435,7 +435,7 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
 
         return result;
     }
-    
+
     // Process data in blocks for larger inputs
     for (size_t blockStart = 0; blockStart < data.size(); blockStart += actualBlockSize) {
         // Extract the current block

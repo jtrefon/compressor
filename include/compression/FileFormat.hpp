@@ -20,7 +20,7 @@ constexpr uint8_t FORMAT_VERSION = 1;
 // --- BWT specific flags ---
 // Bit 0 set if the data block was entropy encoded after BWT (MTF/RLE/Huffman)
 constexpr uint8_t BWT_FLAG_TRANSFORMED = 0x01;
-// Bit 1 set if the block was preprocessed with an LZ77 stage
+// Bit 1 set if any block was additionally processed with LZ77
 constexpr uint8_t BWT_FLAG_LZ77 = 0x02;
 
 // Block-level flags for BWT blocks

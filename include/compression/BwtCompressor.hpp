@@ -59,9 +59,10 @@ public:
      * 
      * The output format begins with the bytes "BWT", a version byte and a
      * flags byte. Flag bit 0 indicates whether the block was further encoded
-     * with MTF/RLE/Huffman. Flag bit 1 indicates the data was also processed
-     * with an LZ77 stage. Each block also stores a block flag byte where
-     * bit 0 indicates whether that specific block used LZ77.
+     * with MTF/RLE/Huffman. Flag bit 1 signals that at least one block was
+     * additionally processed with an LZ77 stage. Each block also stores a
+     * block flag byte where bit 0 specifies whether that particular block
+     * used LZ77.
      *
      * The compression pipeline is:
      * 1. Burrows-Wheeler Transform
