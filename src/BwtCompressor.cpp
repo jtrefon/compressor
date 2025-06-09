@@ -357,16 +357,13 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
     result.push_back(1); // Version 1
     uint8_t flags = 0;
     bool useTransforms = data.size() >= 10;
-    bool applyLz77 = false;
+    bool asciiOnly = std::all_of(data.begin(), data.end(), [](uint8_t b){ return b < 128; });
     if (useTransforms) {
         flags |= format::BWT_FLAG_TRANSFORMED;
-        // Apply LZ77 only if data is mostly ASCII to avoid marker conflicts
-        applyLz77 = std::all_of(data.begin(), data.end(), [](uint8_t b){ return b < 128; });
-        if (applyLz77) {
-            flags |= format::BWT_FLAG_LZ77; // indicate additional LZ77 step
-        }
     }
-    result.push_back(flags);
+    result.push_back(flags); // placeholder, will update later
+
+    bool usedLzOverall = false;
     
     // For very small inputs, process as a single block without further compression
     if (data.size() < 10) {
@@ -400,15 +397,19 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         auto [bwtBlock, primaryIndex] = bwtEncode(data);
         auto mtfBlock = mtfCoder_.encode(bwtBlock);
         auto rleBlock = runLengthEncode(mtfBlock);
-        auto compressedBlock = entropyCompressor_->compress(rleBlock);
 
-        std::vector<uint8_t> finalBlock;
-        if (applyLz77) {
-            Lz77Compressor lz77;
-            finalBlock = lz77.compress(compressedBlock);
-        } else {
-            finalBlock = std::move(compressedBlock);
-        }
+        // Compress without LZ77
+        auto noLzBlock = entropyCompressor_->compress(rleBlock);
+
+        // Compress with an additional LZ77 stage
+        Lz77Compressor lz77;
+        auto lzData = lz77.compress(rleBlock);
+        auto withLzBlock = entropyCompressor_->compress(lzData);
+
+        bool usedLz = asciiOnly && withLzBlock.size() < noLzBlock.size();
+        std::vector<uint8_t> finalBlock = usedLz ? withLzBlock : noLzBlock;
+
+        usedLzOverall = usedLzOverall || usedLz;
 
         // Write block size and primary index to result
         uint32_t blockSize = static_cast<uint32_t>(finalBlock.size());
@@ -424,7 +425,11 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         
         // Add the compressed block to the result
         result.insert(result.end(), finalBlock.begin(), finalBlock.end());
-        
+
+        if (usedLz) {
+            result[4] |= format::BWT_FLAG_LZ77;
+        }
+
         return result;
     }
     
@@ -436,23 +441,25 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         
         // Apply Burrows-Wheeler Transform
         auto [bwtBlock, primaryIndex] = bwtEncode(block);
-        
+
         // Apply Move-To-Front transform
         auto mtfBlock = mtfCoder_.encode(bwtBlock);
-        
+
         // Apply Run-Length Encoding
         auto rleBlock = runLengthEncode(mtfBlock);
 
-        // Apply entropy coding (Huffman)
-        auto compressedBlock = entropyCompressor_->compress(rleBlock);
+        // Compress without LZ77
+        auto noLzBlock = entropyCompressor_->compress(rleBlock);
 
-        std::vector<uint8_t> finalBlock;
-        if (applyLz77) {
-            Lz77Compressor lz77;
-            finalBlock = lz77.compress(compressedBlock);
-        } else {
-            finalBlock = std::move(compressedBlock);
-        }
+        // Compress with an additional LZ77 stage
+        Lz77Compressor lz77;
+        auto lzData = lz77.compress(rleBlock);
+        auto withLzBlock = entropyCompressor_->compress(lzData);
+
+        bool usedLz = asciiOnly && withLzBlock.size() < noLzBlock.size();
+        std::vector<uint8_t> finalBlock = usedLz ? withLzBlock : noLzBlock;
+
+        usedLzOverall = usedLzOverall || usedLz;
 
         // Write block size and primary index to result
         uint32_t blockSize = static_cast<uint32_t>(finalBlock.size());
@@ -469,7 +476,11 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
         // Add the compressed block to the result
         result.insert(result.end(), finalBlock.begin(), finalBlock.end());
     }
-    
+
+    if (usedLzOverall) {
+        result[4] |= format::BWT_FLAG_LZ77;
+    }
+
     return result;
 }
 
@@ -535,20 +546,20 @@ std::vector<uint8_t> BwtCompressor::decompress(const std::vector<uint8_t>& data)
             continue;
         }
 
+        // Apply entropy decoding (Huffman)
+        auto entropyDecodedBlock = entropyCompressor_->decompress(compressedBlock);
+
         // If an extra LZ77 step was used, decode it first
         std::vector<uint8_t> afterLz;
         if (lz77Applied) {
             Lz77Compressor lz77;
-            afterLz = lz77.decompress(compressedBlock);
+            afterLz = lz77.decompress(entropyDecodedBlock);
         } else {
-            afterLz = compressedBlock;
+            afterLz = std::move(entropyDecodedBlock);
         }
 
-        // Apply entropy decoding (Huffman)
-        auto entropyDecodedBlock = entropyCompressor_->decompress(afterLz);
-
         // Apply Run-Length Decoding
-        auto rleDecodedBlock = runLengthDecode(entropyDecodedBlock);
+        auto rleDecodedBlock = runLengthDecode(afterLz);
 
         // Apply Move-To-Front decoding
         auto mtfDecodedBlock = mtfCoder_.decode(rleDecodedBlock);
