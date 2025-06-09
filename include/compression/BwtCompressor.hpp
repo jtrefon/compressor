@@ -59,13 +59,16 @@ public:
      * 
      * The output format begins with the bytes "BWT", a version byte and a
      * flags byte. Flag bit 0 indicates whether the block was further encoded
-     * with MTF/RLE/Huffman.
+     * with MTF/RLE/Huffman. Flag bit 1 indicates the data was also processed
+     * with an LZ77 stage. Each block also stores a block flag byte where
+     * bit 0 indicates whether that specific block used LZ77.
      *
      * The compression pipeline is:
      * 1. Burrows-Wheeler Transform
      * 2. Move-To-Front Transform
      * 3. Run-Length Encoding
-     * 4. Entropy coding (typically Huffman)
+     * 4. LZ77 compression (applied only if it reduces size)
+     * 5. Entropy coding (typically Huffman)
      * 
      * @param data The data to compress
      * @return The compressed data
@@ -79,9 +82,10 @@ public:
      * header flag indicates no transformations were used, only the inverse
      * Burrows-Wheeler Transform is applied. Otherwise:
      * 1. Entropy decoding
-     * 2. Run-Length decoding
-     * 3. Move-To-Front decoding
-     * 4. Inverse Burrows-Wheeler Transform
+     * 2. LZ77 decompression for each block if the block flag bit 0 is set
+     * 3. Run-Length decoding
+     * 4. Move-To-Front decoding
+     * 5. Inverse Burrows-Wheeler Transform
      * 
      * @param data The compressed data
      * @return The decompressed data

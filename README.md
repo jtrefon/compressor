@@ -105,6 +105,10 @@ The benchmark:
 - Calculates compression ratio
 - Measures compression and decompression time
 - Uses real-world test data from the `data/` directory
+## Prebuilt Binaries
+
+Pre-built packages are available from the [GitHub Releases](https://github.com/your-org/compressor/releases) page. Download the archive for your operating system (`linux`, `windows`, or `macos`), unzip it, and run the `compress_app` executable. Each archive includes the `README.md` and a `GREETINGS.txt` with a short note from the author.
+
 
 ## Usage Examples
 

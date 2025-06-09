@@ -1,0 +1,58 @@
+name: Build Release Artifacts
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+
+    - name: Install dependencies (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake zip
+
+    - name: Install dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: brew install cmake zip
+
+    - name: Configure
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Package binaries (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory package
+        Copy-Item build\Release\compress_app.exe package\
+        Copy-Item README.md package\
+        'Thank you for using the compressor library!' | Out-File package\GREETINGS.txt
+        Compress-Archive -Path package\* -DestinationPath compressor-windows.zip
+
+    - name: Package binaries (Unix)
+      if: runner.os != 'Windows'
+      shell: bash
+      run: |
+        mkdir package
+        cp build/app/compress_app package/
+        cp README.md package/
+        echo "Thank you for using the compressor library!" > package/GREETINGS.txt
+        zip -r compressor-${{ runner.os }}.zip package
+
+    - name: Upload release asset
+      uses: softprops/action-gh-release@v1
+      with:
+        files: compressor-${{ runner.os }}.zip
