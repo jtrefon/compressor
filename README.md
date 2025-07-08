@@ -1,5 +1,9 @@
 # Compression Library
 
+[![Build and Test](https://github.com/yourusername/compressor/actions/workflows/build-test.yml/badge.svg)](https://github.com/yourusername/compressor/actions/workflows/build-test.yml)
+[![Release](https://github.com/yourusername/compressor/actions/workflows/release.yml/badge.svg)](https://github.com/yourusername/compressor/actions/workflows/release.yml)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+
 A high-performance file compression library implemented in C++ that provides multiple compression algorithms with a focus on achieving excellent compression ratios for files at rest.
 
 ## Features
