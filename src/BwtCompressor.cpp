@@ -179,6 +179,15 @@ BwtCompressor::BwtCompressor()
       entropyCompressor_(std::make_unique<HuffmanCompressor>()) {
 }
 
+BwtCompressor::BwtCompressor(std::unique_ptr<ICompressor> entropyCompressor)
+    : blockSize_(8 * 1024 * 1024),
+      mtfCoder_(),
+      entropyCompressor_(std::move(entropyCompressor)) {
+    if (!entropyCompressor_) {
+        entropyCompressor_ = std::make_unique<HuffmanCompressor>();
+    }
+}
+
 std::pair<std::vector<uint8_t>, uint32_t> BwtCompressor::bwtEncode(const std::vector<uint8_t>& block) const {
     if (block.empty()) {
         return {{}, 0};

@@ -175,7 +175,7 @@ int main() {
     results.push_back(runBenchmark("Huffman", huffmanComp, originalData));
     results.push_back(runBenchmark("LZ77", lz77Comp, originalData));
     results.push_back(runBenchmark("Deflate", deflateComp, originalData));
-    results.push_back(runBenchmark("BWT", bwtComp, originalData)); // Add BWT benchmark
+    results.push_back(runBenchmark("BWT", bwtComp, originalData)); // BWT with Huffman
 
     // --- Output Results ---
     std::cout << "\n--- Benchmark Results ---\n" << std::endl;

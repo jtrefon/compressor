@@ -384,6 +384,7 @@ TEST(BwtCompressorTest, BinaryData) {
     EXPECT_EQ(data, decompressed);
 }
 
+
 // MoveToFrontEncoder Tests
 TEST(MoveToFrontTest, BasicEncoding) {
     compression::MoveToFrontEncoder mtf;
@@ -420,8 +421,4 @@ TEST(MoveToFrontTest, AllByteValues) {
     }
 }
 
-// GoogleTest main function is usually sufficient
-// int main(int argc, char **argv) {
-//   ::testing::InitGoogleTest(&argc, argv);
-//   return RUN_ALL_TESTS();
-// } 
+
