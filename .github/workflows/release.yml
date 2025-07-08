@@ -45,7 +45,7 @@ jobs:
       shell: bash
 
     - name: Install
-      run: cmake --install build --prefix package
+      run: cmake --install build --config Release --prefix package
       shell: bash
 
     - name: Archive
