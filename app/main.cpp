@@ -65,7 +65,7 @@ std::unique_ptr<compression::ICompressor> createCompressor(compression::format::
         case compression::format::AlgorithmID::BWT_COMPRESSOR:
             return std::make_unique<compression::BwtCompressor>();
         default:
-            throw std::invalid_argument("Unknown or unsupported compression algorithm ID: " 
+            throw std::invalid_argument("Unknown or unsupported compression algorithm ID: "
                                         + std::to_string(static_cast<uint8_t>(id)));
     }
 }

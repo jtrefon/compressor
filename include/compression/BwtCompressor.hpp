@@ -48,6 +48,12 @@ public:
      * @brief Construct a BWT compressor with default settings
      */
     BwtCompressor();
+
+    /**
+     * @brief Construct a BWT compressor with a custom entropy coder
+     * @param entropyCompressor Compressor used for the entropy coding stage
+     */
+    explicit BwtCompressor(std::unique_ptr<ICompressor> entropyCompressor);
     
     /**
      * @brief Destructor with default implementation

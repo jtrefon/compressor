@@ -36,7 +36,6 @@ TEST(DISABLED_DeflateCompressorTest, SimpleRoundTrip) {
     }) << "Compress method threw an exception.";
 
     std::cerr << "  Compression finished. Compressed size: " << compressedData.size() << std::endl;
-    // EXPECT_LT(compressedData.size(), originalData.size()) << "Compression did not reduce size."; // Commented out - overhead expected
 
     std::vector<uint8_t> decompressedData;
      ASSERT_NO_THROW({
@@ -48,12 +47,10 @@ TEST(DISABLED_DeflateCompressorTest, SimpleRoundTrip) {
     EXPECT_EQ(bytesToString(decompressedData), original);
     std::cerr << "--- Test Finished ---" << std::endl;
 
-    // Round trip test
     std::vector<uint8_t> compressed = compressor.compress(originalData);
     std::vector<uint8_t> decompressed = compressor.decompress(compressed);
-    
+
     ASSERT_EQ(decompressed.size(), originalData.size());
-    // ASSERT_EQ(decompressed, originalData); // Commented out for now until fully implemented
 }
 
 // Add more specific tests later if needed 
