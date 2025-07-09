@@ -19,11 +19,11 @@ add_executable(compression_tests
     # ${CMAKE_CURRENT_SOURCE_DIR}/HuffmanCompressorTest.cpp # Missing file
     ${CMAKE_CURRENT_SOURCE_DIR}/Lz77CompressorTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DeflateCompressorTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ParallelCompressorTest.cpp
 )
 
 # Link the test executable against GoogleTest and the compression library
 target_link_libraries(compression_tests PRIVATE GTest::gtest_main compression)
 
-# Discover and add tests to CTest
-include(GoogleTest)
-gtest_discover_tests(compression_tests) 
+
+# Discover and add tests to CTestgtest_discover_tests(compression_tests)

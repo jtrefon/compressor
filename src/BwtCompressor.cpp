@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <cstring>
+#include <memory> // Required for std::make_unique
 
 namespace compression {
 
@@ -182,7 +183,7 @@ BwtCompressor::BwtCompressor()
 BwtCompressor::BwtCompressor(std::unique_ptr<ICompressor> entropyCompressor)
     : blockSize_(8 * 1024 * 1024),
       mtfCoder_(),
-      entropyCompressor_(std::move(entropyCompressor)) {
+              entropyCompressor_(std::move(entropyCompressor)) {
     if (!entropyCompressor_) {
         entropyCompressor_ = std::make_unique<HuffmanCompressor>();
     }
@@ -215,46 +216,37 @@ std::pair<std::vector<uint8_t>, uint32_t> BwtCompressor::bwtEncode(const std::ve
 }
 
 std::vector<uint8_t> BwtCompressor::bwtDecode(const std::vector<uint8_t>& block, uint32_t primaryIndex) const {
-    if (block.empty()) {
+    const size_t n = block.size();
+    if (n == 0) {
         return {};
     }
     
-    const size_t n = block.size();
+    // Check for invalid primary index
     if (primaryIndex >= n) {
-        throw std::runtime_error("Invalid primary index for BWT decoding");
+        throw std::runtime_error("Invalid primary index in BWT decode");
     }
-    
-    // Count occurrences of each character
-    std::vector<int32_t> count(256, 0);
-    for (uint8_t c : block) {
-        ++count[c];
-    }
-    
-    // Compute the starting position for each character
-    std::vector<int32_t> startPos(256, 0);
-    for (int i = 1; i < 256; ++i) {
-        startPos[i] = startPos[i-1] + count[i-1];
-    }
-    
-    // Compute the transform array
-    std::vector<int32_t> transform(n);
-    std::vector<int32_t> tempPos = startPos; // Copy to avoid modifying startPos
-    
+
+    // --- Core decoding logic ---
+    // 1. Create a table of pairs (char, original_index)
+    std::vector<std::pair<uint8_t, size_t>> table(n);
     for (size_t i = 0; i < n; ++i) {
-        uint8_t c = block[i];
-        transform[tempPos[c]++] = static_cast<int32_t>(i);
+        table[i] = {block[i], i};
     }
     
-    // Reconstruct the original string
-    std::vector<uint8_t> result(n);
-    int32_t nextIndex = transform[primaryIndex];
+    // 2. Sort the table to get the first column of the BWT matrix
+    std::stable_sort(table.begin(), table.end(), [](const auto& a, const auto& b) {
+        return a.first < b.first;
+    });
     
+    // 3. Reconstruct the original string by walking backwards
+    std::vector<uint8_t> decoded(n);
+    size_t currentIndex = primaryIndex;
     for (size_t i = 0; i < n; ++i) {
-        result[i] = block[nextIndex];
-        nextIndex = transform[nextIndex];
+        decoded[n - 1 - i] = table[currentIndex].first;
+        currentIndex = table[currentIndex].second;
     }
     
-    return result;
+    return decoded;
 }
 
 std::vector<uint8_t> BwtCompressor::runLengthEncode(const std::vector<uint8_t>& data) const {
@@ -262,62 +254,26 @@ std::vector<uint8_t> BwtCompressor::runLengthEncode(const std::vector<uint8_t>& 
         return {};
     }
     
-    std::vector<uint8_t> result;
-    result.reserve(data.size()); // Reserve space for worst case
+    std::vector<uint8_t> encoded;
+    encoded.reserve(data.size());
     
-    // Simple RLE: for runs of 3 or more identical bytes
-    // Use format: [0] [byte] [run length - 3]
-    uint8_t currentByte = data[0];
-    uint32_t runLength = 1;
-    
-    for (size_t i = 1; i < data.size(); ++i) {
-        if (data[i] == currentByte) {
-            ++runLength;
-            
-            // If we have a long run and reached the max run length or end of data
-            if (runLength >= 3 && (runLength == 260 || i == data.size() - 1)) {
-                // Encode the run
-                result.push_back(0); // RLE marker
-                result.push_back(currentByte);
-                result.push_back(static_cast<uint8_t>(runLength - 3));
-                
-                // Reset the run counter and prepare for the next byte
-                runLength = 0;
-
-                // If we're not at the end, set up for the next byte. We don't
-                // advance the loop index here because the for-loop increment
-                // will move to the correct position on the next iteration.
-                if (i < data.size() - 1) {
-                    currentByte = data[i + 1];
-                }
-            }
-        } else {
-            // If we had a run of 4 or more, encode it
-            if (runLength >= 3) {
-                result.push_back(0); // RLE marker
-                result.push_back(currentByte);
-                result.push_back(static_cast<uint8_t>(runLength - 3));
-            } else {
-                // Otherwise, just output the bytes
-                for (uint32_t j = 0; j < runLength; ++j) {
-                    result.push_back(currentByte);
-                }
-            }
-            
-            // Start a new run
-            currentByte = data[i];
-            runLength = 1;
+    for (size_t i = 0; i < data.size(); ) {
+        uint8_t currentByte = data[i];
+        size_t count = 1;
+        while (i + count < data.size() && data[i + count] == currentByte && count < 255) {
+            count++;
         }
+        
+        encoded.push_back(currentByte);
+        if (count > 1) {
+            encoded.push_back(currentByte);
+            encoded.push_back(static_cast<uint8_t>(count));
+        }
+        
+        i += count;
     }
     
-    // Handle any remaining bytes
-    if (runLength > 0 && runLength < 3) {
-        for (uint32_t j = 0; j < runLength; ++j) {
-            result.push_back(currentByte);
-        }
-    }
-    
-    return result;
+    return encoded;
 }
 
 std::vector<uint8_t> BwtCompressor::runLengthDecode(const std::vector<uint8_t>& data) const {
@@ -325,27 +281,25 @@ std::vector<uint8_t> BwtCompressor::runLengthDecode(const std::vector<uint8_t>& 
         return {};
     }
     
-    std::vector<uint8_t> result;
-    result.reserve(data.size() * 2); // Reserve space for potential expansion
+    std::vector<uint8_t> decoded;
+    decoded.reserve(data.size() * 2); // Pre-allocate to avoid reallocations
     
-    for (size_t i = 0; i < data.size(); ++i) {
-        if (data[i] == 0 && i + 2 < data.size()) {
-            // RLE block: [0] [byte] [run length - 3]
-            uint8_t byte = data[i + 1];
-            uint32_t runLength = data[i + 2] + 3; // Add 3 to get actual run length
-            
-            for (uint32_t j = 0; j < runLength; ++j) {
-                result.push_back(byte);
+    for (size_t i = 0; i < data.size(); ) {
+        uint8_t currentByte = data[i];
+        decoded.push_back(currentByte);
+        
+        if (i + 2 < data.size() && data[i+1] == currentByte) {
+            size_t count = data[i+2];
+            for (size_t j = 1; j < count; ++j) {
+                decoded.push_back(currentByte);
             }
-            
-            i += 2; // Skip the byte and run length values
+            i += 3;
         } else {
-            // Regular byte
-            result.push_back(data[i]);
+            i++;
         }
     }
     
-    return result;
+    return decoded;
 }
 
 std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) const {
@@ -369,11 +323,8 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
     bool applyLz77 = false;
     if (useTransforms) {
         flags |= format::BWT_FLAG_TRANSFORMED;
-        // Apply LZ77 only if data is mostly ASCII to avoid marker conflicts
-        applyLz77 = std::all_of(data.begin(), data.end(), [](uint8_t b){ return b < 128; });
-        if (applyLz77) {
-            flags |= format::BWT_FLAG_LZ77; // indicate additional LZ77 step
-        }
+        // Temporarily disable additional LZ77 stage due to stability issues
+        applyLz77 = false;
     }
     result.push_back(flags);
     
@@ -401,7 +352,7 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
     }
     
     // Process data in blocks for larger inputs
-    size_t actualBlockSize = std::min(blockSize_, data.size());
+    size_t actualBlockSize = ::std::min(blockSize_, data.size());
 
     // For larger inputs where blocking may cause issues, process as a single block
     // This ensures better compression and proper reconstruction
@@ -416,7 +367,7 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
             Lz77Compressor lz77;
             finalBlock = lz77.compress(compressedBlock);
         } else {
-            finalBlock = std::move(compressedBlock);
+            finalBlock = ::std::move(compressedBlock);
         }
 
         // Write block size and primary index to result
@@ -440,7 +391,7 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
     // Process data in blocks for larger inputs
     for (size_t blockStart = 0; blockStart < data.size(); blockStart += actualBlockSize) {
         // Extract the current block
-        size_t blockEnd = std::min(blockStart + actualBlockSize, data.size());
+        size_t blockEnd = ::std::min(blockStart + actualBlockSize, data.size());
         std::vector<uint8_t> block(data.begin() + blockStart, data.begin() + blockEnd);
         
         // Apply Burrows-Wheeler Transform
@@ -460,7 +411,7 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
             Lz77Compressor lz77;
             finalBlock = lz77.compress(compressedBlock);
         } else {
-            finalBlock = std::move(compressedBlock);
+            finalBlock = ::std::move(compressedBlock);
         }
 
         // Write block size and primary index to result
@@ -502,7 +453,7 @@ std::vector<uint8_t> BwtCompressor::decompress(const std::vector<uint8_t>& data)
     uint8_t flags = data[4];
     
     if (version != 1) {
-        throw std::runtime_error("Unsupported BWT version: " + std::to_string(version));
+        throw std::runtime_error("Unsupported BWT version: " + ::std::to_string(version));
     }
     
     bool transformed = (flags & format::BWT_FLAG_TRANSFORMED) != 0;
@@ -573,3 +524,4 @@ std::vector<uint8_t> BwtCompressor::decompress(const std::vector<uint8_t>& data)
 }
 
 } // namespace compression
+

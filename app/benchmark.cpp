@@ -16,8 +16,39 @@
 #include <compression/RleCompressor.hpp>
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/Lz77Compressor.hpp>
-#include <compression/DeflateCompressor.hpp>
 #include <compression/BwtCompressor.hpp>
+#include <compression/ParallelCompressor.hpp>
+#include <compression/FileFormat.hpp>
+#include <compression/SystemInfo.hpp>
+
+// Factory helpers to create compressors by ID or name
+std::unique_ptr<compression::ICompressor>
+createCompressor(compression::format::AlgorithmID id) {
+    using namespace compression;
+    switch (id) {
+        case format::AlgorithmID::RLE_COMPRESSOR:
+            return std::make_unique<RleCompressor>();
+        case format::AlgorithmID::NULL_COMPRESSOR:
+            return std::make_unique<NullCompressor>();
+        case format::AlgorithmID::HUFFMAN_COMPRESSOR:
+            return std::make_unique<HuffmanCompressor>();
+        case format::AlgorithmID::LZ77_COMPRESSOR:
+            return std::make_unique<Lz77Compressor>(32768, 3, 258, false, true,
+                                                   true);
+        case format::AlgorithmID::BWT_COMPRESSOR:
+            return std::make_unique<BwtCompressor>();
+        default:
+            throw std::invalid_argument("Unknown AlgorithmID");
+    }
+}
+
+std::unique_ptr<compression::ICompressor> createCompressor(const std::string& name) {
+    auto id = compression::format::stringToAlgorithmId(name);
+    if (id == compression::format::AlgorithmID::UNKNOWN) {
+        throw std::invalid_argument("Unknown compression strategy " + name);
+    }
+    return createCompressor(id);
+}
 
 // --- Helper Functions ---
 
@@ -49,8 +80,9 @@ struct BenchmarkResult {
 // Runs compress/decompress and times them
 BenchmarkResult runBenchmark(
     const std::string& name,
-    const compression::ICompressor& compressor,
-    const std::vector<uint8_t>& originalData)
+    compression::format::AlgorithmID algoId,
+    const std::vector<uint8_t>& originalData,
+    std::size_t threads)
 {
     BenchmarkResult result;
     result.algorithmName = name;
@@ -60,9 +92,17 @@ BenchmarkResult runBenchmark(
         return result; // Avoid division by zero and unnecessary work
     }
 
+    auto base = createCompressor(algoId);
+
     // --- Time Compression ---
     auto startCompress = std::chrono::high_resolution_clock::now();
-    std::vector<uint8_t> compressedData = compressor.compress(originalData);
+    std::vector<uint8_t> compressedData;
+    if (threads > 1) {
+        compression::ParallelCompressor pc(std::move(base), algoId, threads);
+        compressedData = pc.compress(originalData);
+    } else {
+        compressedData = base->compress(originalData);
+    }
     auto endCompress = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> compressDuration = endCompress - startCompress;
     result.compressionTimeMs = compressDuration.count();
@@ -74,7 +114,13 @@ BenchmarkResult runBenchmark(
      if (!compressedData.empty()) { // Avoid decompressing nothing if compression failed/returned empty
         try {
             auto startDecompress = std::chrono::high_resolution_clock::now();
-            decompressedData = compressor.decompress(compressedData);
+            if (threads > 1) {
+                compression::ParallelCompressor pcDec(createCompressor(algoId), algoId, threads);
+                decompressedData = pcDec.decompress(compressedData);
+            } else {
+                auto decComp = createCompressor(algoId);
+                decompressedData = decComp->decompress(compressedData);
+            }
             auto endDecompress = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> decompressDuration = endDecompress - startDecompress;
             decompressDurationMs = decompressDuration.count();
@@ -121,7 +167,18 @@ BenchmarkResult runBenchmark(
 
 // --- Main Function ---
 
-int main() {
+int main(int argc, char* argv[]) {
+    std::size_t threadCount = compression::getHardwareThreads();
+    if (argc >= 2) {
+        std::string arg = argv[1];
+        if (arg == "--no-threads") {
+            threadCount = 1;
+        } else if (arg == "--threads" && argc >= 3) {
+            threadCount = static_cast<std::size_t>(std::stoul(argv[2]));
+        } else if (arg.rfind("--threads=", 0) == 0) {
+            threadCount = static_cast<std::size_t>(std::stoul(arg.substr(10)));
+        }
+    }
     // --- Get Data File Path using Compile Definition ---
 #ifndef BENCHMARK_DATA_DIR
     #error "BENCHMARK_DATA_DIR is not defined. Check app/CMakeLists.txt"
@@ -159,23 +216,18 @@ int main() {
 
     std::cout << "Read " << originalData.size() << " bytes." << std::endl;
 
-    // --- Instantiate Compressors ---
-    compression::NullCompressor nullComp;
-    compression::RleCompressor rleComp;
-    compression::HuffmanCompressor huffmanComp;
-    // Use LZ77 with optimal parsing for better compression
-    compression::Lz77Compressor lz77Comp(32768, 3, 258, false, true, true);
-    compression::DeflateCompressor deflateComp; // Remove verbose logging flag for benchmarks
-    compression::BwtCompressor bwtComp; // Add BWT compressor
-
     // --- Run Benchmarks ---
     std::vector<BenchmarkResult> results;
-    results.push_back(runBenchmark("Null", nullComp, originalData));
-    results.push_back(runBenchmark("RLE", rleComp, originalData));
-    results.push_back(runBenchmark("Huffman", huffmanComp, originalData));
-    results.push_back(runBenchmark("LZ77", lz77Comp, originalData));
-    results.push_back(runBenchmark("Deflate", deflateComp, originalData));
-    results.push_back(runBenchmark("BWT", bwtComp, originalData)); // BWT with Huffman
+    results.push_back(runBenchmark("Null", compression::format::AlgorithmID::NULL_COMPRESSOR,
+                                   originalData, threadCount));
+    results.push_back(runBenchmark("RLE", compression::format::AlgorithmID::RLE_COMPRESSOR,
+                                   originalData, threadCount));
+    results.push_back(runBenchmark("Huffman", compression::format::AlgorithmID::HUFFMAN_COMPRESSOR,
+                                   originalData, threadCount));
+    results.push_back(runBenchmark("LZ77", compression::format::AlgorithmID::LZ77_COMPRESSOR,
+                                   originalData, threadCount));
+    results.push_back(runBenchmark("BWT", compression::format::AlgorithmID::BWT_COMPRESSOR,
+                                   originalData, threadCount));
 
     // --- Output Results ---
     std::cout << "\n--- Benchmark Results ---\n" << std::endl;

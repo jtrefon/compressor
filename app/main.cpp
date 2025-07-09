@@ -18,6 +18,8 @@
 #include <compression/Crc32.hpp> // Include CRC32 utility
 #include <compression/Lz77Compressor.hpp>
 #include <compression/BwtCompressor.hpp>
+#include <compression/ParallelCompressor.hpp>
+#include <compression/SystemInfo.hpp>
 
 // --- Helper Functions --- 
 
@@ -82,12 +84,13 @@ std::unique_ptr<compression::ICompressor> createCompressor(const std::string& st
 // --- Main Application Logic --- 
 
 void printUsage(const char* appName) {
-    std::cerr << "Usage: " << appName << " <compress|decompress> <strategy|ignored_on_decompress> <input_file> <output_file>\n"
+    std::cerr << "Usage: " << appName
+              << " <compress|decompress> <strategy|ignored_on_decompress> <input_file> <output_file> [--threads N|--no-threads]\n"
               << "Strategies: null, rle, huffman, lz77, bwt\n";
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 5) {
+    if (argc < 5) {
         printUsage(argv[0]);
         return 1;
     }
@@ -96,6 +99,22 @@ int main(int argc, char* argv[]) {
     std::string strategyName = argv[2]; // Used only for compression
     std::string inputFile = argv[3];
     std::string outputFile = argv[4];
+
+    std::size_t threadCount = compression::getHardwareThreads();
+    if (argc >= 6) {
+        std::string arg = argv[5];
+        if (arg == "--no-threads") {
+            threadCount = 1;
+        } else if (arg == "--threads" && argc >= 7) {
+            threadCount = static_cast<std::size_t>(std::stoul(argv[6]));
+        } else if (arg.rfind("--threads=", 0) == 0) {
+            threadCount = static_cast<std::size_t>(std::stoul(arg.substr(10)));
+        } else {
+            std::cerr << "Unknown option: " << arg << "\n";
+            printUsage(argv[0]);
+            return 1;
+        }
+    }
 
     if (operation != "compress" && operation != "decompress") {
         std::cerr << "Error: Invalid operation. Must be 'compress' or 'decompress'.\n";
@@ -119,23 +138,33 @@ int main(int argc, char* argv[]) {
             std::cout << "Original CRC32: 0x" << std::hex << originalCRC << std::dec << std::endl;
 
             // 4. Compress data
-            std::cout << "Compressing using " << strategyName << " strategy..." << std::endl;
-            std::vector<uint8_t> compressedData = compressor->compress(originalData);
-            std::cout << "Compressed payload size: " << compressedData.size() << " bytes." << std::endl;
-
-            // 5. Create and serialize header (including checksum)
-            compression::format::FileHeader header;
-            header.algorithmId = algoId;
-            header.originalSize = originalData.size();
-            header.originalChecksum = originalCRC; // Store calculated CRC
-            std::vector<uint8_t> headerBytes = compression::format::serializeHeader(header);
-            std::cout << "Header size: " << headerBytes.size() << " bytes." << std::endl;
-
-            // 6. Concatenate header and compressed data
             std::vector<uint8_t> outputData;
-            outputData.reserve(headerBytes.size() + compressedData.size());
-            outputData.insert(outputData.end(), headerBytes.begin(), headerBytes.end());
-            outputData.insert(outputData.end(), compressedData.begin(), compressedData.end());
+            if (threadCount <= 1) {
+                std::cout << "Compressing using " << strategyName << " strategy..." << std::endl;
+                std::vector<uint8_t> compressedData = compressor->compress(originalData);
+                std::cout << "Compressed payload size: " << compressedData.size() << " bytes." << std::endl;
+
+                // 5. Create and serialize header (including checksum)
+                compression::format::FileHeader header;
+                header.algorithmId = algoId;
+                header.originalSize = originalData.size();
+                header.originalChecksum = originalCRC; // Store calculated CRC
+                header.chunkCount = 1;
+                header.chunkSize = static_cast<uint32_t>(originalData.size());
+                header.compressedSizes = { static_cast<uint32_t>(compressedData.size()) };
+                std::vector<uint8_t> headerBytes = compression::format::serializeHeader(header);
+                std::cout << "Header size: " << headerBytes.size() << " bytes." << std::endl;
+
+                // 6. Concatenate header and compressed data
+                outputData.reserve(headerBytes.size() + compressedData.size());
+                outputData.insert(outputData.end(), headerBytes.begin(), headerBytes.end());
+                outputData.insert(outputData.end(), compressedData.begin(), compressedData.end());
+            } else {
+                std::cout << "Compressing in parallel with " << threadCount << " threads..." << std::endl;
+                compression::ParallelCompressor pc(std::move(compressor), algoId, threadCount);
+                outputData = pc.compress(originalData);
+            }
+
             std::cout << "Total output size: " << outputData.size() << " bytes." << std::endl;
 
             // 7. Write output file
@@ -162,15 +191,23 @@ int main(int argc, char* argv[]) {
             auto compressor = createCompressor(header.algorithmId);
 
             // 4. Extract compressed payload
+            std::size_t headerSizeBytes = compression::format::serializedHeaderSize(header);
             std::vector<uint8_t> compressedPayload(
-                inputData.begin() + compression::format::HEADER_SIZE, 
+                inputData.begin() + headerSizeBytes,
                 inputData.end()
             );
             std::cout << "Compressed payload size: " << compressedPayload.size() << " bytes." << std::endl;
-            
+
             // 5. Decompress data
-            std::cout << "Decompressing using " << algoName << " strategy..." << std::endl;
-            std::vector<uint8_t> outputData = compressor->decompress(compressedPayload);
+            std::vector<uint8_t> outputData;
+            if (threadCount <= 1 && header.chunkCount == 1) {
+                std::cout << "Decompressing using " << algoName << " strategy..." << std::endl;
+                outputData = compressor->decompress(compressedPayload);
+            } else {
+                std::cout << "Decompressing in parallel with " << threadCount << " threads..." << std::endl;
+                compression::ParallelCompressor pc(std::move(compressor), header.algorithmId, threadCount);
+                outputData = pc.decompress(inputData);
+            }
             std::cout << "Decompressed size: " << outputData.size() << " bytes." << std::endl;
 
             // 6. Verify original size
