@@ -218,16 +218,24 @@ int main(int argc, char* argv[]) {
 
     // --- Run Benchmarks ---
     std::vector<BenchmarkResult> results;
-    results.push_back(runBenchmark("Null", compression::format::AlgorithmID::NULL_COMPRESSOR,
-                                   originalData, threadCount));
-    results.push_back(runBenchmark("RLE", compression::format::AlgorithmID::RLE_COMPRESSOR,
-                                   originalData, threadCount));
-    results.push_back(runBenchmark("Huffman", compression::format::AlgorithmID::HUFFMAN_COMPRESSOR,
-                                   originalData, threadCount));
-    results.push_back(runBenchmark("LZ77", compression::format::AlgorithmID::LZ77_COMPRESSOR,
-                                   originalData, threadCount));
-    results.push_back(runBenchmark("BWT", compression::format::AlgorithmID::BWT_COMPRESSOR,
-                                   originalData, threadCount));
+    
+    std::vector<std::pair<std::string, compression::format::AlgorithmID>> algorithms_to_benchmark = {
+        {"Null", compression::format::AlgorithmID::NULL_COMPRESSOR},
+        {"RLE", compression::format::AlgorithmID::RLE_COMPRESSOR},
+        {"Huffman", compression::format::AlgorithmID::HUFFMAN_COMPRESSOR},
+        {"LZ77", compression::format::AlgorithmID::LZ77_COMPRESSOR},
+        {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR}
+    };
+
+    for (const auto& algo_pair : algorithms_to_benchmark) {
+        // Run single-threaded benchmark
+        results.push_back(runBenchmark(algo_pair.first + " (1T)", algo_pair.second, originalData, 1));
+
+        // Run multi-threaded benchmark if applicable
+        if (threadCount > 1) {
+            results.push_back(runBenchmark(algo_pair.first + " (" + std::to_string(threadCount) + "T)", algo_pair.second, originalData, threadCount));
+        }
+    }
 
     // --- Output Results ---
     std::cout << "\n--- Benchmark Results ---\n" << std::endl;
