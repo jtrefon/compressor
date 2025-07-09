@@ -1,4 +1,5 @@
 # ROADMAP
+
 A concise, sequential roadmap to guide your enhancements and make it easy to pick up where you left off:
 
 In this roadmap, you will sequentially implement advanced preprocessing transforms (BWT + MTF + RLE) to enhance symbol locality and runs for better entropy coding ([geeksforgeeks.org][1], [stackoverflow.com][2]), integrate high‐efficiency entropy coders (arithmetic coding and ANS) to approach theoretical compression limits ([reddit.com][3], [kedartatwawadi.github.io][4]), adopt statistical modeling techniques such as PPM and context mixing (PAQ) to capture long‐range dependencies ([compressions.sourceforge.net][5], [en.wikipedia.org][6]), enhance dictionary‐based methods with LZMA and BCJ filters for structured redundancy ([en.wikipedia.org][7], [en.wikipedia.org][8]), and explore neural compression paradigms combining learned autoencoders with ANS for domain‐specific gains ([medium.com][9], [bjlkeng.github.io][10]).
