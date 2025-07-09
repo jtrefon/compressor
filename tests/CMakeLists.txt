@@ -25,4 +25,5 @@ add_executable(compression_tests
 # Link the test executable against GoogleTest and the compression library
 target_link_libraries(compression_tests PRIVATE GTest::gtest_main compression)
 
+
 # Discover and add tests to CTestgtest_discover_tests(compression_tests)
