@@ -34,11 +34,16 @@ enum class AlgorithmID : uint8_t {
     UNKNOWN = 255
 };
 
-constexpr size_t HEADER_SIZE = MAGIC_NUMBER.size() 
-                               + sizeof(FORMAT_VERSION) 
-                               + sizeof(AlgorithmID) 
-                               + sizeof(uint64_t) // Original Size
-                               + sizeof(uint32_t); // Original Checksum (CRC32)
+constexpr size_t BASE_HEADER_SIZE = MAGIC_NUMBER.size()
+                                  + sizeof(FORMAT_VERSION)
+                                  + sizeof(AlgorithmID)
+                                  + sizeof(uint64_t) // Original Size
+                                  + sizeof(uint32_t) // Original Checksum (CRC32)
+                                  + sizeof(uint32_t) // Chunk Count
+                                  + sizeof(uint32_t); // Chunk Size
+
+// Backwards compatibility alias
+constexpr size_t HEADER_SIZE = BASE_HEADER_SIZE;
 
 // --- Header Structure (Conceptual) --- 
 
@@ -50,6 +55,9 @@ struct FileHeader {
     AlgorithmID algorithmId = AlgorithmID::UNKNOWN;
     uint64_t originalSize = 0;
     uint32_t originalChecksum = 0; // Added CRC32 checksum
+    uint32_t chunkCount = 1;
+    uint32_t chunkSize = 0;
+    std::vector<uint32_t> compressedSizes;
 };
 
 // --- Serialization / Deserialization --- 
@@ -60,7 +68,7 @@ struct FileHeader {
  * @return A vector of bytes representing the serialized header.
  */
 inline std::vector<uint8_t> serializeHeader(const FileHeader& header) {
-    std::vector<uint8_t> buffer(HEADER_SIZE);
+    std::vector<uint8_t> buffer(BASE_HEADER_SIZE + header.compressedSizes.size() * sizeof(uint32_t));
     size_t offset = 0;
 
     // 1. Magic Number
@@ -83,6 +91,23 @@ inline std::vector<uint8_t> serializeHeader(const FileHeader& header) {
         buffer[offset++] = static_cast<uint8_t>((header.originalChecksum >> (i * 8)) & 0xFF);
     }
 
+    // 6. Chunk count
+    for (int i = 0; i < 4; ++i) {
+        buffer[offset++] = static_cast<uint8_t>((header.chunkCount >> (i * 8)) & 0xFF);
+    }
+
+    // 7. Chunk size
+    for (int i = 0; i < 4; ++i) {
+        buffer[offset++] = static_cast<uint8_t>((header.chunkSize >> (i * 8)) & 0xFF);
+    }
+
+    // 8. Compressed sizes for each chunk
+    for (uint32_t size : header.compressedSizes) {
+        for (int i = 0; i < 4; ++i) {
+            buffer[offset++] = static_cast<uint8_t>((size >> (i * 8)) & 0xFF);
+        }
+    }
+
     return buffer;
 }
 
@@ -93,7 +118,7 @@ inline std::vector<uint8_t> serializeHeader(const FileHeader& header) {
  * @throws std::runtime_error if magic number or version is incorrect, or buffer is too small.
  */
 inline FileHeader deserializeHeader(const std::vector<uint8_t>& buffer) {
-    if (buffer.size() < HEADER_SIZE) {
+    if (buffer.size() < BASE_HEADER_SIZE) {
         throw std::runtime_error("Buffer too small to contain file header.");
     }
 
@@ -125,6 +150,31 @@ inline FileHeader deserializeHeader(const std::vector<uint8_t>& buffer) {
     header.originalChecksum = 0;
     for (int i = 0; i < 4; ++i) {
         header.originalChecksum |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
+    }
+
+    // 6. Read chunk count
+    header.chunkCount = 0;
+    for (int i = 0; i < 4; ++i) {
+        header.chunkCount |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
+    }
+
+    // 7. Read chunk size
+    header.chunkSize = 0;
+    for (int i = 0; i < 4; ++i) {
+        header.chunkSize |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
+    }
+
+    // 8. Read compressed sizes
+    if (buffer.size() < BASE_HEADER_SIZE + static_cast<size_t>(header.chunkCount) * 4) {
+        throw std::runtime_error("Buffer too small for chunk metadata");
+    }
+    header.compressedSizes.resize(header.chunkCount);
+    for (uint32_t i = 0; i < header.chunkCount; ++i) {
+        uint32_t size = 0;
+        for (int j = 0; j < 4; ++j) {
+            size |= (static_cast<uint32_t>(buffer[offset++]) << (j * 8));
+        }
+        header.compressedSizes[i] = size;
     }
 
     return header;
@@ -161,6 +211,9 @@ inline AlgorithmID stringToAlgorithmId(const std::string& name) {
     return AlgorithmID::UNKNOWN;
 }
 
+inline size_t serializedHeaderSize(const FileHeader& header) {
+    return BASE_HEADER_SIZE + header.compressedSizes.size() * sizeof(uint32_t);
+}
 
-} // namespace format
-} // namespace compression 
+
+} // namespace format} // namespace compression

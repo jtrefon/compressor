@@ -19,6 +19,7 @@ A high-performance file compression library implemented in C++ that provides mul
   - Fast hash-based string matching for LZ77
   - Efficient bit-level encoding and decoding
   - Robust error handling for corrupted data
+  - Optional multithreaded mode for large files
 
 ## Project Structure
 
@@ -144,14 +145,17 @@ int main() {
 ### Command-line Utility
 
 ```bash
-# Compress a file
-./app/compress_app compress input.txt output.compressed
+# Compress a file using the LZ77 algorithm
+./app/compress_app compress lz77 input.txt output.compressed
 
-# Decompress a file
-./app/compress_app decompress output.compressed restored.txt
+# Decompress a file (strategy argument is ignored)
+./app/compress_app decompress ignored output.compressed restored.txt
 
-# Choose a specific algorithm (null, rle, huffman, lz77, deflate)
-./app/compress_app compress --algorithm lz77 input.txt output.compressed
+# Compress with a specific thread count (default uses all cores)
+./app/compress_app compress lz77 input.txt output.compressed --threads 4
+
+# Disable multithreading
+./app/compress_app compress lz77 input.txt output.compressed --no-threads
 ```
 
 ## API Documentation

@@ -369,11 +369,8 @@ std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) c
     bool applyLz77 = false;
     if (useTransforms) {
         flags |= format::BWT_FLAG_TRANSFORMED;
-        // Apply LZ77 only if data is mostly ASCII to avoid marker conflicts
-        applyLz77 = std::all_of(data.begin(), data.end(), [](uint8_t b){ return b < 128; });
-        if (applyLz77) {
-            flags |= format::BWT_FLAG_LZ77; // indicate additional LZ77 step
-        }
+        // Temporarily disable additional LZ77 stage due to stability issues
+        applyLz77 = false;
     }
     result.push_back(flags);
     

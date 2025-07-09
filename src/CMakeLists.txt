@@ -16,6 +16,9 @@ target_sources(compression PRIVATE
     Lz77Compressor.cpp
     DeflateCompressor.cpp
     BwtCompressor.cpp
+    ThreadPool.cpp
+    ParallelCompressor.cpp
+    SystemInfo.cpp
 #     some_compression_algorithm.cpp
 )
 
