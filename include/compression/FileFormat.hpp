@@ -215,5 +215,4 @@ inline size_t serializedHeaderSize(const FileHeader& header) {
     return BASE_HEADER_SIZE + header.compressedSizes.size() * sizeof(uint32_t);
 }
 
-
-} // namespace format} // namespace compression
+} // namespace compression
