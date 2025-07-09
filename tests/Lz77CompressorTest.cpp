@@ -3,6 +3,7 @@
 #include <compression/Lz77Compressor.hpp>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <cstdint> // For uint8_t
 #include <stdexcept>
 
