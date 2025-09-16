@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cstdint> // For uint8_t
 #include <stdexcept>
+#include <limits>
 
 // Helper function to convert string to vector<uint8_t>
 static std::vector<uint8_t> stringToBytes(const std::string& str) {
@@ -163,7 +164,7 @@ TEST_F(Lz77CompressorTest, DataRequiresMaxDistance) {
 TEST_F(Lz77CompressorTest, DataRequiresMaxLength) {
     // Create a short string that will be directly copied
     std::string data = "ABC";
-    
+
     std::vector<uint8_t> bytes(data.begin(), data.end());
     std::vector<uint8_t> compressed = compressor.compress(bytes);
     std::vector<uint8_t> decompressed = compressor.decompress(compressed);
@@ -180,147 +181,158 @@ TEST_F(Lz77CompressorTest, DataRequiresMaxLength) {
 }
 
 
+TEST_F(Lz77CompressorTest, HandlesAllLiteralByteValues) {
+    std::vector<uint8_t> data(512);
+    for (size_t i = 0; i < data.size(); ++i) {
+        data[i] = static_cast<uint8_t>(i % 256);
+    }
+
+    auto compressed = compressor.compress(data);
+    auto decompressed = compressor.decompress(compressed);
+
+    EXPECT_EQ(decompressed, data);
+}
+
+TEST_F(Lz77CompressorTest, EncodesAndDecodesLongMatches) {
+    std::string original(400, 'Z');
+    auto data = stringToBytes(original);
+
+    auto compressed = compressor.compress(data);
+    auto decompressed = compressor.decompress(compressed);
+    EXPECT_EQ(decompressed, data);
+
+    // Ensure at least one encoded length uses the extended range (255 -> length 258)
+    uint32_t symbolCount = compressed[0] |
+        (compressed[1] << 8) |
+        (compressed[2] << 16) |
+        (compressed[3] << 24);
+
+    size_t offset = 4;
+    uint32_t processed = 0;
+    bool sawLongLength = false;
+    while (processed < symbolCount && offset < compressed.size()) {
+        uint8_t flags = compressed[offset++];
+        for (uint8_t bit = 0; bit < 8 && processed < symbolCount; ++bit) {
+            bool isMatch = (flags >> bit) & 0x1u;
+            if (isMatch) {
+                ASSERT_LE(offset + 3, compressed.size());
+                uint8_t lengthValue = compressed[offset];
+                if (lengthValue == std::numeric_limits<uint8_t>::max()) {
+                    sawLongLength = true;
+                }
+                offset += 3;
+            } else {
+                offset += 1;
+            }
+            processed++;
+            if (sawLongLength) {
+                break;
+            }
+        }
+        if (sawLongLength) {
+            break;
+        }
+    }
+
+    EXPECT_TRUE(sawLongLength);
+}
+
+
 // --- Decompression Error Tests ---
 
 TEST_F(Lz77CompressorTest, DecompressEmpty) {
-    // This is valid, should produce empty output
     std::vector<uint8_t> compressed = {};
     std::vector<uint8_t> decompressed = compressor.decompress(compressed);
     EXPECT_TRUE(decompressed.empty());
 }
 
-TEST_F(Lz77CompressorTest, DecompressTruncatedLiteralFlagOnly) {
-    // For a single 0xFF byte, we might get nothing or a placeholder
-    std::vector<uint8_t> compressed = {0xFF}; // Match marker with no data
-    std::vector<uint8_t> decompressed;
-    ASSERT_NO_THROW({ decompressed = compressor.decompress(compressed); });
-
-    bool allPlaceholders =
-        !decompressed.empty() &&
-        std::all_of(decompressed.begin(), decompressed.end(),
-                     [](uint8_t b) { return b == '?'; });
-
-    EXPECT_TRUE(decompressed.empty() || allPlaceholders);
+TEST_F(Lz77CompressorTest, DecompressTruncatedHeaderThrows) {
+    std::vector<uint8_t> compressed = {0x01, 0x00, 0x00};
+    EXPECT_THROW(compressor.decompress(compressed), std::runtime_error);
 }
 
-TEST_F(Lz77CompressorTest, DecompressTruncatedPairFlagOnly) {
-    std::vector<uint8_t> compressed = {0xFF}; // Match marker with no data
-    std::vector<uint8_t> decompressed;
-    ASSERT_NO_THROW({ decompressed = compressor.decompress(compressed); });
-
-    bool allPlaceholders =
-        !decompressed.empty() &&
-        std::all_of(decompressed.begin(), decompressed.end(),
-                     [](uint8_t b) { return b == '?'; });
-
-    EXPECT_TRUE(decompressed.empty() || allPlaceholders);
+TEST_F(Lz77CompressorTest, DecompressTruncatedLiteralThrows) {
+    std::string original = "Hello world";
+    auto compressed = compressor.compress(stringToBytes(original));
+    ASSERT_FALSE(compressed.empty());
+    compressed.pop_back();
+    EXPECT_THROW(compressor.decompress(compressed), std::runtime_error);
 }
 
-TEST_F(Lz77CompressorTest, DecompressTruncatedPairMissingLength) {
-    std::vector<uint8_t> compressed = {
-        0xFF, // Match marker
-        // Missing length and distance bytes
-    };
-    std::vector<uint8_t> decompressed;
-    ASSERT_NO_THROW({ decompressed = compressor.decompress(compressed); });
+TEST_F(Lz77CompressorTest, DecompressTruncatedMatchThrows) {
+    std::string original(64, 'A');
+    auto compressed = compressor.compress(stringToBytes(original));
+    ASSERT_FALSE(compressed.empty());
 
-    bool allPlaceholders =
-        !decompressed.empty() &&
-        std::all_of(decompressed.begin(), decompressed.end(),
-                     [](uint8_t b) { return b == '?'; });
+    // Walk the encoding to locate the first match payload and truncate it
+    uint32_t symbolCount = compressed[0] |
+        (compressed[1] << 8) |
+        (compressed[2] << 16) |
+        (compressed[3] << 24);
 
-    EXPECT_TRUE(decompressed.empty() || allPlaceholders);
+    size_t offset = 4;
+    uint32_t processed = 0;
+    bool truncated = false;
+    while (processed < symbolCount && offset < compressed.size()) {
+        uint8_t flags = compressed[offset++];
+        for (uint8_t bit = 0; bit < 8 && processed < symbolCount; ++bit) {
+            bool isMatch = (flags >> bit) & 0x1u;
+            if (isMatch) {
+                ASSERT_LE(offset + 3, compressed.size());
+                compressed.erase(compressed.begin() + offset); // remove length byte
+                truncated = true;
+                break;
+            } else {
+                offset += 1;
+            }
+            processed++;
+        }
+        if (truncated) {
+            break;
+        }
+    }
+
+    ASSERT_TRUE(truncated);
+    EXPECT_THROW(compressor.decompress(compressed), std::runtime_error);
 }
 
-TEST_F(Lz77CompressorTest, DecompressTruncatedPairMissingDistHigh) {
-    std::vector<uint8_t> compressed = {
-        0xFF, // Match marker
-        5,    // Length
-        10,   // Distance low byte
-        // Missing Distance high byte
-    };
-    std::vector<uint8_t> decompressed;
-    ASSERT_NO_THROW({ decompressed = compressor.decompress(compressed); });
+TEST_F(Lz77CompressorTest, DecompressInvalidDistanceThrows) {
+    std::string original(32, 'B');
+    auto compressed = compressor.compress(stringToBytes(original));
 
-    bool allPlaceholders =
-        !decompressed.empty() &&
-        std::all_of(decompressed.begin(), decompressed.end(),
-                     [](uint8_t b) { return b == '?'; });
+    uint32_t symbolCount = compressed[0] |
+        (compressed[1] << 8) |
+        (compressed[2] << 16) |
+        (compressed[3] << 24);
 
-    EXPECT_TRUE(decompressed.empty() || allPlaceholders);
+    size_t offset = 4;
+    uint32_t processed = 0;
+    bool modified = false;
+    while (processed < symbolCount && offset < compressed.size()) {
+        uint8_t flags = compressed[offset++];
+        for (uint8_t bit = 0; bit < 8 && processed < symbolCount; ++bit) {
+            bool isMatch = (flags >> bit) & 0x1u;
+            if (isMatch) {
+                ASSERT_LE(offset + 3, compressed.size());
+                // Leave length intact but set an impossible distance (larger than output)
+                offset += 1; // skip length
+                compressed[offset] = 0xFF;
+                compressed[offset + 1] = 0xFF;
+                modified = true;
+                break;
+            } else {
+                offset += 1;
+            }
+            processed++;
+        }
+        if (modified) {
+            break;
+        }
+    }
+
+    ASSERT_TRUE(modified);
+    EXPECT_THROW(compressor.decompress(compressed), std::runtime_error);
 }
-
-TEST_F(Lz77CompressorTest, DecompressInvalidFlag) {
-    // In our new format, any byte that's not 0xFF is a literal, so there are no invalid flags
-    std::vector<uint8_t> compressed = {
-        'A', // Literal 'A'
-        42,  // Literal byte with value 42
-        'B'  // Literal 'B'
-    };
-    std::vector<uint8_t> decompressed = compressor.decompress(compressed);
-    // This is now valid and should decompress to "A*B"
-    EXPECT_EQ(decompressed.size(), 3);
-    EXPECT_EQ(decompressed[0], 'A');
-    EXPECT_EQ(decompressed[1], 42);
-    EXPECT_EQ(decompressed[2], 'B');
-}
-
-TEST_F(Lz77CompressorTest, DecompressInvalidDistanceZero) {
-    // Compressed: Lit(A), Lit(B), Lit(C), Match(len=3, dist=0) <- Invalid distance
-    std::vector<uint8_t> compressed = {
-        'A', 'B', 'C',
-        0xFF, // Match marker
-        3,    // Length = 3
-        0, 0  // Distance = 0 (Invalid)
-    };
-    std::vector<uint8_t> decompressed = compressor.decompress(compressed);
-    // Should get "ABC???" or similar placeholder handling
-    EXPECT_EQ(decompressed.size(), 6);
-    EXPECT_EQ(decompressed[0], 'A');
-    EXPECT_EQ(decompressed[1], 'B');
-    EXPECT_EQ(decompressed[2], 'C');
-    // Next 3 bytes should be placeholders ('?')
-    EXPECT_EQ(decompressed[3], '?');
-    EXPECT_EQ(decompressed[4], '?');
-    EXPECT_EQ(decompressed[5], '?');
-}
-
-TEST_F(Lz77CompressorTest, DecompressInvalidDistanceTooLarge) {
-    // Compressed: Lit(A), Lit(B), Lit(C), Match(len=3, dist=5) <- Distance > decompressed size (3)
-    std::vector<uint8_t> compressed = {
-        'A', 'B', 'C',
-        0xFF, // Match marker
-        3,    // Length = 3
-        5, 0  // Distance = 5 (Invalid, only 3 bytes available)
-    };
-    std::vector<uint8_t> decompressed = compressor.decompress(compressed);
-    // Should get "ABC???" or similar placeholder handling
-    EXPECT_EQ(decompressed.size(), 6);
-    EXPECT_EQ(decompressed[0], 'A');
-    EXPECT_EQ(decompressed[1], 'B');
-    EXPECT_EQ(decompressed[2], 'C');
-    // Next 3 bytes should be placeholders ('?')
-    EXPECT_EQ(decompressed[3], '?');
-    EXPECT_EQ(decompressed[4], '?');
-    EXPECT_EQ(decompressed[5], '?');
-}
-
-// TEST_F(Lz77CompressorTest, DecompressInvalidLengthTooSmall) {
-//     // Note: The compressor shouldn't produce lengths < MIN_MATCH_LENGTH for pairs,
-//     // and the decompressor adds MIN_MATCH_LENGTH back, making this check unreachable
-//     // with the current encoding. Removing this test as it tests an impossible scenario
-//     // for the current implementation.
-//      std::vector<uint8_t> compressed = {
-//         0, static_cast<uint8_t>('A'),
-//         0, static_cast<uint8_t>('B'),
-//         0, static_cast<uint8_t>('C'),
-//         1,
-//         1, 0, // Distance = 1
-//         0 // Encoded Length = 0 -> Actual Length = 3 (Valid)
-//         // Cannot construct a case where encodedLen + MIN_MATCH_LENGTH < MIN_MATCH_LENGTH
-//     };
-//     // EXPECT_THROW(compressor.decompress(compressed), std::runtime_error);
-// } 
 
 TEST_F(Lz77CompressorTest, DISABLED_HandlesLongRepeatedSequence) {
     // ... existing code ...
