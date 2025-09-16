@@ -38,7 +38,7 @@ public:
         uint8_t literal = 0;         // Literal value
         
         bool isLiteral() const { return symbol < 256; }
-        bool isLength() const { return symbol >= 257 && symbol <= 285; }
+        bool isLength() const { return symbol >= LENGTH_CODE_BASE; }
         bool isEob() const { return symbol == EOB_SYMBOL; }
     };
     
