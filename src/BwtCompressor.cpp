@@ -67,17 +67,87 @@ std::vector<uint8_t> BwtCompressor::bwt_transform(const std::vector<uint8_t>& da
     std::vector<uint32_t> suffix_array(n);
     std::iota(suffix_array.begin(), suffix_array.end(), 0);
 
-    // Sort suffixes lexicographically. This is a simple but slow suffix sort.
-    // For large inputs, a more advanced algorithm like SA-IS would be better.
-    std::sort(suffix_array.begin(), suffix_array.end(),
-        [&](uint32_t a, uint32_t b) {
-            const uint8_t* data_ptr = data.data();
-            return std::lexicographical_compare(
-                data_ptr + a, data_ptr + n,
-                data_ptr + b, data_ptr + n
-            );
+    // Optimized suffix array construction using improved radix sort
+    // This is still O(n log n) but much faster than lexicographical comparison
+    std::vector<uint32_t> rank(n);
+    std::vector<uint32_t> new_rank(n);
+    
+    // Initial ranking based on single characters
+    for (size_t i = 0; i < n; ++i) {
+        rank[i] = data[i];
+    }
+    
+    // Optimized radix sort based on 2k substrings, doubling k each iteration
+    for (size_t k = 1; k < n; k <<= 1) {
+        // Use counting sort for better performance on character data
+        const size_t max_rank = n + 256; // Maximum possible rank value
+        
+        // Sort by second key using counting sort
+        std::vector<size_t> count(max_rank, 0);
+        std::vector<uint32_t> temp_suffix(n);
+        
+        // Count frequencies of second keys
+        for (size_t i = 0; i < n; ++i) {
+            uint32_t second_key = (suffix_array[i] + k < n) ? rank[suffix_array[i] + k] : 0;
+            count[second_key + 1]++;
         }
-    );
+        
+        // Compute prefix sums
+        for (size_t i = 1; i < max_rank; ++i) {
+            count[i] += count[i - 1];
+        }
+        
+        // Place elements in correct positions
+        for (size_t i = 0; i < n; ++i) {
+            uint32_t second_key = (suffix_array[i] + k < n) ? rank[suffix_array[i] + k] : 0;
+            temp_suffix[count[second_key]++] = suffix_array[i];
+        }
+        
+        suffix_array = temp_suffix;
+        
+        // Sort by first key using counting sort
+        std::fill(count.begin(), count.end(), 0);
+        
+        // Count frequencies of first keys
+        for (size_t i = 0; i < n; ++i) {
+            uint32_t first_key = rank[suffix_array[i]];
+            count[first_key + 1]++;
+        }
+        
+        // Compute prefix sums
+        for (size_t i = 1; i < max_rank; ++i) {
+            count[i] += count[i - 1];
+        }
+        
+        // Place elements in correct positions
+        for (size_t i = 0; i < n; ++i) {
+            uint32_t first_key = rank[suffix_array[i]];
+            temp_suffix[count[first_key]++] = suffix_array[i];
+        }
+        
+        suffix_array = temp_suffix;
+        
+        // Update rankings
+        new_rank[suffix_array[0]] = 0;
+        for (size_t i = 1; i < n; ++i) {
+            uint32_t a = suffix_array[i-1];
+            uint32_t b = suffix_array[i];
+            
+            uint32_t a_second = (a + k < n) ? rank[a + k] : 0;
+            uint32_t b_second = (b + k < n) ? rank[b + k] : 0;
+            
+            if (rank[a] == rank[b] && a_second == b_second) {
+                new_rank[b] = new_rank[a];
+            } else {
+                new_rank[b] = new_rank[a] + 1;
+            }
+        }
+        
+        rank.swap(new_rank);
+        
+        // Early termination if all suffixes have unique ranks
+        if (rank[suffix_array[n-1]] == n-1) break;
+    }
 
     std::vector<uint8_t> last_column(n);
     uint32_t primary_index = 0;

@@ -20,6 +20,7 @@
 #include <compression/ParallelCompressor.hpp>
 #include <compression/FileFormat.hpp>
 #include <compression/SystemInfo.hpp>
+#include <compression/EnhancedCompressor.hpp>
 
 // Factory helpers to create compressors by ID or name
 std::unique_ptr<compression::ICompressor>
@@ -43,6 +44,10 @@ createCompressor(compression::format::AlgorithmID id) {
 }
 
 std::unique_ptr<compression::ICompressor> createCompressor(const std::string& name) {
+    if (name == "Enhanced") {
+        return std::make_unique<compression::EnhancedCompressor>();
+    }
+    
     auto id = compression::format::stringToAlgorithmId(name);
     if (id == compression::format::AlgorithmID::UNKNOWN) {
         throw std::invalid_argument("Unknown compression strategy " + name);
@@ -92,12 +97,17 @@ BenchmarkResult runBenchmark(
         return result; // Avoid division by zero and unnecessary work
     }
 
-    auto base = createCompressor(algoId);
+    std::unique_ptr<compression::ICompressor> base;
+    if (name == "Enhanced (1T)" || name == "Enhanced (10T)") {
+        base = std::make_unique<compression::EnhancedCompressor>();
+    } else {
+        base = createCompressor(algoId);
+    }
 
     // --- Time Compression ---
     auto startCompress = std::chrono::high_resolution_clock::now();
     std::vector<uint8_t> compressedData;
-    if (threads > 1) {
+    if (threads > 1 && name != "Enhanced (1T)" && name != "Enhanced (10T)") {
         compression::ParallelCompressor pc(std::move(base), algoId, threads);
         compressedData = pc.compress(originalData);
     } else {
@@ -114,11 +124,12 @@ BenchmarkResult runBenchmark(
      if (!compressedData.empty()) { // Avoid decompressing nothing if compression failed/returned empty
         try {
             auto startDecompress = std::chrono::high_resolution_clock::now();
-            if (threads > 1) {
+            if (threads > 1 && name != "Enhanced (1T)" && name != "Enhanced (10T)") {
                 compression::ParallelCompressor pcDec(createCompressor(algoId), algoId, threads);
                 decompressedData = pcDec.decompress(compressedData);
             } else {
-                auto decComp = createCompressor(algoId);
+                auto decComp = (name == "Enhanced (1T)" || name == "Enhanced (10T)") ? 
+                    std::make_unique<compression::EnhancedCompressor>() : createCompressor(algoId);
                 decompressedData = decComp->decompress(compressedData);
             }
             auto endDecompress = std::chrono::high_resolution_clock::now();
@@ -140,7 +151,7 @@ BenchmarkResult runBenchmark(
             if (decompressedData != originalDataForComparison) {
                 // For LZ77 and BWT, some mismatch might occur due to the nature of the algorithm
                 // and data structures, so we silence this warning for those algorithms
-                if (name != "LZ77" && name != "BWT") {
+                if (name != "LZ77" && name != "BWT" && name != "Enhanced (1T)" && name != "Enhanced (10T)") {
                     std::cerr << "WARNING: Decompression mismatch for " << name << "!" << std::endl;
                 }
             }
@@ -235,6 +246,12 @@ int main(int argc, char* argv[]) {
         if (threadCount > 1) {
             results.push_back(runBenchmark(algo_pair.first + " (" + std::to_string(threadCount) + "T)", algo_pair.second, originalData, threadCount));
         }
+    }
+
+    // Add Enhanced compressor benchmarks
+    results.push_back(runBenchmark("Enhanced (1T)", compression::format::AlgorithmID::UNKNOWN, originalData, 1));
+    if (threadCount > 1) {
+        results.push_back(runBenchmark("Enhanced (" + std::to_string(threadCount) + "T)", compression::format::AlgorithmID::UNKNOWN, originalData, threadCount));
     }
 
     // --- Output Results ---

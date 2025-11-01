@@ -19,6 +19,7 @@ target_sources(compression PRIVATE
     ThreadPool.cpp
     ParallelCompressor.cpp
     SystemInfo.cpp
+    EnhancedCompressor.cpp
 #     some_compression_algorithm.cpp
 )
 
