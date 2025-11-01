@@ -300,98 +300,155 @@ std::vector<Lz77Compressor::Lz77Symbol> Lz77Compressor::compressToSymbols(const 
     return symbols;
 }
 
-// Encode symbols with a much more efficient bit-packed format
+// Encode symbols using block flags so that literals can represent all 256 values
+// and matches are stored compactly without sentinel bytes that conflict with literals.
 std::vector<uint8_t> Lz77Compressor::encodeSymbols(const std::vector<Lz77Symbol>& symbols) const {
     if (symbols.empty()) return {};
-    
+
+    // We write the number of symbols up front so the decoder knows when to stop
+    // even when the final flag byte is only partially full.
     std::vector<uint8_t> result;
-    // Reserve conservatively to avoid reallocations
-    result.reserve(symbols.size());
-    
+    result.resize(4, 0); // Placeholder for symbol count (little endian)
+
+    uint32_t symbolCount = 0;
+    uint8_t flagByte = 0;
+    uint8_t flagCount = 0;
+    std::vector<uint8_t> blockData;
+    blockData.reserve(8 * 3);
+
+    const auto flushBlock = [&](std::vector<uint8_t>& out) {
+        out.push_back(flagByte);
+        out.insert(out.end(), blockData.begin(), blockData.end());
+    };
+
     for (const auto& symbol : symbols) {
-        if (symbol.isLiteral()) {
-            // For literals, directly output the byte (0-255)
-            result.push_back(static_cast<uint8_t>(symbol.symbol));
-        } else if (symbol.isLength()) {
-            // For matches, use a special format:
-            // First byte: 0xFF (marker)
-            // Second byte: length (up to 255)
-            // Next 2 bytes: distance (up to 65535)
-            
-            result.push_back(0xFF); // Marker for match
-            result.push_back(static_cast<uint8_t>(symbol.length));
-            
-            // Write distance (little endian)
-            result.push_back(static_cast<uint8_t>(symbol.distance & 0xFF));
-            result.push_back(static_cast<uint8_t>((symbol.distance >> 8) & 0xFF));
+        if (symbol.isEob()) {
+            continue; // We don't encode EOB for this format
         }
-        // EOB is implicitly the end of the data
+
+        bool isMatch = symbol.isLength();
+        if (isMatch) {
+            if (symbol.length < minMatchLength_ || symbol.length > maxMatchLength_) {
+                throw std::runtime_error("Invalid match length while encoding LZ77 stream");
+            }
+
+            if (symbol.length - 3 > std::numeric_limits<uint8_t>::max()) {
+                throw std::runtime_error("Match length exceeds encodable range");
+            }
+
+            if (symbol.distance == 0 || symbol.distance > windowSize_) {
+                throw std::runtime_error("Invalid match distance while encoding LZ77 stream");
+            }
+
+            if (symbol.distance - 1 > std::numeric_limits<uint16_t>::max()) {
+                throw std::runtime_error("Match distance exceeds encodable range");
+            }
+
+            uint16_t distanceValue = static_cast<uint16_t>(symbol.distance - 1);
+            uint8_t lengthValue = static_cast<uint8_t>(symbol.length - 3);
+
+            blockData.push_back(lengthValue);
+            blockData.push_back(static_cast<uint8_t>(distanceValue & 0xFF));
+            blockData.push_back(static_cast<uint8_t>((distanceValue >> 8) & 0xFF));
+
+            flagByte |= static_cast<uint8_t>(1u << flagCount);
+        } else {
+            blockData.push_back(static_cast<uint8_t>(symbol.literal));
+        }
+
+        flagCount++;
+        symbolCount++;
+
+        if (flagCount == 8) {
+            flushBlock(result);
+            flagByte = 0;
+            flagCount = 0;
+            blockData.clear();
+        }
     }
-    
+
+    if (flagCount > 0) {
+        flushBlock(result);
+    }
+
+    result[0] = static_cast<uint8_t>(symbolCount & 0xFF);
+    result[1] = static_cast<uint8_t>((symbolCount >> 8) & 0xFF);
+    result[2] = static_cast<uint8_t>((symbolCount >> 16) & 0xFF);
+    result[3] = static_cast<uint8_t>((symbolCount >> 24) & 0xFF);
+
     return result;
 }
 
-// Update decompress to match the new encoding format and add stricter validation
+// Decode the block-flagged format. Fail fast on malformed data instead of masking errors.
 std::vector<uint8_t> Lz77Compressor::decompress(const std::vector<uint8_t>& data) const {
     if (data.empty()) return {};
-    
+
+    if (data.size() < 4) {
+        throw std::runtime_error("Compressed LZ77 stream truncated before symbol count");
+    }
+
+    uint32_t expectedSymbols = static_cast<uint32_t>(data[0]) |
+        (static_cast<uint32_t>(data[1]) << 8) |
+        (static_cast<uint32_t>(data[2]) << 16) |
+        (static_cast<uint32_t>(data[3]) << 24);
+
     std::vector<uint8_t> result;
-    // Pre-allocate some space to reduce reallocations
-    result.reserve(data.size() * 2);
-    
-    size_t i = 0;
-    while (i < data.size()) {
-        uint8_t currentByte = data[i++];
-        
-        if (currentByte == 0xFF) {
-            // This is a match pattern (marker 0xFF)
-            // Check for truncated data
-            if (i + 2 >= data.size()) {
-                // Handle truncated data by adding placeholder characters
-                // Add 1-3 placeholder characters
-                for (size_t j = 0; j < 3 && i + j < data.size(); j++) {
-                    result.push_back('?');
+    result.reserve(std::max<std::size_t>(data.size() * 2, 64));
+
+    size_t offset = 4;
+    uint32_t decodedSymbols = 0;
+
+    while (decodedSymbols < expectedSymbols) {
+        if (offset >= data.size()) {
+            throw std::runtime_error("Compressed LZ77 stream truncated before flag byte");
+        }
+
+        uint8_t flagByte = data[offset++];
+
+        for (uint8_t bit = 0; bit < 8 && decodedSymbols < expectedSymbols; ++bit) {
+            bool isMatch = (flagByte >> bit) & 0x1u;
+
+            if (isMatch) {
+                if (offset + 3 > data.size()) {
+                    throw std::runtime_error("Compressed LZ77 stream truncated in match data");
                 }
-                // Skip to the end since we can't properly decode this
-                break;
-            }
-            
-            // Read length (1 byte)
-            uint8_t length = data[i++];
-            
-            // Read distance (2 bytes, little endian)
-            uint16_t distanceLow = data[i++];
-            uint16_t distanceHigh = 0;
-            
-            if (i < data.size()) {
-                distanceHigh = data[i++];
-            }
-            
-            uint16_t distance = distanceLow | (distanceHigh << 8);
-            
-            // Validate distance and length
-            if (distance == 0 || distance > result.size()) {
-                // Instead of throwing an exception, treat this as a data corruption
-                // and output placeholder characters
-                for (size_t j = 0; j < length; j++) {
-                    result.push_back('?');
+
+                uint8_t lengthValue = data[offset++];
+                uint16_t distanceValue = static_cast<uint16_t>(data[offset++]);
+                distanceValue |= static_cast<uint16_t>(data[offset++]) << 8;
+
+                size_t length = static_cast<size_t>(lengthValue) + 3;
+                size_t distance = static_cast<size_t>(distanceValue) + 1;
+
+                if (length < minMatchLength_ || length > maxMatchLength_) {
+                    throw std::runtime_error("Invalid match length in LZ77 stream");
                 }
-                continue;
+
+                if (distance == 0 || distance > windowSize_) {
+                    throw std::runtime_error("Invalid match distance in LZ77 stream");
+                }
+
+                if (distance > result.size()) {
+                    throw std::runtime_error("Match distance exceeds produced output");
+                }
+
+                size_t startPos = result.size() - distance;
+                for (size_t j = 0; j < length; ++j) {
+                    uint8_t byte = result[startPos + (j % distance)];
+                    result.push_back(byte);
+                }
+            } else {
+                if (offset >= data.size()) {
+                    throw std::runtime_error("Compressed LZ77 stream truncated in literal data");
+                }
+
+                result.push_back(data[offset++]);
             }
-            
-            // Copy bytes from the output buffer
-            size_t startPos = result.size() - distance;
-            for (size_t j = 0; j < length; j++) {
-                // Handle overlapping copy correctly using modulo
-                uint8_t byte = result[startPos + (j % distance)];
-                result.push_back(byte);
-            }
-        } else {
-            // This is a literal byte
-            result.push_back(currentByte);
+
+            decodedSymbols++;
         }
     }
-    
+
     return result;
 }
 
