@@ -24,6 +24,8 @@
 #include <compression/ArithmeticCompressor.hpp>
 #include <compression/EnhancedBwtCompressor.hpp>
 #include <compression/OptimizedCompressor.hpp>
+#include <compression/UltraCompressor.hpp>
+#include <compression/ExtremeCompressor.hpp>
 
 // Factory helpers to create compressors by ID or name
 std::unique_ptr<compression::ICompressor>
@@ -41,6 +43,10 @@ createCompressor(compression::format::AlgorithmID id) {
                                                    true);
         case format::AlgorithmID::BWT_COMPRESSOR:
             return std::make_unique<BwtCompressor>();
+        case format::AlgorithmID::ULTRA_COMPRESSOR:
+            return std::make_unique<UltraCompressor>();
+        case format::AlgorithmID::EXTREME_COMPRESSOR:
+            return std::make_unique<ExtremeCompressor>();
         default:
             throw std::invalid_argument("Unknown AlgorithmID");
     }
@@ -123,10 +129,7 @@ BenchmarkResult runBenchmark(
     // --- Time Compression ---
     auto startCompress = std::chrono::high_resolution_clock::now();
     std::vector<uint8_t> compressedData;
-    if (threads > 1 && name != "Enhanced (1T)" && name != "Enhanced (10T)" && 
-        name != "Arithmetic (1T)" && name != "Arithmetic (10T)" && 
-        name != "EnhancedBWT (1T)" && name != "EnhancedBWT (10T)" &&
-        name != "Optimized (1T)" && name != "Optimized (10T)") {
+    if (threads > 1 && algoId != compression::format::AlgorithmID::UNKNOWN) {
         compression::ParallelCompressor pc(std::move(base), algoId, threads);
         compressedData = pc.compress(originalData);
     } else {
@@ -153,10 +156,7 @@ BenchmarkResult runBenchmark(
                 std::cout << "⚠️  Running with timeout protection for " << name << std::endl;
             }
             
-            if (threads > 1 && name != "Enhanced (1T)" && name != "Enhanced (10T)" && 
-            name != "Arithmetic (1T)" && name != "Arithmetic (10T)" && 
-            name != "EnhancedBWT (1T)" && name != "EnhancedBWT (10T)" &&
-            name != "Optimized (1T)" && name != "Optimized (10T)") {
+            if (threads > 1 && algoId != compression::format::AlgorithmID::UNKNOWN) {
                 compression::ParallelCompressor pcDec(createCompressor(algoId), algoId, threads);
                 decompressedData = pcDec.decompress(compressedData);
             } else {

@@ -6,6 +6,8 @@
 #include "compression/HuffmanCompressor.hpp"
 #include "compression/Lz77Compressor.hpp"
 #include "compression/BwtCompressor.hpp"
+#include "compression/UltraCompressor.hpp"
+#include "compression/ExtremeCompressor.hpp"
 
 namespace compression {
 
@@ -23,6 +25,10 @@ std::unique_ptr<ICompressor> createCompressorById(format::AlgorithmID id) {
             return std::make_unique<Lz77Compressor>(32768, 3, 258, false, true, true);
         case AlgorithmID::BWT_COMPRESSOR:
             return std::make_unique<BwtCompressor>();
+        case AlgorithmID::ULTRA_COMPRESSOR:
+            return std::make_unique<UltraCompressor>();
+        case AlgorithmID::EXTREME_COMPRESSOR:
+            return std::make_unique<ExtremeCompressor>();
         default:
             throw std::invalid_argument("Unknown AlgorithmID");
     }
