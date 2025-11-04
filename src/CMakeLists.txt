@@ -24,6 +24,8 @@ target_sources(compression PRIVATE
     EnhancedBwtCompressor.cpp
     OptimizedCompressor.cpp
     HybridCompressor.cpp
+    UltraCompressor.cpp
+    ExtremeCompressor.cpp
 #     some_compression_algorithm.cpp
 )
 
