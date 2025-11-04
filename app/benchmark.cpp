@@ -310,7 +310,9 @@ int main(int argc, char* argv[]) {
         {"RLE", compression::format::AlgorithmID::RLE_COMPRESSOR},
         {"Huffman", compression::format::AlgorithmID::HUFFMAN_COMPRESSOR},
         {"LZ77", compression::format::AlgorithmID::LZ77_COMPRESSOR},
-        {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR}
+        {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR},
+        {"Ultra", compression::format::AlgorithmID::ULTRA_COMPRESSOR},
+        {"Extreme", compression::format::AlgorithmID::EXTREME_COMPRESSOR}
     };
 
     for (const auto& algo_pair : algorithms_to_benchmark) {
