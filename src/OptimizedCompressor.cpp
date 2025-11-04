@@ -3,6 +3,7 @@
 #include <compression/HuffmanCompressor.hpp>
 #include <algorithm>
 #include <map>
+#include <cmath>
 
 namespace compression {
 

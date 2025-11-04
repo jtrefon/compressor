@@ -4,6 +4,7 @@
 #include <compression/HuffmanCompressor.hpp>
 #include <algorithm>
 #include <stdexcept>
+#include <cmath>
 
 namespace compression {
 
