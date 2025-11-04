@@ -19,11 +19,14 @@ void write_u32_be(std::vector<uint8_t>& dest, uint32_t value) {
 
 // Helper to read a 32-bit integer from a byte vector in big-endian format.
 uint32_t read_u32_be(const std::vector<uint8_t>& src, size_t& pos) {
-    uint32_t value = (static_cast<uint32_t>(src[pos++]) << 24) |
-                     (static_cast<uint32_t>(src[pos++]) << 16) |
-                     (static_cast<uint32_t>(src[pos++]) << 8)  |
-                     static_cast<uint32_t>(src[pos++]);
-    return value;
+    if (pos + 4 > src.size()) {
+        throw std::out_of_range("read_u32_be: insufficient bytes");
+    }
+    uint32_t b0 = static_cast<uint32_t>(src[pos++]);
+    uint32_t b1 = static_cast<uint32_t>(src[pos++]);
+    uint32_t b2 = static_cast<uint32_t>(src[pos++]);
+    uint32_t b3 = static_cast<uint32_t>(src[pos++]);
+    return (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
 }
 
 std::vector<uint8_t> BwtCompressor::compress(const std::vector<uint8_t>& data) const {
@@ -64,107 +67,72 @@ std::vector<uint8_t> BwtCompressor::decompress(const std::vector<uint8_t>& data)
 
 std::vector<uint8_t> BwtCompressor::bwt_transform(const std::vector<uint8_t>& data) const {
     const size_t n = data.size();
-    std::vector<uint32_t> suffix_array(n);
-    std::iota(suffix_array.begin(), suffix_array.end(), 0);
+    if (n == 0) return {};
 
-    // Optimized suffix array construction using improved radix sort
-    // This is still O(n log n) but much faster than lexicographical comparison
-    std::vector<uint32_t> rank(n);
-    std::vector<uint32_t> new_rank(n);
-    
-    // Initial ranking based on single characters
-    for (size_t i = 0; i < n; ++i) {
-        rank[i] = data[i];
-    }
-    
-    // Optimized radix sort based on 2k substrings, doubling k each iteration
+    // Build T = S + S to sort finite rotations of length n using doubling without wrap.
+    std::vector<uint8_t> T;
+    T.reserve(2 * n);
+    T.insert(T.end(), data.begin(), data.end());
+    T.insert(T.end(), data.begin(), data.end());
+
+    const size_t m = 2 * n;
+    std::vector<uint32_t> sa(m);
+    std::iota(sa.begin(), sa.end(), 0);
+    std::vector<uint32_t> rank(m), new_rank(m);
+    // Initial ranks (offset by +1 so 0 can be sentinel for out-of-range)
+    for (size_t i = 0; i < m; ++i) rank[i] = static_cast<uint32_t>(T[i]) + 1u;
+
+    // Doubling until segment length >= n so comparisons cover full rotation length.
     for (size_t k = 1; k < n; k <<= 1) {
-        // Use counting sort for better performance on character data
-        const size_t max_rank = n + 256; // Maximum possible rank value
-        
-        // Sort by second key using counting sort
-        std::vector<size_t> count(max_rank, 0);
-        std::vector<uint32_t> temp_suffix(n);
-        
-        // Count frequencies of second keys
-        for (size_t i = 0; i < n; ++i) {
-            uint32_t second_key = (suffix_array[i] + k < n) ? rank[suffix_array[i] + k] : 0;
-            count[second_key + 1]++;
+        std::sort(sa.begin(), sa.end(), [&](uint32_t a, uint32_t b) {
+            uint32_t ra = rank[a], rb = rank[b];
+            if (ra != rb) return ra < rb;
+            uint32_t ra2 = (a + k < m) ? rank[a + k] : 0u;
+            uint32_t rb2 = (b + k < m) ? rank[b + k] : 0u;
+            return ra2 < rb2;
+        });
+        new_rank[sa[0]] = 0;
+        for (size_t i = 1; i < m; ++i) {
+            uint32_t a = sa[i - 1], b = sa[i];
+            uint32_t ra = rank[a], rb = rank[b];
+            uint32_t ra2 = (a + k < m) ? rank[a + k] : 0u;
+            uint32_t rb2 = (b + k < m) ? rank[b + k] : 0u;
+            new_rank[b] = (ra == rb && ra2 == rb2) ? new_rank[a] : (new_rank[a] + 1);
         }
-        
-        // Compute prefix sums
-        for (size_t i = 1; i < max_rank; ++i) {
-            count[i] += count[i - 1];
-        }
-        
-        // Place elements in correct positions
-        for (size_t i = 0; i < n; ++i) {
-            uint32_t second_key = (suffix_array[i] + k < n) ? rank[suffix_array[i] + k] : 0;
-            temp_suffix[count[second_key]++] = suffix_array[i];
-        }
-        
-        suffix_array = temp_suffix;
-        
-        // Sort by first key using counting sort
-        std::fill(count.begin(), count.end(), 0);
-        
-        // Count frequencies of first keys
-        for (size_t i = 0; i < n; ++i) {
-            uint32_t first_key = rank[suffix_array[i]];
-            count[first_key + 1]++;
-        }
-        
-        // Compute prefix sums
-        for (size_t i = 1; i < max_rank; ++i) {
-            count[i] += count[i - 1];
-        }
-        
-        // Place elements in correct positions
-        for (size_t i = 0; i < n; ++i) {
-            uint32_t first_key = rank[suffix_array[i]];
-            temp_suffix[count[first_key]++] = suffix_array[i];
-        }
-        
-        suffix_array = temp_suffix;
-        
-        // Update rankings
-        new_rank[suffix_array[0]] = 0;
-        for (size_t i = 1; i < n; ++i) {
-            uint32_t a = suffix_array[i-1];
-            uint32_t b = suffix_array[i];
-            
-            uint32_t a_second = (a + k < n) ? rank[a + k] : 0;
-            uint32_t b_second = (b + k < n) ? rank[b + k] : 0;
-            
-            if (rank[a] == rank[b] && a_second == b_second) {
-                new_rank[b] = new_rank[a];
-            } else {
-                new_rank[b] = new_rank[a] + 1;
-            }
-        }
-        
         rank.swap(new_rank);
-        
-        // Early termination if all suffixes have unique ranks
-        if (rank[suffix_array[n-1]] == n-1) break;
+        if (rank[sa[m - 1]] == m - 1) break;
     }
+
+    // Determine rotation order by sorting indices 0..n-1 by their rank value.
+    std::vector<uint32_t> rot_idx(n);
+    std::iota(rot_idx.begin(), rot_idx.end(), 0);
+    std::sort(rot_idx.begin(), rot_idx.end(), [&](uint32_t a, uint32_t b){
+        if (rank[a] != rank[b]) return rank[a] < rank[b];
+        // Tie-breaker with second half to ensure exact n-length comparison
+        uint32_t ra2 = rank[a + n];
+        uint32_t rb2 = rank[b + n];
+        return ra2 < rb2;
+    });
 
     std::vector<uint8_t> last_column(n);
     uint32_t primary_index = 0;
     for (size_t i = 0; i < n; ++i) {
-        last_column[i] = data[(suffix_array[i] + n - 1) % n];
-        if (suffix_array[i] == 0) {
-            primary_index = static_cast<uint32_t>(i);
-        }
+        uint32_t start = rot_idx[i];
+        last_column[i] = data[(start + n - 1) % n];
+        if (start == 0) primary_index = static_cast<uint32_t>(i);
     }
 
-    std::vector<uint8_t> compressed_data;
-    compressed_data.reserve(4 + n);
-    write_u32_be(compressed_data, primary_index);
-    compressed_data.insert(compressed_data.end(), last_column.begin(), last_column.end());
-
-    return compressed_data;
+    std::vector<uint8_t> out;
+    out.reserve(4 + n);
+    out.push_back(static_cast<uint8_t>((primary_index >> 24) & 0xFF));
+    out.push_back(static_cast<uint8_t>((primary_index >> 16) & 0xFF));
+    out.push_back(static_cast<uint8_t>((primary_index >> 8) & 0xFF));
+    out.push_back(static_cast<uint8_t>(primary_index & 0xFF));
+    out.insert(out.end(), last_column.begin(), last_column.end());
+    return out;
 }
+
+ 
 
 std::vector<uint8_t> BwtCompressor::inverse_bwt_transform(const std::vector<uint8_t>& data) const {
     if (data.empty()) {
@@ -177,45 +145,55 @@ std::vector<uint8_t> BwtCompressor::inverse_bwt_transform(const std::vector<uint
     size_t pos = 0;
     uint32_t primary_index = read_u32_be(data, pos);
     
-    const uint8_t* last_column_ptr = data.data() + 4;
+    const uint8_t* data_ptr = data.data() + 4;
     const size_t n = data.size() - 4;
 
     if (n == 0) {
         return {};
     }
+    
+    // Use efficient LF mapping inverse for ALL sizes - the iterative approach is too slow
     if (primary_index >= n) {
          throw std::runtime_error("Invalid BWT data: primary index is out of bounds.");
     }
 
-    std::vector<uint8_t> first_column(last_column_ptr, last_column_ptr + n);
+    std::vector<uint8_t> decompressed_data(n);
+    
+    // Correct LF mapping algorithm for BWT inverse
+    // Build the first column (sorted last column)
+    std::vector<uint8_t> first_column(data_ptr, data_ptr + n);
     std::sort(first_column.begin(), first_column.end());
-
-    std::vector<uint32_t> lf_mapping(n);
-    std::vector<uint32_t> counts(256, 0);
-    std::vector<uint32_t> base(256);
-
-    for (size_t i = 0; i < n; ++i) {
-        counts[first_column[i]]++;
-    }
-
-    uint32_t current_sum = 0;
-    for (int i = 0; i < 256; ++i) {
-        base[i] = current_sum;
-        current_sum += counts[i];
+    
+    // Count occurrences of each character in first column
+    std::vector<uint32_t> char_counts(256, 0);
+    for (uint8_t c : first_column) {
+        char_counts[c]++;
     }
     
-    std::fill(counts.begin(), counts.end(), 0);
-    for (size_t i = 0; i < n; ++i) {
-        uint8_t c = last_column_ptr[i];
-        lf_mapping[base[c] + counts[c]] = static_cast<uint32_t>(i);
-        counts[c]++;
+    // Build character position table for first column
+    std::vector<uint32_t> char_start(256);
+    uint32_t start_pos = 0;
+    for (int c = 0; c < 256; ++c) {
+        char_start[c] = start_pos;
+        start_pos += char_counts[c];
     }
-
-    std::vector<uint8_t> decompressed_data(n);
-    uint32_t current_row = primary_index;
+    
+    // Build LF mapping: for each position in last column, find corresponding position in first column
+    std::vector<uint32_t> lf_mapping(n);
+    std::vector<uint32_t> char_pos(256, 0);
+    
     for (size_t i = 0; i < n; ++i) {
-        decompressed_data[n - 1 - i] = first_column[current_row];
-        current_row = lf_mapping[current_row];
+        uint8_t c = data_ptr[i];
+        lf_mapping[i] = char_start[c] + char_pos[c];
+        char_pos[c]++;
+    }
+    
+    // Reconstruct original string by following LF chain using the last column (L)
+    // Emit L[row] then step to next row
+    uint32_t current = primary_index;
+    for (int i = static_cast<int>(n) - 1; i >= 0; --i) {
+        decompressed_data[static_cast<size_t>(i)] = data_ptr[current];
+        current = lf_mapping[current];
     }
 
     return decompressed_data;

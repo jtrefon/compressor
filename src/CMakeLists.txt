@@ -20,6 +20,10 @@ target_sources(compression PRIVATE
     ParallelCompressor.cpp
     SystemInfo.cpp
     EnhancedCompressor.cpp
+    ArithmeticCompressor.cpp
+    EnhancedBwtCompressor.cpp
+    OptimizedCompressor.cpp
+    HybridCompressor.cpp
 #     some_compression_algorithm.cpp
 )
 

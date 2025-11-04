@@ -18,6 +18,8 @@
 #include <compression/Crc32.hpp> // Include CRC32 utility
 #include <compression/Lz77Compressor.hpp>
 #include <compression/BwtCompressor.hpp>
+#include <compression/UltraCompressor.hpp>
+#include <compression/ExtremeCompressor.hpp>
 #include <compression/ParallelCompressor.hpp>
 #include <compression/SystemInfo.hpp>
 
@@ -66,6 +68,10 @@ std::unique_ptr<compression::ICompressor> createCompressor(compression::format::
             return std::make_unique<compression::Lz77Compressor>(32768, 3, 258, false, true, true);
         case compression::format::AlgorithmID::BWT_COMPRESSOR:
             return std::make_unique<compression::BwtCompressor>();
+        case compression::format::AlgorithmID::ULTRA_COMPRESSOR:
+            return std::make_unique<compression::UltraCompressor>();
+        case compression::format::AlgorithmID::EXTREME_COMPRESSOR:
+            return std::make_unique<compression::ExtremeCompressor>();
         default:
             throw std::invalid_argument("Unknown or unsupported compression algorithm ID: "
                                         + std::to_string(static_cast<uint8_t>(id)));
@@ -74,9 +80,14 @@ std::unique_ptr<compression::ICompressor> createCompressor(compression::format::
 
 // Overload for creating based on name (used for compression command)
 std::unique_ptr<compression::ICompressor> createCompressor(const std::string& strategyName) {
+    // Default to BWT if 'default' specified or strategy unrecognized
+    if (strategyName == "default") {
+        return std::make_unique<compression::BwtCompressor>();
+    }
     compression::format::AlgorithmID id = compression::format::stringToAlgorithmId(strategyName);
     if (id == compression::format::AlgorithmID::UNKNOWN) {
-         throw std::invalid_argument("Unknown compression strategy name: " + strategyName);
+        // Fallback to BWT as default to avoid runtime errors
+        return std::make_unique<compression::BwtCompressor>();
     }
     return createCompressor(id);
 }
@@ -86,7 +97,7 @@ std::unique_ptr<compression::ICompressor> createCompressor(const std::string& st
 void printUsage(const char* appName) {
     std::cerr << "Usage: " << appName
               << " <compress|decompress> <strategy|ignored_on_decompress> <input_file> <output_file> [--threads N|--no-threads]\n"
-              << "Strategies: null, rle, huffman, lz77, bwt\n";
+              << "Strategies: default(bwt), bwt, ultra, extreme, lz77, huffman, rle, null\n";
 }
 
 int main(int argc, char* argv[]) {

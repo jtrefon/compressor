@@ -269,8 +269,11 @@ std::vector<uint8_t> HuffmanCompressor::serializeFrequencyMap(
     //   - Byte: Symbol
     //   - VarInt: Frequency
     
-    // Number of entries (max 256 for byte values)
-    serialized.push_back(static_cast<uint8_t>(freqMap.size()));
+    // Number of entries (uint16_t little-endian). Supports up to 65535 entries.
+    // For bytes, actual maximum is 256.
+    uint16_t count = static_cast<uint16_t>(freqMap.size());
+    serialized.push_back(static_cast<uint8_t>(count & 0xFF));
+    serialized.push_back(static_cast<uint8_t>((count >> 8) & 0xFF));
     
     // For each symbol and its frequency
     for (const auto& [symbol, frequency] : freqMap) {
@@ -298,16 +301,17 @@ HuffmanCompressor::FrequencyMap HuffmanCompressor::deserializeFrequencyMap(
     
     FrequencyMap freqMap;
     
-    // Check buffer size
-    if (offset >= buffer.size()) {
-        throw std::runtime_error("Buffer ended unexpectedly during map deserialization");
+    // Need at least 2 bytes for the count
+    if (offset + 2 > buffer.size()) {
+        throw std::runtime_error("Buffer ended unexpectedly during map count deserialization");
     }
-    
-    // Get count of entries
-    uint8_t count = buffer[offset++];
+    // Get count of entries (uint16_t little-endian)
+    uint16_t count = static_cast<uint16_t>(buffer[offset]) |
+                     (static_cast<uint16_t>(buffer[offset + 1]) << 8);
+    offset += 2;
     
     // Process each entry
-    for (uint8_t i = 0; i < count; i++) {
+    for (size_t i = 0; i < static_cast<size_t>(count); i++) {
         // Check buffer size
         if (offset + 1 >= buffer.size()) {
             throw std::runtime_error("Buffer ended unexpectedly during map entry deserialization");
@@ -467,7 +471,7 @@ std::vector<uint8_t> HuffmanCompressor::decompress(
         // 5. Calculate total number of bits in encoded data
         size_t dataByteCount = data.size() - offset;
         if (dataByteCount == 0) {
-            return {}; // No encoded bits
+            throw std::runtime_error("Huffman: no encoded payload after header");
         }
         
         size_t totalBits = (dataByteCount - 1) * 8;
