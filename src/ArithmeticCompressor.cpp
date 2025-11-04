@@ -190,7 +190,9 @@ std::vector<uint8_t> ArithmeticCompressor::serializeFrequencyMap(const Frequency
     std::vector<uint8_t> serialized;
     
     // Number of entries
-    serialized.push_back(static_cast<uint8_t>(freqMap.size()));
+    uint16_t count = static_cast<uint16_t>(freqMap.size());
+    serialized.push_back(static_cast<uint8_t>(count & 0xFF));
+    serialized.push_back(static_cast<uint8_t>((count >> 8) & 0xFF));
     
     // For each symbol and its frequency
     for (const auto& [symbol, frequency] : freqMap) {
@@ -213,15 +215,17 @@ std::vector<uint8_t> ArithmeticCompressor::serializeFrequencyMap(const Frequency
 ArithmeticCompressor::FrequencyMap ArithmeticCompressor::deserializeFrequencyMap(const std::vector<uint8_t>& buffer, size_t& offset) const {
     FrequencyMap freqMap;
     
-    if (offset >= buffer.size()) {
+    if (offset + 2 > buffer.size()) {
         throw std::runtime_error("Buffer ended unexpectedly during map deserialization");
     }
     
     // Get count of entries
-    uint8_t count = buffer[offset++];
+    uint16_t count = static_cast<uint16_t>(buffer[offset]) |
+                     (static_cast<uint16_t>(buffer[offset + 1]) << 8);
+    offset += 2;
     
     // Process each entry
-    for (uint8_t i = 0; i < count; i++) {
+    for (size_t i = 0; i < static_cast<size_t>(count); i++) {
         if (offset >= buffer.size()) {
             throw std::runtime_error("Buffer ended unexpectedly during map entry deserialization");
         }
