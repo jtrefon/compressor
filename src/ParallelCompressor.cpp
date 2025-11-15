@@ -29,6 +29,8 @@ std::unique_ptr<ICompressor> createCompressorById(format::AlgorithmID id) {
             return std::make_unique<UltraCompressor>();
         case AlgorithmID::EXTREME_COMPRESSOR:
             return std::make_unique<ExtremeCompressor>();
+        case AlgorithmID::UNKNOWN:
+            return std::make_unique<NullCompressor>();
         default:
             throw std::invalid_argument("Unknown AlgorithmID");
     }
@@ -127,7 +129,7 @@ std::vector<uint8_t> ParallelCompressor::decompress(const std::vector<uint8_t>& 
         }
         std::vector<uint8_t> chunk(data.begin() + offset, data.begin() + offset + sz);
         offset += sz;
-        futures[i] = pool.enqueue([algoId = algoId_, c = std::move(chunk)]() mutable {
+        futures[i] = pool.enqueue([algoId = header.algorithmId, c = std::move(chunk)]() mutable {
             auto comp = createCompressorById(algoId);
             return comp->decompress(c);
         });
