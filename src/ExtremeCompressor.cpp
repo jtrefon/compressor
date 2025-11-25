@@ -9,6 +9,8 @@
 #include <cstring>
 #include <iostream>
 #include <iomanip>
+#include <future>
+#include <thread>
 
 namespace compression {
 
@@ -25,35 +27,24 @@ std::vector<uint8_t> ExtremeCompressor::compress(const std::vector<uint8_t>& dat
         return {};
     }
     
-    std::cout << "🚀 EXTREME COMPRESSION MODE - Maximum Ratio" << std::endl;
+    std::cout << "🚀 EXTREME COMPRESSION MODE - Maximum Ratio (Parallel)" << std::endl;
     
-    // Try multiple compression strategies and pick the best
+    // Launch strategies in parallel
+    std::cout << "🔄 Launching 5 compression strategies in parallel..." << std::endl;
+
+    auto f1 = std::async(std::launch::async, &ExtremeCompressor::applyBwtLz77Huffman, this, std::cref(data));
+    auto f2 = std::async(std::launch::async, &ExtremeCompressor::applyLz77BwtHuffman, this, std::cref(data));
+    auto f3 = std::async(std::launch::async, &ExtremeCompressor::applyBwtHuffmanLz77, this, std::cref(data));
+    auto f4 = std::async(std::launch::async, &ExtremeCompressor::applyDoubleBwtHuffman, this, std::cref(data));
+    auto f5 = std::async(std::launch::async, &ExtremeCompressor::applyPreprocessBwtLz77Huffman, this, std::cref(data));
+
+    // Collect results
     std::vector<std::pair<std::vector<uint8_t>, std::string>> candidates;
-    
-    // Strategy 1: BWT + LZ77 + Huffman
-    std::cout << "🔄 Strategy 1: BWT → LZ77 → Huffman..." << std::endl;
-    auto strategy1 = applyBwtLz77Huffman(data);
-    candidates.push_back({strategy1, "BWT+LZ77+Huffman"});
-    
-    // Strategy 2: LZ77 + BWT + Huffman  
-    std::cout << "🔄 Strategy 2: LZ77 → BWT → Huffman..." << std::endl;
-    auto strategy2 = applyLz77BwtHuffman(data);
-    candidates.push_back({strategy2, "LZ77+BWT+Huffman"});
-    
-    // Strategy 3: BWT + Huffman + LZ77
-    std::cout << "🔄 Strategy 3: BWT → Huffman → LZ77..." << std::endl;
-    auto strategy3 = applyBwtHuffmanLz77(data);
-    candidates.push_back({strategy3, "BWT+Huffman+LZ77"});
-    
-    // Strategy 4: Double BWT + Huffman
-    std::cout << "🔄 Strategy 4: Double BWT → Huffman..." << std::endl;
-    auto strategy4 = applyDoubleBwtHuffman(data);
-    candidates.push_back({strategy4, "DoubleBWT+Huffman"});
-    
-    // Strategy 5: Preprocessing + BWT + LZ77 + Huffman
-    std::cout << "🔄 Strategy 5: Preprocess → BWT → LZ77 → Huffman..." << std::endl;
-    auto strategy5 = applyPreprocessBwtLz77Huffman(data);
-    candidates.push_back({strategy5, "Preprocess+BWT+LZ77+Huffman"});
+    candidates.push_back({f1.get(), "BWT+LZ77+Huffman"});
+    candidates.push_back({f2.get(), "LZ77+BWT+Huffman"});
+    candidates.push_back({f3.get(), "BWT+Huffman+LZ77"});
+    candidates.push_back({f4.get(), "DoubleBWT+Huffman"});
+    candidates.push_back({f5.get(), "Preprocess+BWT+LZ77+Huffman"});
     
     // Find the best compression
     auto best_it = std::min_element(candidates.begin(), candidates.end(),
