@@ -4,6 +4,7 @@
 #include <compression/Lz77Compressor.hpp>
 #include <compression/OptimizedCompressor.hpp>
 #include <map>
+#include <string>
 
 namespace compression {
 
