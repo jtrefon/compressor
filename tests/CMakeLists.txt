@@ -15,12 +15,14 @@ FetchContent_MakeAvailable(googletest)
 add_executable(compression_tests
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     # ${CMAKE_CURRENT_SOURCE_DIR}/NullCompressorTest.cpp # Missing file
-    # ${CMAKE_CURRENT_SOURCE_DIR}/RleCompressorTest.cpp # Missing file
-    # ${CMAKE_CURRENT_SOURCE_DIR}/HuffmanCompressorTest.cpp # Missing file
+    ${CMAKE_CURRENT_SOURCE_DIR}/RleCompressorTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/HuffmanCompressorTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Lz77CompressorTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DeflateCompressorTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ParallelCompressorTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/BwtCompressorTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/OptimizedCompressorTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/HybridCompressorTest.cpp
 )
 
 # Link the test executable against GoogleTest and the compression library
