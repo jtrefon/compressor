@@ -36,7 +36,9 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_CONFIG_FILE ${CMAKE_SOURCE_DIR}/Doxyfile)
 
     # Add a custom target to run Doxygen
-    add_custom_target(doc ALL
+    # NOTE: Removed 'ALL' to make doc generation optional for CI/CD builds
+    # Developers can still build docs manually with: make doc
+    add_custom_target(doc
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_CONFIG_FILE}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Generating API documentation with Doxygen"
