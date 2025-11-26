@@ -1,20 +1,18 @@
 #pragma once
 
-#include <cstdint> // For uint8_t, uint64_t
-#include <array>
-#include <vector>
-#include <string>
-#include <stdexcept> // For std::runtime_error
 #include <algorithm> // For std::copy
+#include <array>
+#include <cstdint>   // For uint8_t, uint64_t
+#include <stdexcept> // For std::runtime_error
+#include <string>
+#include <vector>
 
 namespace compression {
 namespace format {
 
-// --- Constants --- 
+// --- Constants ---
 
-constexpr std::array<uint8_t, 4> MAGIC_NUMBER = {
-    'C', 'P', 'R', 'O'
-};
+constexpr std::array<uint8_t, 4> MAGIC_NUMBER = {'C', 'P', 'R', 'O'};
 constexpr uint8_t FORMAT_VERSION = 1;
 
 // --- BWT specific flags ---
@@ -25,161 +23,173 @@ constexpr uint8_t BWT_FLAG_LZ77 = 0x02;
 
 // Algorithm IDs (extend this as new algorithms are added)
 enum class AlgorithmID : uint8_t {
-    NULL_COMPRESSOR = 0,
-    RLE_COMPRESSOR = 1,
-    HUFFMAN_COMPRESSOR = 2,
-    LZ77_COMPRESSOR = 3,
-    BWT_COMPRESSOR = 4,
-    ULTRA_COMPRESSOR = 5,
-    EXTREME_COMPRESSOR = 6,
-    // Add future IDs here
-    UNKNOWN = 255
+  NULL_COMPRESSOR = 0,
+  RLE_COMPRESSOR = 1,
+  HUFFMAN_COMPRESSOR = 2,
+  LZ77_COMPRESSOR = 3,
+  BWT_COMPRESSOR = 4,
+  ULTRA_COMPRESSOR = 5,
+  EXTREME_COMPRESSOR = 6,
+  OPTIMIZED_COMPRESSOR = 7,
+  // Add future IDs here
+  UNKNOWN = 255
 };
 
-constexpr size_t BASE_HEADER_SIZE = MAGIC_NUMBER.size()
-                                  + sizeof(FORMAT_VERSION)
-                                  + sizeof(AlgorithmID)
-                                  + sizeof(uint64_t) // Original Size
-                                  + sizeof(uint32_t) // Original Checksum (CRC32)
-                                  + sizeof(uint32_t) // Chunk Count
-                                  + sizeof(uint32_t); // Chunk Size
+constexpr size_t BASE_HEADER_SIZE =
+    MAGIC_NUMBER.size() + sizeof(FORMAT_VERSION) + sizeof(AlgorithmID) +
+    sizeof(uint64_t)    // Original Size
+    + sizeof(uint32_t)  // Original Checksum (CRC32)
+    + sizeof(uint32_t)  // Chunk Count
+    + sizeof(uint32_t); // Chunk Size
 
 // Backwards compatibility alias
 constexpr size_t HEADER_SIZE = BASE_HEADER_SIZE;
 
-// --- Header Structure (Conceptual) --- 
+// --- Header Structure (Conceptual) ---
 
-// We won't use a packed struct directly to avoid portability issues (padding, endianness).
-// Instead, we'll use serialization/deserialization functions.
+// We won't use a packed struct directly to avoid portability issues (padding,
+// endianness). Instead, we'll use serialization/deserialization functions.
 struct FileHeader {
-    // Magic number is implicitly checked/written
-    uint8_t formatVersion = FORMAT_VERSION;
-    AlgorithmID algorithmId = AlgorithmID::UNKNOWN;
-    uint64_t originalSize = 0;
-    uint32_t originalChecksum = 0; // Added CRC32 checksum
-    uint32_t chunkCount = 1;
-    uint32_t chunkSize = 0;
-    std::vector<uint32_t> compressedSizes;
+  // Magic number is implicitly checked/written
+  uint8_t formatVersion = FORMAT_VERSION;
+  AlgorithmID algorithmId = AlgorithmID::UNKNOWN;
+  uint64_t originalSize = 0;
+  uint32_t originalChecksum = 0; // Added CRC32 checksum
+  uint32_t chunkCount = 1;
+  uint32_t chunkSize = 0;
+  std::vector<uint32_t> compressedSizes;
 };
 
-// --- Serialization / Deserialization --- 
+// --- Serialization / Deserialization ---
 
 /**
  * @brief Serializes the header data into a byte vector.
  * @param header The header data to serialize.
  * @return A vector of bytes representing the serialized header.
  */
-inline std::vector<uint8_t> serializeHeader(const FileHeader& header) {
-    std::vector<uint8_t> buffer(BASE_HEADER_SIZE + header.compressedSizes.size() * sizeof(uint32_t));
-    size_t offset = 0;
+inline std::vector<uint8_t> serializeHeader(const FileHeader &header) {
+  std::vector<uint8_t> buffer(BASE_HEADER_SIZE +
+                              header.compressedSizes.size() * sizeof(uint32_t));
+  size_t offset = 0;
 
-    // 1. Magic Number
-    std::copy(MAGIC_NUMBER.begin(), MAGIC_NUMBER.end(), buffer.begin() + offset);
-    offset += MAGIC_NUMBER.size();
+  // 1. Magic Number
+  std::copy(MAGIC_NUMBER.begin(), MAGIC_NUMBER.end(), buffer.begin() + offset);
+  offset += MAGIC_NUMBER.size();
 
-    // 2. Format Version
-    buffer[offset++] = header.formatVersion;
+  // 2. Format Version
+  buffer[offset++] = header.formatVersion;
 
-    // 3. Algorithm ID
-    buffer[offset++] = static_cast<uint8_t>(header.algorithmId);
+  // 3. Algorithm ID
+  buffer[offset++] = static_cast<uint8_t>(header.algorithmId);
 
-    // 4. Original Size (little-endian)
-    for (int i = 0; i < 8; ++i) {
-        buffer[offset++] = static_cast<uint8_t>((header.originalSize >> (i * 8)) & 0xFF);
-    }
+  // 4. Original Size (little-endian)
+  for (int i = 0; i < 8; ++i) {
+    buffer[offset++] =
+        static_cast<uint8_t>((header.originalSize >> (i * 8)) & 0xFF);
+  }
 
-    // 5. Original Checksum (little-endian)
+  // 5. Original Checksum (little-endian)
+  for (int i = 0; i < 4; ++i) {
+    buffer[offset++] =
+        static_cast<uint8_t>((header.originalChecksum >> (i * 8)) & 0xFF);
+  }
+
+  // 6. Chunk count
+  for (int i = 0; i < 4; ++i) {
+    buffer[offset++] =
+        static_cast<uint8_t>((header.chunkCount >> (i * 8)) & 0xFF);
+  }
+
+  // 7. Chunk size
+  for (int i = 0; i < 4; ++i) {
+    buffer[offset++] =
+        static_cast<uint8_t>((header.chunkSize >> (i * 8)) & 0xFF);
+  }
+
+  // 8. Compressed sizes for each chunk
+  for (uint32_t size : header.compressedSizes) {
     for (int i = 0; i < 4; ++i) {
-        buffer[offset++] = static_cast<uint8_t>((header.originalChecksum >> (i * 8)) & 0xFF);
+      buffer[offset++] = static_cast<uint8_t>((size >> (i * 8)) & 0xFF);
     }
+  }
 
-    // 6. Chunk count
-    for (int i = 0; i < 4; ++i) {
-        buffer[offset++] = static_cast<uint8_t>((header.chunkCount >> (i * 8)) & 0xFF);
-    }
-
-    // 7. Chunk size
-    for (int i = 0; i < 4; ++i) {
-        buffer[offset++] = static_cast<uint8_t>((header.chunkSize >> (i * 8)) & 0xFF);
-    }
-
-    // 8. Compressed sizes for each chunk
-    for (uint32_t size : header.compressedSizes) {
-        for (int i = 0; i < 4; ++i) {
-            buffer[offset++] = static_cast<uint8_t>((size >> (i * 8)) & 0xFF);
-        }
-    }
-
-    return buffer;
+  return buffer;
 }
 
 /**
  * @brief Deserializes header data from a byte vector.
- * @param buffer The byte vector containing the serialized header (must be at least HEADER_SIZE bytes).
+ * @param buffer The byte vector containing the serialized header (must be at
+ * least HEADER_SIZE bytes).
  * @return The deserialized FileHeader.
- * @throws std::runtime_error if magic number or version is incorrect, or buffer is too small.
+ * @throws std::runtime_error if magic number or version is incorrect, or buffer
+ * is too small.
  */
-inline FileHeader deserializeHeader(const std::vector<uint8_t>& buffer) {
-    if (buffer.size() < BASE_HEADER_SIZE) {
-        throw std::runtime_error("Buffer too small to contain file header.");
+inline FileHeader deserializeHeader(const std::vector<uint8_t> &buffer) {
+  if (buffer.size() < BASE_HEADER_SIZE) {
+    throw std::runtime_error("Buffer too small to contain file header.");
+  }
+
+  size_t offset = 0;
+  FileHeader header;
+
+  // 1. Verify Magic Number
+  if (!std::equal(MAGIC_NUMBER.begin(), MAGIC_NUMBER.end(),
+                  buffer.begin() + offset)) {
+    throw std::runtime_error(
+        "Invalid magic number. Not a recognized compressed file.");
+  }
+  offset += MAGIC_NUMBER.size();
+
+  // 2. Read and Verify Format Version
+  header.formatVersion = buffer[offset++];
+  if (header.formatVersion != FORMAT_VERSION) {
+    throw std::runtime_error("Unsupported format version: " +
+                             std::to_string(header.formatVersion));
+  }
+
+  // 3. Read Algorithm ID
+  header.algorithmId = static_cast<AlgorithmID>(buffer[offset++]);
+
+  // 4. Read Original Size (assuming little-endian storage)
+  header.originalSize = 0;
+  for (int i = 0; i < 8; ++i) {
+    header.originalSize |= (static_cast<uint64_t>(buffer[offset++]) << (i * 8));
+  }
+
+  // 5. Read Original Checksum (assuming little-endian storage)
+  header.originalChecksum = 0;
+  for (int i = 0; i < 4; ++i) {
+    header.originalChecksum |=
+        (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
+  }
+
+  // 6. Read chunk count
+  header.chunkCount = 0;
+  for (int i = 0; i < 4; ++i) {
+    header.chunkCount |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
+  }
+
+  // 7. Read chunk size
+  header.chunkSize = 0;
+  for (int i = 0; i < 4; ++i) {
+    header.chunkSize |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
+  }
+
+  // 8. Read compressed sizes
+  if (buffer.size() <
+      BASE_HEADER_SIZE + static_cast<size_t>(header.chunkCount) * 4) {
+    throw std::runtime_error("Buffer too small for chunk metadata");
+  }
+  header.compressedSizes.resize(header.chunkCount);
+  for (uint32_t i = 0; i < header.chunkCount; ++i) {
+    uint32_t size = 0;
+    for (int j = 0; j < 4; ++j) {
+      size |= (static_cast<uint32_t>(buffer[offset++]) << (j * 8));
     }
+    header.compressedSizes[i] = size;
+  }
 
-    size_t offset = 0;
-    FileHeader header;
-
-    // 1. Verify Magic Number
-    if (!std::equal(MAGIC_NUMBER.begin(), MAGIC_NUMBER.end(), buffer.begin() + offset)) {
-        throw std::runtime_error("Invalid magic number. Not a recognized compressed file.");
-    }
-    offset += MAGIC_NUMBER.size();
-
-    // 2. Read and Verify Format Version
-    header.formatVersion = buffer[offset++];
-    if (header.formatVersion != FORMAT_VERSION) {
-        throw std::runtime_error("Unsupported format version: " + std::to_string(header.formatVersion));
-    }
-
-    // 3. Read Algorithm ID
-    header.algorithmId = static_cast<AlgorithmID>(buffer[offset++]);
-
-    // 4. Read Original Size (assuming little-endian storage)
-    header.originalSize = 0;
-    for (int i = 0; i < 8; ++i) {
-        header.originalSize |= (static_cast<uint64_t>(buffer[offset++]) << (i * 8));
-    }
-
-    // 5. Read Original Checksum (assuming little-endian storage)
-    header.originalChecksum = 0;
-    for (int i = 0; i < 4; ++i) {
-        header.originalChecksum |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
-    }
-
-    // 6. Read chunk count
-    header.chunkCount = 0;
-    for (int i = 0; i < 4; ++i) {
-        header.chunkCount |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
-    }
-
-    // 7. Read chunk size
-    header.chunkSize = 0;
-    for (int i = 0; i < 4; ++i) {
-        header.chunkSize |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
-    }
-
-    // 8. Read compressed sizes
-    if (buffer.size() < BASE_HEADER_SIZE + static_cast<size_t>(header.chunkCount) * 4) {
-        throw std::runtime_error("Buffer too small for chunk metadata");
-    }
-    header.compressedSizes.resize(header.chunkCount);
-    for (uint32_t i = 0; i < header.chunkCount; ++i) {
-        uint32_t size = 0;
-        for (int j = 0; j < 4; ++j) {
-            size |= (static_cast<uint32_t>(buffer[offset++]) << (j * 8));
-        }
-        header.compressedSizes[i] = size;
-    }
-
-    return header;
+  return header;
 }
 
 /**
@@ -188,16 +198,26 @@ inline FileHeader deserializeHeader(const std::vector<uint8_t>& buffer) {
  * @return String name of the algorithm (e.g., "rle", "null").
  */
 inline std::string algorithmIdToString(AlgorithmID id) {
-    switch (id) {
-        case AlgorithmID::NULL_COMPRESSOR: return "null";
-        case AlgorithmID::RLE_COMPRESSOR:  return "rle";
-        case AlgorithmID::HUFFMAN_COMPRESSOR: return "huffman";
-        case AlgorithmID::LZ77_COMPRESSOR: return "lz77";
-        case AlgorithmID::BWT_COMPRESSOR: return "bwt";
-        case AlgorithmID::ULTRA_COMPRESSOR: return "ultra";
-        case AlgorithmID::EXTREME_COMPRESSOR: return "extreme";
-        default:                          return "unknown";
-    }
+  switch (id) {
+  case AlgorithmID::NULL_COMPRESSOR:
+    return "null";
+  case AlgorithmID::RLE_COMPRESSOR:
+    return "rle";
+  case AlgorithmID::HUFFMAN_COMPRESSOR:
+    return "huffman";
+  case AlgorithmID::LZ77_COMPRESSOR:
+    return "lz77";
+  case AlgorithmID::BWT_COMPRESSOR:
+    return "bwt";
+  case AlgorithmID::ULTRA_COMPRESSOR:
+    return "ultra";
+  case AlgorithmID::EXTREME_COMPRESSOR:
+    return "extreme";
+  case AlgorithmID::OPTIMIZED_COMPRESSOR:
+    return "optimized";
+  default:
+    return "unknown";
+  }
 }
 
 /**
@@ -205,20 +225,29 @@ inline std::string algorithmIdToString(AlgorithmID id) {
  * @param name The string name (e.g., "rle", "null").
  * @return The corresponding AlgorithmID, or UNKNOWN if not found.
  */
-inline AlgorithmID stringToAlgorithmId(const std::string& name) {
-    if (name == "null") return AlgorithmID::NULL_COMPRESSOR;
-    if (name == "rle")  return AlgorithmID::RLE_COMPRESSOR;
-    if (name == "huffman") return AlgorithmID::HUFFMAN_COMPRESSOR;
-    if (name == "lz77") return AlgorithmID::LZ77_COMPRESSOR;
-    if (name == "bwt") return AlgorithmID::BWT_COMPRESSOR;
-    if (name == "ultra") return AlgorithmID::ULTRA_COMPRESSOR;
-    if (name == "extreme") return AlgorithmID::EXTREME_COMPRESSOR;
-    // Add mappings for future algorithms
-    return AlgorithmID::UNKNOWN;
+inline AlgorithmID stringToAlgorithmId(const std::string &name) {
+  if (name == "null")
+    return AlgorithmID::NULL_COMPRESSOR;
+  if (name == "rle")
+    return AlgorithmID::RLE_COMPRESSOR;
+  if (name == "huffman")
+    return AlgorithmID::HUFFMAN_COMPRESSOR;
+  if (name == "lz77")
+    return AlgorithmID::LZ77_COMPRESSOR;
+  if (name == "bwt")
+    return AlgorithmID::BWT_COMPRESSOR;
+  if (name == "ultra")
+    return AlgorithmID::ULTRA_COMPRESSOR;
+  if (name == "extreme")
+    return AlgorithmID::EXTREME_COMPRESSOR;
+  if (name == "optimized")
+    return AlgorithmID::OPTIMIZED_COMPRESSOR;
+  // Add mappings for future algorithms
+  return AlgorithmID::UNKNOWN;
 }
 
-inline size_t serializedHeaderSize(const FileHeader& header) {
-    return BASE_HEADER_SIZE + header.compressedSizes.size() * sizeof(uint32_t);
+inline size_t serializedHeaderSize(const FileHeader &header) {
+  return BASE_HEADER_SIZE + header.compressedSizes.size() * sizeof(uint32_t);
 }
 
 } // namespace format

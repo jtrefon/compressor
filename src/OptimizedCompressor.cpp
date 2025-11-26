@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <compression/BwtCompressor.hpp>
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/Lz77Compressor.hpp>
 #include <compression/OptimizedCompressor.hpp>
@@ -10,7 +11,8 @@ namespace compression {
 
 OptimizedCompressor::OptimizedCompressor()
     : lz77_(std::make_unique<Lz77Compressor>(65536, 3, 258, false, true, true)),
-      huffman_(std::make_unique<HuffmanCompressor>()) {}
+      huffman_(std::make_unique<HuffmanCompressor>()),
+      bwt_(std::make_unique<BwtCompressor>()) {}
 
 OptimizedCompressor::~OptimizedCompressor() = default;
 
@@ -23,16 +25,46 @@ OptimizedCompressor::compress(const std::vector<uint8_t> &data) const {
   // Analyze data characteristics to choose optimal strategy
   DataCharacteristics characteristics = analyzeData(data);
 
-  if (characteristics.isHighlyRepetitive) {
-    // Use enhanced BWT-like approach for repetitive data
-    return compressRepetitiveData(data);
-  } else if (characteristics.hasLongMatches) {
-    // Use optimized LZ77 for data with good pattern matching
-    return compressPatternData(data);
-  } else {
-    // Use entropy coding for diverse data
-    return compressEntropyData(data);
+  // Try all strategies and pick the best one
+  std::vector<uint8_t> bestResult;
+
+  // Always try Store mode as baseline (1 byte overhead)
+  size_t bestSize = data.size() + 1;
+
+  // Helper to update best result
+  auto updateBest = [&](const std::vector<uint8_t> &candidate) {
+    if (!candidate.empty() && candidate.size() < bestSize) {
+      bestResult = candidate;
+      bestSize = candidate.size();
+    }
+  };
+
+  // Try Repetitive (RLE + Huffman)
+  updateBest(compressRepetitiveData(data));
+
+  // Try Pattern (LZ77)
+  updateBest(compressPatternData(data));
+
+  // Try Entropy (XOR + Huffman)
+  updateBest(compressEntropyData(data));
+
+  // Try BWT (BWT + MTF + ZRL + Huffman)
+  updateBest(compressBwtData(data));
+
+  // Try Deflate (LZ77 + Huffman)
+  updateBest(compressDeflateData(data));
+
+  // If the best we found is worse than storing, fallback to Store Mode.
+  if (bestResult.empty() || bestResult.size() >= data.size() + 1) {
+    // Store mode: [0x00] [Original Data]
+    std::vector<uint8_t> storeResult;
+    storeResult.reserve(data.size() + 1);
+    storeResult.push_back(0x00);
+    storeResult.insert(storeResult.end(), data.begin(), data.end());
+    return storeResult;
   }
+
+  return bestResult;
 }
 
 std::vector<uint8_t>
@@ -51,12 +83,18 @@ OptimizedCompressor::decompress(const std::vector<uint8_t> &data) const {
     const std::vector<uint8_t> compressedData(data.begin() + 1, data.end());
 
     switch (method) {
+    case 0x00: // Store mode (no compression)
+      return compressedData;
     case 0x01: // Repetitive data method
       return decompressRepetitiveData(compressedData);
     case 0x02: // Pattern data method
       return decompressPatternData(compressedData);
     case 0x03: // Entropy data method
       return decompressEntropyData(compressedData);
+    case 0x04: // BWT method
+      return decompressBwtData(compressedData);
+    case 0x05: // Deflate method (LZ77 + Huffman)
+      return decompressDeflateData(compressedData);
     default:
       throw std::runtime_error("Unknown compression method: " +
                                std::to_string(static_cast<int>(method)));
@@ -203,6 +241,34 @@ std::vector<uint8_t> OptimizedCompressor::compressEntropyData(
   return result;
 }
 
+std::vector<uint8_t>
+OptimizedCompressor::compressBwtData(const std::vector<uint8_t> &data) const {
+  // BWT compression (BWT -> MTF -> ZRL -> Huffman)
+  auto bwtCompressed = bwt_->compress(data);
+
+  // Add method marker at the beginning
+  std::vector<uint8_t> result;
+  result.push_back(0x04);
+  result.insert(result.end(), bwtCompressed.begin(), bwtCompressed.end());
+
+  return result;
+}
+
+std::vector<uint8_t> OptimizedCompressor::compressDeflateData(
+    const std::vector<uint8_t> &data) const {
+  // Deflate-style: LZ77 followed by Huffman
+  auto lz77Compressed = lz77_->compress(data);
+  auto huffmanCompressed = huffman_->compress(lz77Compressed);
+
+  // Add method marker at the beginning
+  std::vector<uint8_t> result;
+  result.push_back(0x05);
+  result.insert(result.end(), huffmanCompressed.begin(),
+                huffmanCompressed.end());
+
+  return result;
+}
+
 std::vector<uint8_t> OptimizedCompressor::decompressRepetitiveData(
     const std::vector<uint8_t> &data) const {
   // First decompress Huffman
@@ -241,6 +307,17 @@ std::vector<uint8_t> OptimizedCompressor::decompressEntropyData(
     const std::vector<uint8_t> &data) const {
   auto huffmanDecompressed = huffman_->decompress(data);
   return postprocessFromEntropy(huffmanDecompressed);
+}
+
+std::vector<uint8_t>
+OptimizedCompressor::decompressBwtData(const std::vector<uint8_t> &data) const {
+  return bwt_->decompress(data);
+}
+
+std::vector<uint8_t> OptimizedCompressor::decompressDeflateData(
+    const std::vector<uint8_t> &data) const {
+  auto huffmanDecompressed = huffman_->decompress(data);
+  return lz77_->decompress(huffmanDecompressed);
 }
 
 std::vector<uint8_t> OptimizedCompressor::preprocessForEntropy(
