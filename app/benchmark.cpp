@@ -260,6 +260,28 @@ BenchmarkResult runBenchmark(const std::string &name,
   return result;
 }
 
+// Helper to read all files in a directory recursively into a single buffer
+std::vector<uint8_t> readDirectoryRecursive(const std::filesystem::path &path) {
+  std::vector<uint8_t> result;
+  if (!std::filesystem::exists(path)) {
+    return result;
+  }
+
+  for (const auto &entry :
+       std::filesystem::recursive_directory_iterator(path)) {
+    if (entry.is_regular_file()) {
+      try {
+        std::vector<uint8_t> fileData = readFile(entry.path());
+        result.insert(result.end(), fileData.begin(), fileData.end());
+      } catch (const std::exception &e) {
+        std::cerr << "Warning: Failed to read " << entry.path() << ": "
+                  << e.what() << std::endl;
+      }
+    }
+  }
+  return result;
+}
+
 // --- Main Function ---
 
 int main(int argc, char *argv[]) {
@@ -282,14 +304,11 @@ int main(int argc, char *argv[]) {
     pclose(pipe);
   }
 
-  std::size_t threadCount = compression::getHardwareThreads();
-  if (argc >= 2) {
-    std::string arg = argv[1];
-    if (arg == "--no-threads") {
-      threadCount = 1;
-    } else if (arg == "--threads" && argc >= 3) {
-      threadCount = static_cast<std::size_t>(std::stoul(argv[2]));
-    } else if (arg.rfind("--threads=", 0) == 0) {
+  // Parse command line arguments
+  std::size_t threadCount = 1; // Default to 1 thread
+  for (int i = 1; i < argc; ++i) {
+    std::string arg = argv[i];
+    if (arg.rfind("--threads=", 0) == 0) {
       threadCount = static_cast<std::size_t>(std::stoul(arg.substr(10)));
     }
   }
@@ -300,14 +319,28 @@ int main(int argc, char *argv[]) {
 #endif
 
   std::filesystem::path dataDir = BENCHMARK_DATA_DIR;
+  std::filesystem::path projectRoot =
+      dataDir.parent_path(); // Assuming data/ is at root
 
   // Define all test files
-  std::vector<std::pair<std::string, std::filesystem::path>> testFiles = {
-      {"Text (6.2 MB)", dataDir / "test.txt"},
+  // We use a lambda or just manual handling for the directory case since it's
+  // special
+  struct BenchmarkCase {
+    std::string desc;
+    std::filesystem::path path;
+    bool isDirectory;
+  };
+
+  std::vector<BenchmarkCase> testCases = {
+      {"Text (6.2 MB)", dataDir / "test.txt", false},
       {"JPEG Image (2.3 MB)",
-       dataDir / "faizur-rehman-xqh-RlfJVx4-unsplash.jpg"},
+       dataDir / "faizur-rehman-xqh-RlfJVx4-unsplash.jpg", false},
       {"WAV Audio (9.4 MB)",
-       dataDir / "835222__silverillusionist__ascendancy-music-sample.wav"}};
+       dataDir / "835222__silverillusionist__ascendancy-music-sample.wav",
+       false},
+      {"Source Tree (C++ src)", projectRoot / "src", true},
+      {"Binary (Executable)", projectRoot / "build/app/compression_benchmark",
+       false}};
 
   std::filesystem::path benchmarkMdPath =
       std::filesystem::path(BENCHMARK_DATA_DIR) / "../BENCHMARKS.md";
@@ -323,24 +356,47 @@ int main(int argc, char *argv[]) {
           {"RLE", compression::format::AlgorithmID::RLE_COMPRESSOR},
           {"Huffman", compression::format::AlgorithmID::HUFFMAN_COMPRESSOR},
           {"LZ77", compression::format::AlgorithmID::LZ77_COMPRESSOR},
-          {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR}};
-
+          {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR},
+          {"Optimized",
+           compression::format::AlgorithmID::OPTIMIZED_COMPRESSOR}};
   // Benchmark each file
-  for (const auto &[fileDesc, filePath] : testFiles) {
-    if (!std::filesystem::exists(filePath)) {
+  for (const auto &testCase : testCases) {
+    const std::string &fileDesc = testCase.desc;
+    const std::filesystem::path &filePath = testCase.path;
+    const bool isDirectory = testCase.isDirectory;
+
+    // Special handling for binary path which might vary
+    std::filesystem::path actualPath = filePath;
+    if (!std::filesystem::exists(actualPath) &&
+        fileDesc.find("Binary") != std::string::npos) {
+      if (std::filesystem::exists(projectRoot /
+                                  "build/app/Release/compression_benchmark")) {
+        actualPath = projectRoot / "build/app/Release/compression_benchmark";
+      } else if (std::filesystem::exists(
+                     projectRoot / "build/app/Debug/compression_benchmark")) {
+        actualPath = projectRoot / "build/app/Debug/compression_benchmark";
+      }
+    }
+
+    if (!std::filesystem::exists(actualPath)) {
       std::cerr << "⚠️  Skipping " << fileDesc
-                << " - file not found: " << filePath << std::endl;
+                << " - file not found: " << actualPath << std::endl;
       continue;
     }
 
     std::cout << "\n" << std::string(60, '=') << std::endl;
     std::cout << "Benchmarking: " << fileDesc << std::endl;
-    std::cout << "File: " << filePath.filename() << std::endl;
+    std::cout << "Path: " << actualPath.filename() << std::endl;
     std::cout << std::string(60, '=') << std::endl;
 
     std::vector<uint8_t> originalData;
     try {
-      originalData = readFile(filePath);
+      if (isDirectory) {
+        std::cout << "Reading directory recursively..." << std::endl;
+        originalData = readDirectoryRecursive(actualPath);
+      } else {
+        originalData = readFile(actualPath);
+      }
     } catch (const std::exception &e) {
       std::cerr << "Failed to read " << fileDesc << ": " << e.what()
                 << std::endl;
