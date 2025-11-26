@@ -293,49 +293,29 @@ int main(int argc, char *argv[]) {
       threadCount = static_cast<std::size_t>(std::stoul(arg.substr(10)));
     }
   }
+
   // --- Get Data File Path using Compile Definition ---
 #ifndef BENCHMARK_DATA_DIR
 #error "BENCHMARK_DATA_DIR is not defined. Check app/CMakeLists.txt"
 #endif
-  // Use the macro directly as it expands to a C string literal
+
   std::filesystem::path dataDir = BENCHMARK_DATA_DIR;
-  std::filesystem::path dataFilePath = dataDir / "test.txt";
 
-  // Check if the constructed path exists
-  if (!std::filesystem::exists(dataFilePath)) {
-    std::cerr << "Error: Benchmark data file not found at expected location: "
-              << dataFilePath << std::endl;
-    std::cerr << "(Derived from BENCHMARK_DATA_DIR macro: "
-              << BENCHMARK_DATA_DIR << ")" << std::endl;
-    return 1;
-  }
+  // Define all test files
+  std::vector<std::pair<std::string, std::filesystem::path>> testFiles = {
+      {"Text (6.2 MB)", dataDir / "test.txt"},
+      {"JPEG Image (2.3 MB)",
+       dataDir / "faizur-rehman-xqh-RlfJVx4-unsplash.jpg"},
+      {"WAV Audio (9.4 MB)",
+       dataDir / "835222__silverillusionist__ascendancy-music-sample.wav"}};
 
-  // Determine the path for the output MD file (relative to source dir)
-  // Use the compile-time path directly here too
   std::filesystem::path benchmarkMdPath =
       std::filesystem::path(BENCHMARK_DATA_DIR) / "../BENCHMARKS.md";
 
-  // --- Rest of main function ---
-  std::cout << "Starting benchmark using file: " << dataFilePath << std::endl;
-
-  std::vector<uint8_t> originalData;
-  try {
-    originalData = readFile(dataFilePath);
-  } catch (const std::exception &e) {
-    std::cerr << "Failed to read benchmark data: " << e.what() << std::endl;
-    return 1;
-  }
-
-  if (originalData.empty()) {
-    std::cerr << "Benchmark data file is empty. No benchmarks to run."
-              << std::endl;
-    return 0;
-  }
-
-  std::cout << "Read " << originalData.size() << " bytes." << std::endl;
-
-  // --- Run Benchmarks ---
-  std::vector<BenchmarkResult> results;
+  // Prepare markdown output
+  std::stringstream markdownOutput;
+  markdownOutput << "# Compression Benchmark Results\n\n";
+  markdownOutput << "Performance comparison across different file types.\n\n";
 
   std::vector<std::pair<std::string, compression::format::AlgorithmID>>
       algorithms_to_benchmark = {
@@ -343,114 +323,109 @@ int main(int argc, char *argv[]) {
           {"RLE", compression::format::AlgorithmID::RLE_COMPRESSOR},
           {"Huffman", compression::format::AlgorithmID::HUFFMAN_COMPRESSOR},
           {"LZ77", compression::format::AlgorithmID::LZ77_COMPRESSOR},
-          {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR}
-          // Note: Ultra and Extreme compressors are too slow for CI/CD
-          // benchmarking They can be tested manually with smaller datasets
-          // {"Ultra", compression::format::AlgorithmID::ULTRA_COMPRESSOR},
-          // {"Extreme", compression::format::AlgorithmID::EXTREME_COMPRESSOR}
-      };
+          {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR}};
 
-  for (const auto &algo_pair : algorithms_to_benchmark) {
-    // Run single-threaded benchmark
-    results.push_back(runBenchmark(algo_pair.first + " (1T)", algo_pair.second,
-                                   originalData, 1));
+  // Benchmark each file
+  for (const auto &[fileDesc, filePath] : testFiles) {
+    if (!std::filesystem::exists(filePath)) {
+      std::cerr << "⚠️  Skipping " << fileDesc
+                << " - file not found: " << filePath << std::endl;
+      continue;
+    }
 
-    // Run multi-threaded benchmark if applicable
-    if (threadCount > 1) {
-      results.push_back(runBenchmark(
-          algo_pair.first + " (" + std::to_string(threadCount) + "T)",
-          algo_pair.second, originalData, threadCount));
+    std::cout << "\n" << std::string(60, '=') << std::endl;
+    std::cout << "Benchmarking: " << fileDesc << std::endl;
+    std::cout << "File: " << filePath.filename() << std::endl;
+    std::cout << std::string(60, '=') << std::endl;
+
+    std::vector<uint8_t> originalData;
+    try {
+      originalData = readFile(filePath);
+    } catch (const std::exception &e) {
+      std::cerr << "Failed to read " << fileDesc << ": " << e.what()
+                << std::endl;
+      continue;
+    }
+
+    if (originalData.empty()) {
+      std::cerr << "File is empty, skipping." << std::endl;
+      continue;
+    }
+
+    std::cout << "Read " << originalData.size() << " bytes." << std::endl;
+
+    // Run benchmarks for this file
+    std::vector<BenchmarkResult> results;
+
+    for (const auto &algo_pair : algorithms_to_benchmark) {
+      // Single-threaded
+      results.push_back(runBenchmark(algo_pair.first + " (1T)",
+                                     algo_pair.second, originalData, 1));
+
+      // Multi-threaded
+      if (threadCount > 1) {
+        results.push_back(runBenchmark(
+            algo_pair.first + " (" + std::to_string(threadCount) + "T)",
+            algo_pair.second, originalData, threadCount));
+      }
+    }
+
+    // Output results for this file
+    markdownOutput << "\n## " << fileDesc << "\n\n";
+    markdownOutput << "File: `" << filePath.filename().string() << "`  \n";
+    markdownOutput << "Size: " << originalData.size() << " bytes\n\n";
+    markdownOutput << "| Algorithm | Compressed Size (bytes) | Ratio (%) | "
+                      "Compress Time (ms) | Decompress Time (ms) |\n";
+    markdownOutput
+        << "|-----------|-------------------------|-----------|---------"
+           "-----------|----------------------|\n";
+
+    std::cout << "\n--- Results for " << fileDesc << " ---\n" << std::endl;
+    std::cout << std::fixed << std::setprecision(3);
+    markdownOutput << std::fixed << std::setprecision(3);
+
+    for (const auto &result : results) {
+      double ratioPercent = result.ratio * 100.0;
+
+      // Console output
+      std::cout << "Algorithm:       " << result.algorithmName << std::endl;
+      std::cout << "Original Size:   " << result.originalSize << " bytes"
+                << std::endl;
+      std::cout << "Compressed Size: " << result.compressedSize << " bytes"
+                << std::endl;
+      std::cout << "Ratio:           " << std::setprecision(2) << ratioPercent
+                << "%" << std::endl;
+      std::cout << "Compress Time:   " << std::setprecision(3)
+                << result.compressionTimeMs << " ms" << std::endl;
+      std::cout << "Decompress Time: " << result.decompressionTimeMs << " ms"
+                << std::endl;
+      std::cout << "-------------------------" << std::endl;
+
+      // Markdown output
+      markdownOutput << "| " << result.algorithmName << " | "
+                     << result.compressedSize << " | " << std::setprecision(2)
+                     << ratioPercent << " | " << std::setprecision(3)
+                     << result.compressionTimeMs << " | "
+                     << result.decompressionTimeMs << " |\n";
     }
   }
 
-  // NOTE: Advanced compressors (Enhanced, Arithmetic, EnhancedBWT, Optimized)
-  // are disabled in CI/CD benchmarks because they are too slow for large files
-  // (6.5MB+). They use BWT or complex multi-stage pipelines that cause
-  // timeouts. To benchmark them, run manually with smaller test files (< 1MB).
+  // Add summary section
+  markdownOutput << "\n## Summary\n\n";
+  markdownOutput << "**Observations:**\n\n";
+  markdownOutput << "- **Text files**: Highly compressible with Huffman, LZ77, "
+                    "and BWT algorithms\n";
+  markdownOutput
+      << "- **JPEG images**: Already compressed, minimal improvement "
+         "possible\n";
+  markdownOutput
+      << "- **WAV audio**: Moderate compressibility, larger file size "
+         "tests throughput\n";
+  markdownOutput << "\n**Hardware**: " << compression::getHardwareThreads()
+                 << " threads available\n";
 
-  // // Add Enhanced compressor benchmarks
-  // results.push_back(runBenchmark("Enhanced (1T)",
-  // compression::format::AlgorithmID::UNKNOWN, originalData, 1)); if
-  // (threadCount > 1) {
-  //     results.push_back(runBenchmark("Enhanced (" +
-  //     std::to_string(threadCount) + "T)",
-  //     compression::format::AlgorithmID::UNKNOWN, originalData, threadCount));
-  // }
-
-  // // Add Arithmetic compressor benchmarks
-  // results.push_back(runBenchmark("Arithmetic (1T)",
-  // compression::format::AlgorithmID::UNKNOWN, originalData, 1)); if
-  // (threadCount > 1) {
-  //     results.push_back(runBenchmark("Arithmetic (" +
-  //     std::to_string(threadCount) + "T)",
-  //     compression::format::AlgorithmID::UNKNOWN, originalData, threadCount));
-  // }
-
-  // // Add Enhanced BWT compressor benchmarks
-  // results.push_back(runBenchmark("EnhancedBWT (1T)",
-  // compression::format::AlgorithmID::UNKNOWN, originalData, 1)); if
-  // (threadCount > 1) {
-  //     results.push_back(runBenchmark("EnhancedBWT (" +
-  //     std::to_string(threadCount) + "T)",
-  //     compression::format::AlgorithmID::UNKNOWN, originalData, threadCount));
-  // }
-
-  // // Add Optimized compressor benchmarks
-  // results.push_back(runBenchmark("Optimized (1T)",
-  // compression::format::AlgorithmID::UNKNOWN, originalData, 1)); if
-  // (threadCount > 1) {
-  //     results.push_back(runBenchmark("Optimized (" +
-  //     std::to_string(threadCount) + "T)",
-  //     compression::format::AlgorithmID::UNKNOWN, originalData, threadCount));
-  // }
-
-  // --- Output Results ---
-  std::cout << "\n--- Benchmark Results ---\n" << std::endl;
-
-  // Prepare Markdown output string
-  std::stringstream markdownOutput;
-  markdownOutput << "# Compression Benchmark Results\n\n";
-  markdownOutput << "Benchmarked against `data/test.txt` (Size: "
-                 << results[0].originalSize << " bytes)\n\n";
-  markdownOutput << "| Algorithm | Compressed Size (bytes) | Ratio (%) | "
-                    "Compress Time (ms) | Decompress Time (ms) |\n";
-  markdownOutput << "|-----------|-------------------------|-----------|-------"
-                    "-------------|----------------------|\n";
-
-  std::cout << std::fixed << std::setprecision(3); // For console output timing
-  markdownOutput << std::fixed
-                 << std::setprecision(3); // For markdown output timing
-
-  for (const auto &result : results) {
-    double ratioPercent = result.ratio * 100.0;
-
-    // Console Output
-    std::cout << "Algorithm:       " << result.algorithmName << std::endl;
-    std::cout << "Original Size:   " << result.originalSize << " bytes"
-              << std::endl;
-    std::cout << "Compressed Size: " << result.compressedSize << " bytes"
-              << std::endl;
-    std::cout << "Ratio:           " << std::setprecision(2) << ratioPercent
-              << "%" << std::endl;
-    std::cout << "Compress Time:   " << std::setprecision(3)
-              << result.compressionTimeMs << " ms" << std::endl;
-    std::cout << "Decompress Time: " << result.decompressionTimeMs << " ms"
-              << std::endl;
-    std::cout << "-------------------------" << std::endl;
-
-    // Markdown Table Row
-    markdownOutput << "| " << result.algorithmName << " "
-                   << "| " << result.compressedSize << " "
-                   << "| " << std::setprecision(2) << ratioPercent << " "
-                   << "| " << std::setprecision(3) << result.compressionTimeMs
-                   << " "
-                   << "| " << result.decompressionTimeMs << " |\n";
-  }
-
-  // --- Write Markdown File (Using path derived from compile definition) ---
+  // Write markdown file
   try {
-    // Ensure the path is clean (remove potential .. etc, though less critical
-    // now)
     benchmarkMdPath = std::filesystem::weakly_canonical(benchmarkMdPath);
     std::ofstream mdFile(benchmarkMdPath);
     if (!mdFile) {
@@ -458,14 +433,13 @@ int main(int argc, char *argv[]) {
                 << benchmarkMdPath << std::endl;
     } else {
       mdFile << markdownOutput.str();
-      std::cout << "\nBenchmark results written to " << benchmarkMdPath
+      std::cout << "\n✅ Benchmark results written to " << benchmarkMdPath
                 << std::endl;
     }
   } catch (const std::filesystem::filesystem_error &e) {
-    // Use weakly_canonical to avoid issues if parent doesn't exist temporarily
-    std::cerr
-        << "Warning: Could not determine canonical path for BENCHMARKS.md: "
-        << e.what() << std::endl;
+    std::cerr << "Warning: Could not determine canonical path for "
+                 "BENCHMARKS.md: "
+              << e.what() << std::endl;
     std::cerr << "Attempted path: " << benchmarkMdPath << std::endl;
   }
 
