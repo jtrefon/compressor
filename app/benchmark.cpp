@@ -481,6 +481,88 @@ int main(int argc, char *argv[]) {
                  << " threads available\n";
 
   // Write markdown file
+  // Add Enhanced compressor benchmarks
+  // results.push_back(runBenchmark("Enhanced (1T)",
+  // compression::format::AlgorithmID::UNKNOWN, originalData, 1)); if
+  // (threadCount > 1) {
+  //     results.push_back(runBenchmark("Enhanced (" +
+  //     std::to_string(threadCount) + "T)",
+  //     compression::format::AlgorithmID::UNKNOWN, originalData, threadCount));
+  // }
+
+  // Add Arithmetic compressor benchmarks
+  results.push_back(runBenchmark("Arithmetic (1T)",
+                                 compression::format::AlgorithmID::UNKNOWN,
+                                 originalData, 1));
+  if (threadCount > 1) {
+    results.push_back(runBenchmark(
+        "Arithmetic (" + std::to_string(threadCount) + "T)",
+        compression::format::AlgorithmID::UNKNOWN, originalData, threadCount));
+  }
+
+  // // Add Enhanced BWT compressor benchmarks
+  // results.push_back(runBenchmark("EnhancedBWT (1T)",
+  // compression::format::AlgorithmID::UNKNOWN, originalData, 1)); if
+  // (threadCount > 1) {
+  //     results.push_back(runBenchmark("EnhancedBWT (" +
+  //     std::to_string(threadCount) + "T)",
+  //     compression::format::AlgorithmID::UNKNOWN, originalData, threadCount));
+  // }
+
+  // // Add Optimized compressor benchmarks
+  // results.push_back(runBenchmark("Optimized (1T)",
+  // compression::format::AlgorithmID::UNKNOWN, originalData, 1)); if
+  // (threadCount > 1) {
+  //     results.push_back(runBenchmark("Optimized (" +
+  //     std::to_string(threadCount) + "T)",
+  //     compression::format::AlgorithmID::UNKNOWN, originalData, threadCount));
+  // }
+
+  // --- Output Results ---
+  std::cout << "\n--- Benchmark Results ---\n" << std::endl;
+
+  // Prepare Markdown output string
+  std::stringstream markdownOutput;
+  markdownOutput << "# Compression Benchmark Results\n\n";
+  markdownOutput << "Benchmarked against `data/test.txt` (Size: "
+                 << results[0].originalSize << " bytes)\n\n";
+  markdownOutput << "| Algorithm | Compressed Size (bytes) | Ratio (%) | "
+                    "Compress Time (ms) | Decompress Time (ms) |\n";
+  markdownOutput << "|-----------|-------------------------|-----------|-------"
+                    "-------------|----------------------|\n";
+
+  std::cout << std::fixed << std::setprecision(3); // For console output timing
+  markdownOutput << std::fixed
+                 << std::setprecision(3); // For markdown output timing
+
+  for (const auto &result : results) {
+    double ratioPercent = result.ratio * 100.0;
+
+    // Console Output
+    std::cout << "Algorithm:       " << result.algorithmName << std::endl;
+    std::cout << "Original Size:   " << result.originalSize << " bytes"
+              << std::endl;
+    std::cout << "Compressed Size: " << result.compressedSize << " bytes"
+              << std::endl;
+    std::cout << "Ratio:           " << std::setprecision(2) << ratioPercent
+              << "%" << std::endl;
+    std::cout << "Compress Time:   " << std::setprecision(3)
+              << result.compressionTimeMs << " ms" << std::endl;
+    std::cout << "Decompress Time: " << result.decompressionTimeMs << " ms"
+              << std::endl;
+    std::cout << "-------------------------" << std::endl;
+
+    // Markdown Table Row
+    markdownOutput << "| " << result.algorithmName << " "
+                   << "| " << result.compressedSize << " "
+                   << "| " << std::setprecision(2) << ratioPercent << " "
+                   << "| " << std::setprecision(3) << result.compressionTimeMs
+                   << " "
+                   << "| " << result.decompressionTimeMs << " |\n";
+  }
+
+  // --- Write Markdown File (Using path derived from compile definition) ---
+>>>>>>> 63d72c6 (Release 1.4.0)
   try {
     benchmarkMdPath = std::filesystem::weakly_canonical(benchmarkMdPath);
     std::ofstream mdFile(benchmarkMdPath);

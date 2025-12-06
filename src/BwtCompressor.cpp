@@ -1,7 +1,8 @@
 #include <algorithm>
+#include <compression/ArithmeticCompressor.hpp>
 #include <compression/BwtCompressor.hpp>
-#include <compression/HuffmanCompressor.hpp> // Include Huffman for the final stage
 #include <cstdint>
+#include <iostream>
 #include <numeric>
 #include <stdexcept>
 #include <vector>
@@ -28,99 +29,6 @@ uint32_t read_u32_be(const std::vector<uint8_t> &src, size_t &pos) {
   return (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
 }
 
-// --- Zero-Run-Length Encoding Helpers ---
-
-// Encodes runs of zeros using a variable-length integer scheme.
-// Non-zero values are output as value + 1 (to avoid conflict with zero run
-// markers, but wait, we can just use 0 as a marker). Actually, a simpler scheme
-// for byte-aligned output: If value != 0: Output value. If value == 0: Output
-// 0, then output run length (varint). Note: MTF produces 0..255. If we output 0
-// for a run, we need to distinguish it from a literal 0. But in MTF, 0 is the
-// most common symbol. So:
-// - If value != 0: Output value.
-// - If value == 0: Count run length L.
-//   - Output 0.
-//   - Output L encoded as varint.
-//   - But wait, if the decoder sees 0, it reads L.
-//   - If the original data was just a single 0, L=1.
-//   - So we output 0, then varint(1).
-//   - This adds overhead for single zeros (2 bytes instead of 1).
-//   - But MTF zeros usually come in runs.
-//   - Let's try this.
-
-static std::vector<uint8_t> zrl_encode(const std::vector<uint8_t> &data) {
-  std::vector<uint8_t> result;
-  result.reserve(data.size());
-
-  size_t i = 0;
-  while (i < data.size()) {
-    if (data[i] != 0) {
-      result.push_back(data[i]);
-      i++;
-    } else {
-      // Found a zero, count the run
-      size_t run_length = 0;
-      while (i < data.size() && data[i] == 0) {
-        run_length++;
-        i++;
-      }
-
-      // Output 0 marker
-      result.push_back(0);
-
-      // Encode run_length using varint (128-base)
-      // We encode run_length - 1 because run_length is at least 1.
-      // Actually, let's just encode run_length.
-      uint64_t value = run_length;
-      do {
-        uint8_t byte = value & 0x7F;
-        value >>= 7;
-        if (value > 0)
-          byte |= 0x80;
-        result.push_back(byte);
-      } while (value > 0);
-    }
-  }
-  return result;
-}
-
-static std::vector<uint8_t> zrl_decode(const std::vector<uint8_t> &data) {
-  std::vector<uint8_t> result;
-  result.reserve(data.size() * 2); // Estimate
-
-  size_t i = 0;
-  while (i < data.size()) {
-    if (data[i] != 0) {
-      result.push_back(data[i]);
-      i++;
-    } else {
-      // Found 0 marker, read run length
-      i++; // Skip marker
-      if (i >= data.size()) {
-        throw std::runtime_error("ZRL decode error: truncated run length");
-      }
-
-      uint64_t run_length = 0;
-      int shift = 0;
-      uint8_t byte;
-      do {
-        if (i >= data.size()) {
-          throw std::runtime_error("ZRL decode error: truncated varint");
-        }
-        byte = data[i++];
-        run_length |= static_cast<uint64_t>(byte & 0x7F) << shift;
-        shift += 7;
-      } while (byte & 0x80);
-
-      // Output zeros
-      for (size_t k = 0; k < run_length; ++k) {
-        result.push_back(0);
-      }
-    }
-  }
-  return result;
-}
-
 std::vector<uint8_t>
 BwtCompressor::compress(const std::vector<uint8_t> &data) const {
   if (data.empty()) {
@@ -130,12 +38,11 @@ BwtCompressor::compress(const std::vector<uint8_t> &data) const {
   const auto bwt_transformed = bwt_transform(data);
   const auto mtf_encoded = mtf_encode(bwt_transformed);
 
-  // Use Zero-Run-Length Encoding instead of generic RLE
-  const auto zrl_encoded = zrl_encode(mtf_encoded);
-
-  // Final stage: Huffman coding
-  HuffmanCompressor huffman;
-  return huffman.compress(zrl_encoded);
+  // Directly use Arithmetic Coding on MTF output
+  // MTF produces skewed data (many small numbers), ideal for adaptive
+  // arithmetic coding.
+  ArithmeticCompressor arithmetic;
+  return arithmetic.compress(mtf_encoded);
 }
 
 std::vector<uint8_t>
@@ -144,14 +51,11 @@ BwtCompressor::decompress(const std::vector<uint8_t> &data) const {
     return {};
   }
 
-  // Decompress Huffman first
-  HuffmanCompressor huffman;
-  const auto huffman_decompressed = huffman.decompress(data);
+  // Decompress Arithmetic first
+  ArithmeticCompressor arithmetic;
+  const auto mtf_encoded = arithmetic.decompress(data);
 
-  // Decode ZRL
-  const auto zrl_decoded = zrl_decode(huffman_decompressed);
-
-  const auto mtf_decoded = mtf_decode(zrl_decoded);
+  const auto mtf_decoded = mtf_decode(mtf_encoded);
 
   return inverse_bwt_transform(mtf_decoded);
 }
@@ -180,10 +84,6 @@ BwtCompressor::bwt_transform(const std::vector<uint8_t> &data) const {
 
   // Doubling steps
   for (size_t k = 1; k < n; k <<= 1) {
-    // Sort based on pair (rank[i], rank[(i+k)%n])
-    // To improve cache locality, we could pack these into a struct,
-    // but for now let's rely on the smaller working set (N vs 2N).
-
     auto compare = [&](int32_t i, int32_t j) {
       if (rank[i] != rank[j]) {
         return rank[i] < rank[j];
