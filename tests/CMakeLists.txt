@@ -11,6 +11,8 @@ FetchContent_Declare(
 # Must be called before first add_test
 FetchContent_MakeAvailable(googletest)
 
+include(GoogleTest)
+
 # Add the test executable
 add_executable(compression_tests
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
@@ -30,3 +32,5 @@ target_link_libraries(compression_tests PRIVATE GTest::gtest_main compression)
 
 
 # Discover and add tests to CTestgtest_discover_tests(compression_tests)
+
+gtest_discover_tests(compression_tests)

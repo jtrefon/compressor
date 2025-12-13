@@ -8,7 +8,6 @@
 namespace compression {
 
 // Forward declarations
-class BwtCompressor;
 class HuffmanCompressor;
 class Lz77Compressor;
 
@@ -76,7 +75,6 @@ private:
     std::vector<uint8_t> postprocessData(const std::vector<uint8_t>& data) const;
 
 private:
-    std::unique_ptr<BwtCompressor> bwt_;
     std::unique_ptr<HuffmanCompressor> huffman_;
     std::unique_ptr<Lz77Compressor> lz77_;
 };

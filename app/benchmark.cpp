@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <limits>
+#include <map>
 #include <memory>
 #include <numeric> // std::accumulate (potentially needed later)
 #include <sstream> // Include for stringstream
@@ -52,10 +54,10 @@ createCompressor(compression::format::AlgorithmID id) {
     return std::make_unique<UltraCompressor>();
   case format::AlgorithmID::EXTREME_COMPRESSOR:
     return std::make_unique<ExtremeCompressor>();
-  case format::AlgorithmID::UNKNOWN:
-    return std::make_unique<NullCompressor>();
+  case format::AlgorithmID::OPTIMIZED_COMPRESSOR:
+    return std::make_unique<OptimizedCompressor>();
   default:
-    return std::make_unique<NullCompressor>();
+    throw std::invalid_argument("Unknown compression strategy");
   }
 }
 
@@ -106,6 +108,7 @@ struct BenchmarkResult {
   double compressionTimeMs = 0.0;
   double decompressionTimeMs = 0.0;
   double ratio = 0.0;
+  bool success = true;
 };
 
 // Runs compress/decompress and times them
@@ -121,135 +124,48 @@ BenchmarkResult runBenchmark(const std::string &name,
     return result; // Avoid division by zero and unnecessary work
   }
 
-  std::unique_ptr<compression::ICompressor> base;
-  if (name == "Enhanced (1T)" || name == "Enhanced (10T)") {
-    base = std::make_unique<compression::EnhancedCompressor>();
-  } else if (name == "Arithmetic (1T)" || name == "Arithmetic (10T)") {
-    base = std::make_unique<compression::ArithmeticCompressor>();
-  } else if (name == "EnhancedBWT (1T)" || name == "EnhancedBWT (10T)") {
-    base = std::make_unique<compression::EnhancedBwtCompressor>();
-  } else if (name == "Optimized (1T)" || name == "Optimized (10T)") {
-    base = std::make_unique<compression::OptimizedCompressor>();
-  } else {
-    base = createCompressor(algoId);
-  }
+  std::unique_ptr<compression::ICompressor> base = createCompressor(algoId);
 
-  // --- Time Compression ---
-  auto startCompress = std::chrono::high_resolution_clock::now();
   std::vector<uint8_t> compressedData;
-  if (threads > 1 && algoId != compression::format::AlgorithmID::UNKNOWN) {
+  try {
+    auto startCompress = std::chrono::high_resolution_clock::now();
     compression::ParallelCompressor pc(std::move(base), algoId, threads);
     compressedData = pc.compress(originalData);
-  } else {
-    compressedData = base->compress(originalData);
+    auto endCompress = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> compressDuration =
+        endCompress - startCompress;
+    result.compressionTimeMs = compressDuration.count();
+    result.compressedSize = compressedData.size();
+  } catch (const std::exception &e) {
+    std::cerr << "ERROR: Compression failed for " << name << ": " << e.what()
+              << std::endl;
+    result.success = false;
+    result.compressionTimeMs = std::numeric_limits<double>::infinity();
+    result.decompressionTimeMs = std::numeric_limits<double>::infinity();
+    result.compressedSize = 0;
   }
-  auto endCompress = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> compressDuration =
-      endCompress - startCompress;
-  result.compressionTimeMs = compressDuration.count();
-  result.compressedSize = compressedData.size();
 
-  // --- Time Decompression ---
-  std::vector<uint8_t> decompressedData;
-  double decompressDurationMs = 0.0;
-  if (!compressedData.empty()) { // Avoid decompressing nothing if compression
-                                 // failed/returned empty
+  if (result.success) {
     try {
       auto startDecompress = std::chrono::high_resolution_clock::now();
-
-      // Add timeout protection for broken compressors
-      bool useTimeout = (name.find("Arithmetic") != std::string::npos) ||
-                        (name.find("Optimized") != std::string::npos) ||
-                        (name.find("EnhancedBWT") != std::string::npos);
-
-      if (useTimeout) {
-        std::cout << "⚠️  Running with timeout protection for " << name
-                  << std::endl;
-      }
-
-      if (threads > 1 && algoId != compression::format::AlgorithmID::UNKNOWN) {
-        compression::ParallelCompressor pcDec(createCompressor(algoId), algoId,
-                                              threads);
-        decompressedData = pcDec.decompress(compressedData);
-      } else {
-        auto decComp =
-            (name == "Enhanced (1T)" || name == "Enhanced (10T)")
-                ? std::make_unique<compression::EnhancedCompressor>()
-            : (name == "Arithmetic (1T)" || name == "Arithmetic (10T)")
-                ? std::make_unique<compression::ArithmeticCompressor>()
-            : (name == "EnhancedBWT (1T)" || name == "EnhancedBWT (10T)")
-                ? std::make_unique<compression::EnhancedBwtCompressor>()
-            : (name == "Optimized (1T)" || name == "Optimized (10T)")
-                ? std::make_unique<compression::OptimizedCompressor>()
-                : createCompressor(algoId);
-
-        if (useTimeout) {
-          // For broken compressors, try with a simple timeout
-          std::cout << "  🔄 Attempting decompression (30s timeout)..."
-                    << std::flush;
-          auto decompressStart = std::chrono::high_resolution_clock::now();
-
-          // Simple timeout check
-          decompressedData = decComp->decompress(compressedData);
-
-          auto decompressEnd = std::chrono::high_resolution_clock::now();
-          std::chrono::duration<double> decompressElapsed =
-              decompressEnd - decompressStart;
-
-          if (decompressElapsed.count() > 30.0) {
-            std::cout << " ❌ TIMEOUT (>30s)" << std::endl;
-            throw std::runtime_error("Decompression timeout");
-          }
-          std::cout << " ✅" << std::endl;
-        } else {
-          decompressedData = decComp->decompress(compressedData);
-        }
-      }
+      compression::ParallelCompressor pcDec(createCompressor(algoId), algoId,
+                                            threads);
+      std::vector<uint8_t> decompressedData = pcDec.decompress(compressedData);
       auto endDecompress = std::chrono::high_resolution_clock::now();
       std::chrono::duration<double, std::milli> decompressDuration =
           endDecompress - startDecompress;
-      decompressDurationMs = decompressDuration.count();
+      result.decompressionTimeMs = decompressDuration.count();
 
-      // Trim any trailing null terminators from decompressed data before
-      // comparison
-      while (!decompressedData.empty() && decompressedData.back() == 0) {
-        decompressedData.pop_back();
-      }
-
-      // If original data might have trailing nulls too, extract those as well
-      // for fair comparison
-      std::vector<uint8_t> originalDataForComparison = originalData;
-      while (!originalDataForComparison.empty() &&
-             originalDataForComparison.back() == 0) {
-        originalDataForComparison.pop_back();
-      }
-
-      // Sanity check decompression
-      if (decompressedData != originalDataForComparison) {
-        // For LZ77 and BWT, some mismatch might occur due to the nature of the
-        // algorithm and data structures, so we silence this warning for those
-        // algorithms
-        if (name != "LZ77" && name != "BWT" && name != "Enhanced (1T)" &&
-            name != "Enhanced (10T)" && name != "Arithmetic (1T)" &&
-            name != "Arithmetic (10T)" && name != "EnhancedBWT (1T)" &&
-            name != "EnhancedBWT (10T)") {
-          std::cerr << "WARNING: Decompression mismatch for " << name << "!"
-                    << std::endl;
-        }
+      if (decompressedData != originalData) {
+        throw std::runtime_error("Decompression mismatch");
       }
     } catch (const std::exception &e) {
       std::cerr << "ERROR: Decompression failed for " << name << ": "
                 << e.what() << std::endl;
-      // Indicate failure, e.g., set time to infinity or NaN
-      decompressDurationMs = std::numeric_limits<double>::infinity();
+      result.success = false;
+      result.decompressionTimeMs = std::numeric_limits<double>::infinity();
     }
-  } else if (result.originalSize > 0) {
-    // If original was not empty but compressed is, decompression is trivial
-    // (and likely instant) but might indicate an issue or edge case in
-    // compress.
-    decompressDurationMs = 0.0; // Or leave as 0?
   }
-  result.decompressionTimeMs = decompressDurationMs;
 
   // --- Calculate Ratio ---
   if (result.originalSize > 0) {
@@ -306,10 +222,13 @@ int main(int argc, char *argv[]) {
 
   // Parse command line arguments
   std::size_t threadCount = 1; // Default to 1 thread
+  bool quick = false;
   for (int i = 1; i < argc; ++i) {
     std::string arg = argv[i];
     if (arg.rfind("--threads=", 0) == 0) {
       threadCount = static_cast<std::size_t>(std::stoul(arg.substr(10)));
+    } else if (arg == "--quick") {
+      quick = true;
     }
   }
 
@@ -331,34 +250,43 @@ int main(int argc, char *argv[]) {
     bool isDirectory;
   };
 
-  std::vector<BenchmarkCase> testCases = {
-      {"Text (6.2 MB)", dataDir / "test.txt", false},
-      {"JPEG Image (2.3 MB)",
-       dataDir / "faizur-rehman-xqh-RlfJVx4-unsplash.jpg", false},
-      {"WAV Audio (9.4 MB)",
-       dataDir / "835222__silverillusionist__ascendancy-music-sample.wav",
-       false},
-      {"Source Tree (C++ src)", projectRoot / "src", true},
-      {"Binary (Executable)", projectRoot / "build/app/compression_benchmark",
-       false}};
+  std::vector<BenchmarkCase> testCases;
+  if (quick) {
+    testCases = {{"Text (6.2 MB)", dataDir / "test.txt", false},
+                 {"Source Tree (C++ src)", projectRoot / "src", true}};
+  } else {
+    testCases = {{"Text (6.2 MB)", dataDir / "test.txt", false},
+                 {"JPEG Image (2.3 MB)",
+                  dataDir / "faizur-rehman-xqh-RlfJVx4-unsplash.jpg", false},
+                 {"WAV Audio (9.4 MB)",
+                  dataDir /
+                      "835222__silverillusionist__ascendancy-music-sample.wav",
+                  false},
+                 {"Source Tree (C++ src)", projectRoot / "src", true},
+                 {"Binary (Executable)",
+                  projectRoot / "build/app/compression_benchmark", false}};
+  }
 
-  std::filesystem::path benchmarkMdPath =
-      std::filesystem::path(BENCHMARK_DATA_DIR) / "../BENCHMARKS.md";
-
-  // Prepare markdown output
-  std::stringstream markdownOutput;
-  markdownOutput << "# Compression Benchmark Results\n\n";
-  markdownOutput << "Performance comparison across different file types.\n\n";
+  std::map<std::string, std::pair<size_t, size_t>> totalsByAlgorithm;
 
   std::vector<std::pair<std::string, compression::format::AlgorithmID>>
-      algorithms_to_benchmark = {
-          {"Null", compression::format::AlgorithmID::NULL_COMPRESSOR},
-          {"RLE", compression::format::AlgorithmID::RLE_COMPRESSOR},
-          {"Huffman", compression::format::AlgorithmID::HUFFMAN_COMPRESSOR},
-          {"LZ77", compression::format::AlgorithmID::LZ77_COMPRESSOR},
-          {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR},
-          {"Optimized", compression::format::AlgorithmID::OPTIMIZED_COMPRESSOR},
-          {"Arithmetic", compression::format::AlgorithmID::UNKNOWN}};
+      algorithms_to_benchmark;
+  if (quick) {
+    algorithms_to_benchmark = {
+        {"Huffman", compression::format::AlgorithmID::HUFFMAN_COMPRESSOR},
+        {"LZ77", compression::format::AlgorithmID::LZ77_COMPRESSOR},
+        {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR},
+        {"Optimized", compression::format::AlgorithmID::OPTIMIZED_COMPRESSOR}};
+  } else {
+    algorithms_to_benchmark = {
+        {"Huffman", compression::format::AlgorithmID::HUFFMAN_COMPRESSOR},
+        {"LZ77", compression::format::AlgorithmID::LZ77_COMPRESSOR},
+        {"BWT", compression::format::AlgorithmID::BWT_COMPRESSOR},
+        {"Optimized", compression::format::AlgorithmID::OPTIMIZED_COMPRESSOR},
+        {"Ultra", compression::format::AlgorithmID::ULTRA_COMPRESSOR},
+        {"Extreme", compression::format::AlgorithmID::EXTREME_COMPRESSOR}};
+  }
+
   // Benchmark each file
   for (const auto &testCase : testCases) {
     const std::string &fileDesc = testCase.desc;
@@ -426,22 +354,17 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    // Output results for this file
-    markdownOutput << "\n## " << fileDesc << "\n\n";
-    markdownOutput << "File: `" << filePath.filename().string() << "`  \n";
-    markdownOutput << "Size: " << originalData.size() << " bytes\n\n";
-    markdownOutput << "| Algorithm | Compressed Size (bytes) | Ratio (%) | "
-                      "Compress Time (ms) | Decompress Time (ms) |\n";
-    markdownOutput
-        << "|-----------|-------------------------|-----------|---------"
-           "-----------|----------------------|\n";
-
     std::cout << "\n--- Results for " << fileDesc << " ---\n" << std::endl;
     std::cout << std::fixed << std::setprecision(3);
-    markdownOutput << std::fixed << std::setprecision(3);
 
     for (const auto &result : results) {
       double ratioPercent = result.ratio * 100.0;
+
+      if (result.success) {
+        auto &totals = totalsByAlgorithm[result.algorithmName];
+        totals.first += result.originalSize;
+        totals.second += result.compressedSize;
+      }
 
       // Console output
       std::cout << "Algorithm:       " << result.algorithmName << std::endl;
@@ -455,47 +378,33 @@ int main(int argc, char *argv[]) {
                 << result.compressionTimeMs << " ms" << std::endl;
       std::cout << "Decompress Time: " << result.decompressionTimeMs << " ms"
                 << std::endl;
+      if (!result.success) {
+        std::cout << "Status:          FAILED" << std::endl;
+      }
       std::cout << "-------------------------" << std::endl;
-
-      // Markdown output
-      markdownOutput << "| " << result.algorithmName << " | "
-                     << result.compressedSize << " | " << std::setprecision(2)
-                     << ratioPercent << " | " << std::setprecision(3)
-                     << result.compressionTimeMs << " | "
-                     << result.decompressionTimeMs << " |\n";
     }
   }
 
-  // Add summary section
-  markdownOutput << "\n## Summary\n\n";
-  markdownOutput << "**Observations:**\n\n";
-  markdownOutput << "- **Text files**: Highly compressible with Huffman, LZ77, "
-                    "and BWT algorithms\n";
-  markdownOutput
-      << "- **JPEG images**: Already compressed, minimal improvement "
-         "possible\n";
-  markdownOutput
-      << "- **WAV audio**: Moderate compressibility, larger file size "
-         "tests throughput\n";
-  markdownOutput << "\n**Hardware**: " << compression::getHardwareThreads()
-                 << " threads available\n";
+  std::cout << "\n" << std::string(60, '=') << std::endl;
+  std::cout << "Aggregate Summary (successful runs only)" << std::endl;
+  std::cout << std::string(60, '=') << std::endl;
 
-  try {
-    benchmarkMdPath = std::filesystem::weakly_canonical(benchmarkMdPath);
-    std::ofstream mdFile(benchmarkMdPath);
-    if (!mdFile) {
-      std::cerr << "Warning: Could not open BENCHMARKS.md for writing at "
-                << benchmarkMdPath << std::endl;
-    } else {
-      mdFile << markdownOutput.str();
-      std::cout << "\n✅ Benchmark results written to " << benchmarkMdPath
-                << std::endl;
+  for (const auto &entry : totalsByAlgorithm) {
+    const auto &algoName = entry.first;
+    const size_t totalOriginal = entry.second.first;
+    const size_t totalCompressed = entry.second.second;
+
+    if (totalOriginal == 0) {
+      continue;
     }
-  } catch (const std::filesystem::filesystem_error &e) {
-    std::cerr << "Warning: Could not determine canonical path for "
-                 "BENCHMARKS.md: "
-              << e.what() << std::endl;
-    std::cerr << "Attempted path: " << benchmarkMdPath << std::endl;
+
+    const double aggregateRatio =
+        static_cast<double>(totalCompressed) / static_cast<double>(totalOriginal);
+
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << algoName << ": " << (aggregateRatio * 100.0)
+              << "% (" << totalCompressed << "/" << totalOriginal << " bytes)"
+              << std::endl;
   }
 
   return 0;

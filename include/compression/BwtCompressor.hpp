@@ -11,6 +11,9 @@ public:
     std::vector<uint8_t> compress(const std::vector<uint8_t>& data) const override;
     std::vector<uint8_t> decompress(const std::vector<uint8_t>& data) const override;
 
+    std::vector<uint8_t> transform(const std::vector<uint8_t>& data) const;
+    std::vector<uint8_t> inverseTransform(const std::vector<uint8_t>& data) const;
+
 private:
     std::vector<uint8_t> bwt_transform(const std::vector<uint8_t>& data) const;
     std::vector<uint8_t> bwt_transform_fast(const std::vector<uint8_t>& data) const;

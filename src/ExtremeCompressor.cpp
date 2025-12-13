@@ -2,6 +2,7 @@
 #include <compression/BwtCompressor.hpp>
 #include <compression/HuffmanCompressor.hpp>
 #include <compression/Lz77Compressor.hpp>
+#include <compression/OptimizedCompressor.hpp>
 #include <algorithm>
 #include <map>
 #include <vector>
@@ -15,8 +16,7 @@
 namespace compression {
 
 ExtremeCompressor::ExtremeCompressor() 
-    : bwt_(std::make_unique<BwtCompressor>()),
-      huffman_(std::make_unique<HuffmanCompressor>()),
+    : huffman_(std::make_unique<HuffmanCompressor>()),
       lz77_(std::make_unique<Lz77Compressor>(65536, 3, 258, false, true, true)) {
 }
 
@@ -30,13 +30,21 @@ std::vector<uint8_t> ExtremeCompressor::compress(const std::vector<uint8_t>& dat
     std::cout << "🚀 EXTREME COMPRESSION MODE - Maximum Ratio (Parallel)" << std::endl;
     
     // Launch strategies in parallel
-    std::cout << "🔄 Launching 5 compression strategies in parallel..." << std::endl;
+    std::cout << "🔄 Launching 7 compression strategies in parallel..." << std::endl;
 
     auto f1 = std::async(std::launch::async, &ExtremeCompressor::applyBwtLz77Huffman, this, std::cref(data));
     auto f2 = std::async(std::launch::async, &ExtremeCompressor::applyLz77BwtHuffman, this, std::cref(data));
     auto f3 = std::async(std::launch::async, &ExtremeCompressor::applyBwtHuffmanLz77, this, std::cref(data));
     auto f4 = std::async(std::launch::async, &ExtremeCompressor::applyDoubleBwtHuffman, this, std::cref(data));
     auto f5 = std::async(std::launch::async, &ExtremeCompressor::applyPreprocessBwtLz77Huffman, this, std::cref(data));
+    auto f6 = std::async(std::launch::async, [&data]() {
+        OptimizedCompressor optimized;
+        return optimized.compress(data);
+    });
+    auto f7 = std::async(std::launch::async, [&data]() {
+        BwtCompressor bwt;
+        return bwt.compress(data);
+    });
 
     // Collect results
     std::vector<std::pair<std::vector<uint8_t>, std::string>> candidates;
@@ -45,6 +53,8 @@ std::vector<uint8_t> ExtremeCompressor::compress(const std::vector<uint8_t>& dat
     candidates.push_back({f3.get(), "BWT+Huffman+LZ77"});
     candidates.push_back({f4.get(), "DoubleBWT+Huffman"});
     candidates.push_back({f5.get(), "Preprocess+BWT+LZ77+Huffman"});
+    candidates.push_back({f6.get(), "Optimized"});
+    candidates.push_back({f7.get(), "BWT"});
     
     // Find the best compression
     auto best_it = std::min_element(candidates.begin(), candidates.end(),
@@ -93,6 +103,14 @@ std::vector<uint8_t> ExtremeCompressor::decompress(const std::vector<uint8_t>& d
             case 2: return reverseBwtHuffmanLz77(compressed_data);
             case 3: return reverseDoubleBwtHuffman(compressed_data);
             case 4: return reversePreprocessBwtLz77Huffman(compressed_data);
+            case 5: {
+                OptimizedCompressor optimized;
+                return optimized.decompress(compressed_data);
+            }
+            case 6: {
+                BwtCompressor bwt;
+                return bwt.decompress(compressed_data);
+            }
             default:
                 throw std::runtime_error("Unknown compression strategy");
         }
@@ -103,33 +121,38 @@ std::vector<uint8_t> ExtremeCompressor::decompress(const std::vector<uint8_t>& d
 
 // Strategy implementations
 std::vector<uint8_t> ExtremeCompressor::applyBwtLz77Huffman(const std::vector<uint8_t>& data) const {
-    auto bwt_compressed = bwt_->compress(data);
-    auto lz77_compressed = lz77_->compress(bwt_compressed);
+    BwtCompressor bwt;
+    auto bwt_transformed = bwt.transform(data);
+    auto lz77_compressed = lz77_->compress(bwt_transformed);
     return huffman_->compress(lz77_compressed);
 }
 
 std::vector<uint8_t> ExtremeCompressor::applyLz77BwtHuffman(const std::vector<uint8_t>& data) const {
     auto lz77_compressed = lz77_->compress(data);
-    auto bwt_compressed = bwt_->compress(lz77_compressed);
-    return huffman_->compress(bwt_compressed);
+    BwtCompressor bwt;
+    auto bwt_transformed = bwt.transform(lz77_compressed);
+    return huffman_->compress(bwt_transformed);
 }
 
 std::vector<uint8_t> ExtremeCompressor::applyBwtHuffmanLz77(const std::vector<uint8_t>& data) const {
-    auto bwt_compressed = bwt_->compress(data);
-    auto huffman_compressed = huffman_->compress(bwt_compressed);
+    BwtCompressor bwt;
+    auto bwt_transformed = bwt.transform(data);
+    auto huffman_compressed = huffman_->compress(bwt_transformed);
     return lz77_->compress(huffman_compressed);
 }
 
 std::vector<uint8_t> ExtremeCompressor::applyDoubleBwtHuffman(const std::vector<uint8_t>& data) const {
-    auto bwt1 = bwt_->compress(data);
-    auto bwt2 = bwt_->compress(bwt1);
+    BwtCompressor bwt;
+    auto bwt1 = bwt.transform(data);
+    auto bwt2 = bwt.transform(bwt1);
     return huffman_->compress(bwt2);
 }
 
 std::vector<uint8_t> ExtremeCompressor::applyPreprocessBwtLz77Huffman(const std::vector<uint8_t>& data) const {
     auto preprocessed = preprocessData(data);
-    auto bwt_compressed = bwt_->compress(preprocessed);
-    auto lz77_compressed = lz77_->compress(bwt_compressed);
+    BwtCompressor bwt;
+    auto bwt_transformed = bwt.transform(preprocessed);
+    auto lz77_compressed = lz77_->compress(bwt_transformed);
     return huffman_->compress(lz77_compressed);
 }
 
@@ -137,32 +160,37 @@ std::vector<uint8_t> ExtremeCompressor::applyPreprocessBwtLz77Huffman(const std:
 std::vector<uint8_t> ExtremeCompressor::reverseBwtLz77Huffman(const std::vector<uint8_t>& data) const {
     auto huffman_decompressed = huffman_->decompress(data);
     auto lz77_decompressed = lz77_->decompress(huffman_decompressed);
-    return bwt_->decompress(lz77_decompressed);
+    BwtCompressor bwt;
+    return bwt.inverseTransform(lz77_decompressed);
 }
 
 std::vector<uint8_t> ExtremeCompressor::reverseLz77BwtHuffman(const std::vector<uint8_t>& data) const {
     auto huffman_decompressed = huffman_->decompress(data);
-    auto bwt_decompressed = bwt_->decompress(huffman_decompressed);
-    return lz77_->decompress(bwt_decompressed);
+    BwtCompressor bwt;
+    auto bwt_inversed = bwt.inverseTransform(huffman_decompressed);
+    return lz77_->decompress(bwt_inversed);
 }
 
 std::vector<uint8_t> ExtremeCompressor::reverseBwtHuffmanLz77(const std::vector<uint8_t>& data) const {
     auto lz77_decompressed = lz77_->decompress(data);
     auto huffman_decompressed = huffman_->decompress(lz77_decompressed);
-    return bwt_->decompress(huffman_decompressed);
+    BwtCompressor bwt;
+    return bwt.inverseTransform(huffman_decompressed);
 }
 
 std::vector<uint8_t> ExtremeCompressor::reverseDoubleBwtHuffman(const std::vector<uint8_t>& data) const {
     auto huffman_decompressed = huffman_->decompress(data);
-    auto bwt1 = bwt_->decompress(huffman_decompressed);
-    return bwt_->decompress(bwt1);
+    BwtCompressor bwt;
+    auto bwt1 = bwt.inverseTransform(huffman_decompressed);
+    return bwt.inverseTransform(bwt1);
 }
 
 std::vector<uint8_t> ExtremeCompressor::reversePreprocessBwtLz77Huffman(const std::vector<uint8_t>& data) const {
     auto huffman_decompressed = huffman_->decompress(data);
     auto lz77_decompressed = lz77_->decompress(huffman_decompressed);
-    auto bwt_decompressed = bwt_->decompress(lz77_decompressed);
-    return postprocessData(bwt_decompressed);
+    BwtCompressor bwt;
+    auto bwt_inversed = bwt.inverseTransform(lz77_decompressed);
+    return postprocessData(bwt_inversed);
 }
 
 // Preprocessing for better compression

@@ -20,6 +20,7 @@
 #include <compression/BwtCompressor.hpp>
 #include <compression/UltraCompressor.hpp>
 #include <compression/ExtremeCompressor.hpp>
+#include <compression/OptimizedCompressor.hpp>
 #include <compression/ParallelCompressor.hpp>
 #include <compression/SystemInfo.hpp>
 
@@ -72,24 +73,36 @@ std::unique_ptr<compression::ICompressor> createCompressor(compression::format::
             return std::make_unique<compression::UltraCompressor>();
         case compression::format::AlgorithmID::EXTREME_COMPRESSOR:
             return std::make_unique<compression::ExtremeCompressor>();
+        case compression::format::AlgorithmID::OPTIMIZED_COMPRESSOR:
+            return std::make_unique<compression::OptimizedCompressor>();
         default:
             throw std::invalid_argument("Unknown or unsupported compression algorithm ID: "
                                         + std::to_string(static_cast<uint8_t>(id)));
     }
 }
 
-// Overload for creating based on name (used for compression command)
-std::unique_ptr<compression::ICompressor> createCompressor(const std::string& strategyName) {
-    // Default to BWT if 'default' specified or strategy unrecognized
+compression::format::AlgorithmID getAlgorithmIdForCompression(const std::string& strategyName) {
     if (strategyName == "default") {
-        return std::make_unique<compression::BwtCompressor>();
+        return compression::format::AlgorithmID::OPTIMIZED_COMPRESSOR;
     }
+
     compression::format::AlgorithmID id = compression::format::stringToAlgorithmId(strategyName);
-    if (id == compression::format::AlgorithmID::UNKNOWN) {
-        // Fallback to BWT as default to avoid runtime errors
-        return std::make_unique<compression::BwtCompressor>();
+    if (id == compression::format::AlgorithmID::NULL_COMPRESSOR ||
+        id == compression::format::AlgorithmID::RLE_COMPRESSOR) {
+        throw std::invalid_argument("Strategy is disabled: " + strategyName);
     }
-    return createCompressor(id);
+    if (id == compression::format::AlgorithmID::UNKNOWN) {
+        throw std::invalid_argument("Unknown compression strategy: " + strategyName);
+    }
+    return id;
+}
+
+// Overload for creating based on name (used for compression command)
+std::unique_ptr<compression::ICompressor> createCompressorForCompression(
+    const std::string& strategyName,
+    compression::format::AlgorithmID& outAlgoId) {
+    outAlgoId = getAlgorithmIdForCompression(strategyName);
+    return createCompressor(outAlgoId);
 }
 
 // --- Main Application Logic --- 
@@ -97,7 +110,7 @@ std::unique_ptr<compression::ICompressor> createCompressor(const std::string& st
 void printUsage(const char* appName) {
     std::cerr << "Usage: " << appName
               << " <compress|decompress> <strategy|ignored_on_decompress> <input_file> <output_file> [--threads N|--no-threads]\n"
-              << "Strategies: default(bwt), bwt, ultra, extreme, lz77, huffman, rle, null\n";
+              << "Strategies: default(optimized), bwt, ultra, extreme, lz77, huffman, optimized\n";
 }
 
 int main(int argc, char* argv[]) {
@@ -111,7 +124,8 @@ int main(int argc, char* argv[]) {
     std::string inputFile = argv[3];
     std::string outputFile = argv[4];
 
-    std::size_t threadCount = compression::getHardwareThreads();
+    // Default to single-threaded operation for best compression ratio.
+    std::size_t threadCount = 1;
     if (argc >= 6) {
         std::string arg = argv[5];
         if (arg == "--no-threads") {
@@ -136,8 +150,8 @@ int main(int argc, char* argv[]) {
     try {
         if (operation == "compress") {
             // 1. Create the compressor strategy from name
-            auto compressor = createCompressor(strategyName);
-            compression::format::AlgorithmID algoId = compression::format::stringToAlgorithmId(strategyName);
+            compression::format::AlgorithmID algoId = compression::format::AlgorithmID::UNKNOWN;
+            auto compressor = createCompressorForCompression(strategyName, algoId);
 
             // 2. Read input file
             std::cout << "Reading input file: " << inputFile << "..." << std::endl;
