@@ -60,6 +60,24 @@ BwtCompressor::decompress(const std::vector<uint8_t> &data) const {
   return inverse_bwt_transform(mtf_decoded);
 }
 
+std::vector<uint8_t>
+BwtCompressor::transform(const std::vector<uint8_t> &data) const {
+  if (data.empty()) {
+    return {};
+  }
+
+  return bwt_transform(data);
+}
+
+std::vector<uint8_t>
+BwtCompressor::inverseTransform(const std::vector<uint8_t> &data) const {
+  if (data.empty()) {
+    return {};
+  }
+
+  return inverse_bwt_transform(data);
+}
+
 // --- Helper Implementations ---
 
 std::vector<uint8_t>

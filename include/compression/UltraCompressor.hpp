@@ -8,7 +8,6 @@
 namespace compression {
 
 // Forward declarations
-class BwtCompressor;
 class Lz77Compressor;
 
 /**
@@ -49,7 +48,6 @@ public:
     std::vector<uint8_t> decompress(const std::vector<uint8_t>& data) const override;
 
 private:
-    std::unique_ptr<BwtCompressor> bwt_;
     std::unique_ptr<Lz77Compressor> lz77_;
 };
 

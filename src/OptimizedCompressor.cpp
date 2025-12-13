@@ -54,6 +54,13 @@ OptimizedCompressor::compress(const std::vector<uint8_t> &data) const {
   // Try Deflate (LZ77 + Huffman)
   updateBest(compressDeflateData(data));
 
+  auto huffmanCompressed = huffman_->compress(data);
+  std::vector<uint8_t> huffmanResult;
+  huffmanResult.push_back(0x06);
+  huffmanResult.insert(huffmanResult.end(), huffmanCompressed.begin(),
+                       huffmanCompressed.end());
+  updateBest(huffmanResult);
+
   // If the best we found is worse than storing, fallback to Store Mode.
   if (bestResult.empty() || bestResult.size() >= data.size() + 1) {
     // Store mode: [0x00] [Original Data]
@@ -95,6 +102,8 @@ OptimizedCompressor::decompress(const std::vector<uint8_t> &data) const {
       return decompressBwtData(compressedData);
     case 0x05: // Deflate method (LZ77 + Huffman)
       return decompressDeflateData(compressedData);
+    case 0x06:
+      return huffman_->decompress(compressedData);
     default:
       throw std::runtime_error("Unknown compression method: " +
                                std::to_string(static_cast<int>(method)));
@@ -184,7 +193,7 @@ std::vector<uint8_t> OptimizedCompressor::compressRepetitiveData(
       count++;
     }
 
-    if (count >= 3 || current == 0) {
+    if (count >= 3 || current == 0 || current == 0xFF) {
       // Encode as run: [0xFF][count_low][count_high][value]
       rleData.push_back(0xFF);
       rleData.push_back(static_cast<uint8_t>(count & 0xFF));
