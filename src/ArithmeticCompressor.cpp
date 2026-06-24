@@ -189,50 +189,25 @@ uint8_t ArithmeticCompressor::AdaptiveContextModel::getSymbol(
   const auto &ctx = contexts_[context];
   total = ctx.total;
 
-  // Binary search over prefix sums for O(log N) would be ideal,
-  // but linear scan over 256 items is ~100-200 ops, totally fine for now
-  // compared to Range Coder arithmetic.
-  uint32_t current_low = 0;
-  for (int i = 0; i < 256; ++i) {
-    // query(ctx, i+1) gives cumulative up to i
-    // Optimization: track cumulative sum linearly
-    // Wait, 'query' is O(log N). 256 * log N is slow.
-    // We really just need to traverse.
-    // Since we treat Fenwick indices 1..256, but we can't iterate efficiently
-    // without rebuilding. Let's use `query` but binary search? Or just optimize
-    // later. Let's rely on `query` for correctness first, even if O(256 * 8).
-    // It's 2k ops. Might be bottleneck.
-
-    // BETTER: maintain a cached 'tree' or just use the Fenwick structure to
-    // binary lift. Implementing Binary Lifting on Fenwick Tree for O(log N): We
-    // search for index 'idx' such that query(idx-1) <= count < query(idx).
-
-    // Standard Binary Lifting on BIT
-    /*
+ // Binary lifting on Fenwick tree for O(log N) symbol lookup.
+    // Finds largest idx such that query(idx) <= count.
+    // Symbol is idx (0-based: idx=0 -> symbol 0, idx=1 -> symbol 1, ...).
     int idx = 0;
-    int sum = 0;
+    int32_t accumulated = 0;
     for (int bit_mask = 128; bit_mask > 0; bit_mask >>= 1) {
-        int tIdx = idx + bit_mask;
-        if (tIdx < 257 && sum + ctx.tree[tIdx] <= count) {
-            idx = tIdx;
-            sum += ctx.tree[idx];
-        }
+      int tIdx = idx + bit_mask;
+      if (tIdx < 257 &&
+          accumulated + ctx.tree[static_cast<size_t>(tIdx)] <=
+              static_cast<int32_t>(count)) {
+        idx = tIdx;
+        accumulated +=
+            static_cast<int32_t>(ctx.tree[static_cast<size_t>(idx)]);
+      }
     }
-    return idx; // idx is 0-255? No, BIT is 1-based.
-    */
-
-    // Let's stick to safe Linear Scan for correctness first, straightforward
-    // debug.
-    uint32_t sym_freq = query(ctx, i + 1) - query(ctx, i);
-    if (current_low + sym_freq > count) {
-      low = current_low;
-      high = current_low + sym_freq;
-      return static_cast<uint8_t>(i);
-    }
-    current_low += sym_freq;
-  }
-  // Should not reach here if count < total
-  return 0;
+    uint32_t symIdx = static_cast<uint32_t>(idx);
+    low = static_cast<uint32_t>(accumulated);
+    high = query(ctx, idx + 1);
+    return static_cast<uint8_t>(symIdx);
 }
 
 // --- Range Encoder ---

@@ -16,7 +16,6 @@ public:
 
 private:
     std::vector<uint8_t> bwt_transform(const std::vector<uint8_t>& data) const;
-    std::vector<uint8_t> bwt_transform_fast(const std::vector<uint8_t>& data) const;
     std::vector<uint8_t> inverse_bwt_transform(const std::vector<uint8_t>& data) const;
 
     static std::vector<uint8_t> mtf_encode(const std::vector<uint8_t>& data);

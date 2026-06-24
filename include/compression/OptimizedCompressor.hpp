@@ -14,17 +14,6 @@ class HuffmanCompressor;
 class BwtCompressor;
 
 /**
- * @struct DataCharacteristics
- * @brief Analysis results for input data characteristics
- */
-struct DataCharacteristics {
-  double entropy = 8.0;            // Data entropy (0-8 for bytes)
-  bool isHighlyRepetitive = false; // Low entropy, high repetition
-  bool hasLongRuns = false;        // Has long runs of identical bytes
-  bool hasLongMatches = false;     // Has good pattern matching potential
-};
-
-/**
  * @class OptimizedCompressor
  * @brief Intelligent compressor that adapts strategy based on data
  * characteristics
@@ -69,9 +58,6 @@ private:
   std::unique_ptr<Lz77Compressor> lz77_;
   std::unique_ptr<HuffmanCompressor> huffman_;
   std::unique_ptr<BwtCompressor> bwt_;
-
-  // Data analysis
-  DataCharacteristics analyzeData(const std::vector<uint8_t> &data) const;
 
   // Compression strategies
   std::vector<uint8_t>

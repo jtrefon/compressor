@@ -9,15 +9,6 @@
 
 namespace compression {
 
-// Helper to write a 32-bit integer to a byte vector in big-endian format.
-void write_u32_be(std::vector<uint8_t> &dest, uint32_t value) {
-  dest.push_back(static_cast<uint8_t>((value >> 24) & 0xFF));
-  dest.push_back(static_cast<uint8_t>((value >> 16) & 0xFF));
-  dest.push_back(static_cast<uint8_t>((value >> 8) & 0xFF));
-  dest.push_back(static_cast<uint8_t>(value & 0xFF));
-}
-
-// Helper to read a 32-bit integer from a byte vector in big-endian format.
 uint32_t read_u32_be(const std::vector<uint8_t> &src, size_t &pos) {
   if (pos + 4 > src.size()) {
     throw std::out_of_range("read_u32_be: insufficient bytes");
@@ -28,6 +19,8 @@ uint32_t read_u32_be(const std::vector<uint8_t> &src, size_t &pos) {
   uint32_t b3 = static_cast<uint32_t>(src[pos++]);
   return (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
 }
+
+
 
 std::vector<uint8_t>
 BwtCompressor::compress(const std::vector<uint8_t> &data) const {
@@ -260,8 +253,7 @@ BwtCompressor::mtf_encode(const std::vector<uint8_t> &data) {
     result.push_back(static_cast<uint8_t>(rank));
 
     // Move symbol to front
-    symbol_table.erase(it);
-    symbol_table.insert(symbol_table.begin(), symbol);
+    std::rotate(symbol_table.begin(), it, it + 1);
   }
   return result;
 }
@@ -282,8 +274,7 @@ BwtCompressor::mtf_decode(const std::vector<uint8_t> &data) {
     result.push_back(symbol);
 
     // Move symbol to front
-    symbol_table.erase(symbol_table.begin() + rank);
-    symbol_table.insert(symbol_table.begin(), symbol);
+    std::rotate(symbol_table.begin(), symbol_table.begin() + rank, symbol_table.begin() + rank + 1);
   }
   return result;
 }

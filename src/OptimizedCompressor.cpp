@@ -22,9 +22,6 @@ OptimizedCompressor::compress(const std::vector<uint8_t> &data) const {
     return {};
   }
 
-  // Analyze data characteristics to choose optimal strategy
-  DataCharacteristics characteristics = analyzeData(data);
-
   // Try all strategies and pick the best one
   std::vector<uint8_t> bestResult;
 
@@ -114,68 +111,7 @@ OptimizedCompressor::decompress(const std::vector<uint8_t> &data) const {
   }
 }
 
-DataCharacteristics
-OptimizedCompressor::analyzeData(const std::vector<uint8_t> &data) const {
-  DataCharacteristics characteristics;
 
-  if (data.size() < 100) {
-    characteristics.entropy = 8.0;
-    return characteristics; // Too small for meaningful analysis
-  }
-
-  // Calculate entropy
-  std::array<size_t, 256> freq{};
-  for (uint8_t byte : data) {
-    freq[byte]++;
-  }
-
-  double entropy = 0.0;
-  for (size_t count : freq) {
-    if (count > 0) {
-      double p = static_cast<double>(count) / data.size();
-      entropy -= p * std::log2(p);
-    }
-  }
-
-  characteristics.entropy = entropy;
-  characteristics.isHighlyRepetitive = (entropy < 6.0);
-
-  // Check for long repeated sequences
-  size_t maxRun = 1;
-  size_t currentRun = 1;
-  for (size_t i = 1; i < data.size(); ++i) {
-    if (data[i] == data[i - 1]) {
-      currentRun++;
-    } else {
-      maxRun = std::max(maxRun, currentRun);
-      currentRun = 1;
-    }
-  }
-  maxRun = std::max(maxRun, currentRun);
-
-  characteristics.hasLongRuns = (maxRun > 10);
-
-  // Check for pattern matches (simplified)
-  std::map<std::vector<uint8_t>, size_t> patterns;
-  const size_t patternLength = 4;
-
-  for (size_t i = 0; i + patternLength <= data.size(); ++i) {
-    std::vector<uint8_t> pattern(data.begin() + i,
-                                 data.begin() + i + patternLength);
-    patterns[pattern]++;
-  }
-
-  size_t repeatedPatterns = 0;
-  for (const auto &[pattern, count] : patterns) {
-    if (count > 1) {
-      repeatedPatterns++;
-    }
-  }
-
-  characteristics.hasLongMatches = (repeatedPatterns > patterns.size() * 0.1);
-
-  return characteristics;
-}
 
 std::vector<uint8_t> OptimizedCompressor::compressRepetitiveData(
     const std::vector<uint8_t> &data) const {

@@ -1,15 +1,17 @@
 #pragma once
-
+ 
 #include <compression/ICompressor.hpp>
 #include <memory>
 #include <vector>
 #include <cstdint>
-
+ 
 namespace compression {
-
+ 
 // Forward declarations
 class Lz77Compressor;
-
+class BwtCompressor;
+class OptimizedCompressor;
+ 
 /**
  * @class UltraCompressor
  * @brief Maximum compression ratio compressor using multi-stage approach
@@ -46,9 +48,12 @@ public:
      * @return Original decompressed data
      */
     std::vector<uint8_t> decompress(const std::vector<uint8_t>& data) const override;
-
+ 
 private:
-    std::unique_ptr<Lz77Compressor> lz77_;
+    mutable std::unique_ptr<Lz77Compressor> lz77_;
+    mutable std::unique_ptr<BwtCompressor> bwt_;
+    mutable std::unique_ptr<OptimizedCompressor> optimized_;
 };
-
+ 
 } // namespace compression
+
