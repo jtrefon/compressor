@@ -210,85 +210,80 @@ uint8_t ArithmeticCompressor::AdaptiveContextModel::getSymbol(
     return static_cast<uint8_t>(symIdx);
 }
 
-// --- Range Encoder ---
+// --- Range Encoder (Witten-Neal-Cleary arithmetic coding, 32-bit) ---
 
 void ArithmeticCompressor::RangeEncoder::start(std::vector<uint8_t> &output) {
+  output_ = &output;
   low_ = 0;
-  range_ = MAX_RANGE;
-  help_ = 0;
-  buffer_ = 0;
-  buffer_count_ = 0;
-  buffer_full_ = false;
+  high_ = MAX_RANGE;
+  pendingBits_ = 0;
+  bitBuffer_ = 0;
+  bitCount_ = 0;
+}
+
+void ArithmeticCompressor::RangeEncoder::emitBit(int bit) {
+  bitBuffer_ = static_cast<uint8_t>((bitBuffer_ << 1) | (bit & 1));
+  if (++bitCount_ == 8) {
+    output_->push_back(bitBuffer_);
+    bitBuffer_ = 0;
+    bitCount_ = 0;
+  }
+}
+
+void ArithmeticCompressor::RangeEncoder::emitBitPlusPending(int bit) {
+  emitBit(bit);
+  while (pendingBits_ > 0) {
+    emitBit(bit ^ 1);
+    --pendingBits_;
+  }
+}
+
+void ArithmeticCompressor::RangeEncoder::normalize() {
+  while (true) {
+    if (high_ < HALF_) {
+      emitBitPlusPending(0);
+    } else if (low_ >= HALF_) {
+      emitBitPlusPending(1);
+      low_ -= HALF_;
+      high_ -= HALF_;
+    } else if (low_ >= QUARTER_ && high_ < THREE_QUARTERS_) {
+      ++pendingBits_;
+      low_ -= QUARTER_;
+      high_ -= QUARTER_;
+    } else {
+      break;
+    }
+    low_ = (low_ << 1) & 0xFFFFFFFFu;
+    high_ = ((high_ << 1) | 1) & 0xFFFFFFFFu;
+  }
 }
 
 void ArithmeticCompressor::RangeEncoder::encode(uint32_t low_count,
                                                 uint32_t high_count,
                                                 uint32_t total,
                                                 std::vector<uint8_t> &output) {
-  uint32_t r = range_ / total;
-  uint32_t size_part = r * (high_count - low_count);
-  uint64_t new_low = low_ + static_cast<uint64_t>(r) * low_count;
-
-  // Check for carry
-  if (new_low >= (1ULL << 32)) {
-    buffer_++;
-    // Force output of carry
-    output.push_back(buffer_);
-    for (int i = 0; i < buffer_count_; ++i)
-      output.push_back(0);
-
-    buffer_ = 0; // Reset buffer (though it's "empty" now)
-    buffer_count_ = 0;
-    buffer_full_ = false; // Buffer is empty/consumed
-    new_low &= 0xFFFFFFFF;
-  }
-  low_ = new_low;
-  range_ = size_part;
-
-  while (range_ < TOP_VALUE) {
-    if (low_ < (0xFF000000)) {
-      uint8_t b = (low_ >> 24) & 0xFF;
-      // Write previous buffer and FFs if buffer is full
-      if (buffer_full_) {
-        output.push_back(buffer_);
-        for (int i = 0; i < buffer_count_; ++i)
-          output.push_back(0xFF);
-        buffer_count_ = 0;
-      }
-      buffer_ = b;
-      buffer_full_ = true;
-    } else if (low_ >= 0xFF000000) {
-      buffer_count_++;
-      low_ &= 0x00FFFFFF;
-    }
-
-    low_ = (low_ << 8) & 0xFFFFFFFF;
-    range_ <<= 8;
-  }
-}
-
-void ArithmeticCompressor::RangeEncoder::outputByte(
-    uint8_t b, std::vector<uint8_t> &output) {
-  // Helper handled inline
+  output_ = &output;
+  uint64_t range = static_cast<uint64_t>(high_) - low_ + 1;
+  uint64_t newLow = low_ + (range * low_count) / total;
+  uint64_t newHigh = low_ + (range * high_count) / total - 1;
+  low_ = static_cast<uint32_t>(newLow);
+  high_ = static_cast<uint32_t>(newHigh);
+  normalize();
 }
 
 void ArithmeticCompressor::RangeEncoder::finish(std::vector<uint8_t> &output) {
-  for (int i = 0; i < 5; ++i) {
-    if (low_ < (0xFF000000)) {
-      uint8_t b = (low_ >> 24) & 0xFF;
-      if (buffer_full_) {
-        output.push_back(buffer_);
-        for (int c = 0; c < buffer_count_; ++c)
-          output.push_back(0xFF);
-        buffer_count_ = 0;
-      }
-      buffer_ = b;
-      buffer_full_ = true;
-    } else {
-      buffer_count_++;
-      low_ &= 0x00FFFFFF;
-    }
-    low_ = (low_ << 8) & 0xFFFFFFFF;
+  output_ = &output;
+  ++pendingBits_;
+  if (low_ < QUARTER_)
+    emitBitPlusPending(0);
+  else
+    emitBitPlusPending(1);
+  // Flush any partially filled byte
+  if (bitCount_ > 0) {
+    bitBuffer_ = static_cast<uint8_t>(bitBuffer_ << (8 - bitCount_));
+    output_->push_back(bitBuffer_);
+    bitBuffer_ = 0;
+    bitCount_ = 0;
   }
 }
 
@@ -296,50 +291,71 @@ void ArithmeticCompressor::RangeEncoder::finish(std::vector<uint8_t> &output) {
 
 void ArithmeticCompressor::RangeDecoder::start(
     const std::vector<uint8_t> &input, size_t &inputPos) {
+  input_ = &input;
+  inputPos_ = &inputPos;
   low_ = 0;
-  range_ = MAX_RANGE;
+  high_ = MAX_RANGE;
   code_ = 0;
+  bitBuffer_ = 0;
+  bitCount_ = 0;
+  for (int i = 0; i < 32; ++i)
+    code_ = (code_ << 1) | static_cast<uint32_t>(readBit());
+}
 
-  // Fill buffer with first 4 bytes (32 bits)
-  for (int i = 0; i < 4; ++i) {
-    code_ <<= 8;
-    if (inputPos < input.size()) {
-      code_ |= input[inputPos++];
-    }
+int ArithmeticCompressor::RangeDecoder::readBit() {
+  if (bitCount_ == 0) {
+    if (*inputPos_ < input_->size())
+      bitBuffer_ = (*input_)[*inputPos_];
+    else
+      bitBuffer_ = 0;
+    ++(*inputPos_);
+    bitCount_ = 8;
   }
+  int bit = (bitBuffer_ >> 7) & 1;
+  bitBuffer_ <<= 1;
+  --bitCount_;
+  return bit;
 }
 
 uint32_t
 ArithmeticCompressor::RangeDecoder::getCurrentCount(uint32_t total) const {
-  uint32_t r = range_ / total;
-  return (code_ - static_cast<uint32_t>(low_)) / r;
+  uint64_t range = static_cast<uint64_t>(high_) - low_ + 1;
+  return static_cast<uint32_t>(
+      ((static_cast<uint64_t>(code_) - low_ + 1) * total - 1) / range);
+}
+
+void ArithmeticCompressor::RangeDecoder::normalize() {
+  while (true) {
+    if (high_ < HALF_) {
+      // nothing to shift out
+    } else if (low_ >= HALF_) {
+      low_ -= HALF_;
+      high_ -= HALF_;
+      code_ -= HALF_;
+    } else if (low_ >= QUARTER_ && high_ < THREE_QUARTERS_) {
+      low_ -= QUARTER_;
+      high_ -= QUARTER_;
+      code_ -= QUARTER_;
+    } else {
+      break;
+    }
+    low_ = (low_ << 1) & 0xFFFFFFFFu;
+    high_ = ((high_ << 1) | 1) & 0xFFFFFFFFu;
+    code_ = ((code_ << 1) | static_cast<uint32_t>(readBit())) & 0xFFFFFFFFu;
+  }
 }
 
 void ArithmeticCompressor::RangeDecoder::removeRange(
     uint32_t low_count, uint32_t high_count, uint32_t total,
     const std::vector<uint8_t> &input, size_t &inputPos) {
-  uint32_t r = range_ / total;
-  uint32_t size_part = r * (high_count - low_count);
-  uint32_t start_low_part = r * low_count;
-
-  // My Decoder struct has `low_`.
-  // Let's ignore `low_` in decoder if we just shift `code`.
-  // But `getCurrentCount` used `(code_ - low_)`.
-  // If I use `low_` to track the base, then:
-
-  low_ = (low_ + start_low_part) & 0xFFFFFFFF; // Manually wrap at 32-bit
-  range_ = size_part;
-
-  while (range_ < TOP_VALUE) {
-    // Just always shift if range < TOP_VALUE, matching Encoder logic
-    uint8_t byte = 0;
-    if (inputPos < input.size())
-      byte = input[inputPos++];
-
-    code_ = (code_ << 8) | byte;
-    low_ = (low_ << 8) & 0xFFFFFFFF;
-    range_ <<= 8;
-  }
+  input_ = &input;
+  inputPos_ = &inputPos;
+  uint64_t range = static_cast<uint64_t>(high_) - low_ + 1;
+  uint64_t newLow = low_ + (range * low_count) / total;
+  uint64_t newHigh = low_ + (range * high_count) / total - 1;
+  low_ = static_cast<uint32_t>(newLow);
+  high_ = static_cast<uint32_t>(newHigh);
+  normalize();
 }
 
 } // namespace compression

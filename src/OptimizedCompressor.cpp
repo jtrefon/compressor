@@ -129,7 +129,7 @@ std::vector<uint8_t> OptimizedCompressor::compressRepetitiveData(
       count++;
     }
 
-    if (count >= 3 || current == 0 || current == 0xFF) {
+    if (count >= 3 || current == 0) {
       // Encode as run: [0xFF][count_low][count_high][value]
       rleData.push_back(0xFF);
       rleData.push_back(static_cast<uint8_t>(count & 0xFF));

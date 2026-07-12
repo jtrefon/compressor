@@ -85,15 +85,20 @@ private:
     void finish(std::vector<uint8_t> &output);
 
   private:
-    uint64_t low_ = 0;
-    uint32_t range_ = 0xFFFFFFFF;
-    uint32_t help_ = 0;    // Bytes to follow
-    uint8_t buffer_ = 0;   // Current byte
-    int buffer_count_ = 0; // Counter for 'help' bytes
-    bool buffer_full_ = false;
+    static constexpr uint32_t HALF_ = 0x80000000u;
+    static constexpr uint32_t QUARTER_ = 0x40000000u;
+    static constexpr uint32_t THREE_QUARTERS_ = 0xC0000000u;
 
-    // Output a byte with carry handling
-    void outputByte(uint8_t b, std::vector<uint8_t> &output);
+    std::vector<uint8_t> *output_ = nullptr;
+    uint32_t low_ = 0;
+    uint32_t high_ = 0xFFFFFFFF;
+    uint32_t pendingBits_ = 0;
+    uint8_t bitBuffer_ = 0;
+    int bitCount_ = 0;
+
+    void emitBit(int bit);
+    void emitBitPlusPending(int bit);
+    void normalize();
   };
 
   class RangeDecoder {
@@ -104,9 +109,20 @@ private:
                      const std::vector<uint8_t> &input, size_t &inputPos);
 
   private:
-    uint64_t low_ = 0;
-    uint32_t range_ = 0xFFFFFFFF;
+    static constexpr uint32_t HALF_ = 0x80000000u;
+    static constexpr uint32_t QUARTER_ = 0x40000000u;
+    static constexpr uint32_t THREE_QUARTERS_ = 0xC0000000u;
+
+    const std::vector<uint8_t> *input_ = nullptr;
+    size_t *inputPos_ = nullptr;
+    uint32_t low_ = 0;
+    uint32_t high_ = 0xFFFFFFFF;
     uint32_t code_ = 0;
+    uint8_t bitBuffer_ = 0;
+    int bitCount_ = 0;
+
+    int readBit();
+    void normalize();
   };
 };
 

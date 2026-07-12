@@ -20,36 +20,104 @@ uint32_t read_u32_be(const std::vector<uint8_t> &src, size_t &pos) {
   return (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
 }
 
+static void write_u32_be(std::vector<uint8_t> &dest, uint32_t value) {
+  dest.push_back(static_cast<uint8_t>((value >> 24) & 0xFF));
+  dest.push_back(static_cast<uint8_t>((value >> 16) & 0xFF));
+  dest.push_back(static_cast<uint8_t>((value >> 8) & 0xFF));
+  dest.push_back(static_cast<uint8_t>(value & 0xFF));
+}
 
+// Escape data so 0x00 can be used as unique EOF marker.
+// 0x00 -> 0xFF 0x01 0x00,  0xFF -> 0xFF 0xFF
+static std::vector<uint8_t> escape_for_bwt(const std::vector<uint8_t> &data) {
+  std::vector<uint8_t> out;
+  out.reserve(data.size() * 3);
+  for (uint8_t b : data) {
+    if (b == 0x00) {
+      out.push_back(0xFF); out.push_back(0x01); out.push_back(0x00);
+    } else if (b == 0xFF) {
+      out.push_back(0xFF); out.push_back(0xFF);
+    } else {
+      out.push_back(b);
+    }
+  }
+  return out;
+}
+
+static std::vector<uint8_t> unescape_bwt(const std::vector<uint8_t> &data) {
+  std::vector<uint8_t> out;
+  out.reserve(data.size());
+  for (size_t i = 0; i < data.size(); ) {
+    if (data[i] == 0xFF) {
+      if (i + 1 >= data.size()) throw std::runtime_error("BWT unescape: truncated");
+      if (data[i + 1] == 0x01) {
+        if (i + 2 >= data.size()) throw std::runtime_error("BWT unescape: truncated");
+        out.push_back(0x00); i += 3;
+      } else if (data[i + 1] == 0xFF) {
+        out.push_back(0xFF); i += 2;
+      } else {
+        throw std::runtime_error("BWT unescape: invalid escape");
+      }
+    } else {
+      out.push_back(data[i]); i++;
+    }
+  }
+  return out;
+}
 
 std::vector<uint8_t>
 BwtCompressor::compress(const std::vector<uint8_t> &data) const {
-  if (data.empty()) {
-    return {};
-  }
+  if (data.empty()) return {};
 
-  const auto bwt_transformed = bwt_transform(data);
-  const auto mtf_encoded = mtf_encode(bwt_transformed);
+  // Escape + EOF sentinel for correct primary index
+  auto escaped = escape_for_bwt(data);
+  escaped.push_back(0x00);  // EOF marker — lexicographically smallest, unique
 
-  // Directly use Arithmetic Coding on MTF output
-  // MTF produces skewed data (many small numbers), ideal for adaptive
-  // arithmetic coding.
+  auto bwt_transformed = bwt_transform(escaped);
+  auto mtf_encoded = mtf_encode(bwt_transformed);
+
   ArithmeticCompressor arithmetic;
-  return arithmetic.compress(mtf_encoded);
+  auto arith_compressed = arithmetic.compress(mtf_encoded);
+
+  // Header: magic(1) + version(1) + original_size(4) + compressed
+  std::vector<uint8_t> result;
+  result.push_back(0xB7);  // magic
+  result.push_back(0x01);  // version 1 = with EOF sentinel
+  write_u32_be(result, static_cast<uint32_t>(data.size()));
+  result.insert(result.end(), arith_compressed.begin(), arith_compressed.end());
+  return result;
 }
 
 std::vector<uint8_t>
 BwtCompressor::decompress(const std::vector<uint8_t> &data) const {
-  if (data.empty()) {
-    return {};
+  if (data.empty()) return {};
+  if (data.size() < 6)
+    throw std::runtime_error("BWT decompress: header too short");
+
+  // Version 1: EOF sentinel format
+  if (data[0] == 0xB7 && data[1] == 0x01) {
+    size_t pos = 2;
+    uint32_t original_size = read_u32_be(data, pos);
+    if (original_size == 0) return {};
+
+    std::vector<uint8_t> arith_data(data.begin() + pos, data.end());
+    ArithmeticCompressor arithmetic;
+    auto mtf_encoded = arithmetic.decompress(arith_data);
+    auto bwt_data = mtf_decode(mtf_encoded);
+    auto with_eof = inverse_bwt_transform(bwt_data);
+
+    // Strip EOF marker
+    if (with_eof.empty() || with_eof.back() != 0x00)
+      throw std::runtime_error("BWT decompress: EOF marker missing");
+    with_eof.pop_back();
+
+    return unescape_bwt(with_eof);
   }
 
-  // Decompress Arithmetic first
+  // Legacy: no header, plain arithmetic-coded MTF
   ArithmeticCompressor arithmetic;
-  const auto mtf_encoded = arithmetic.decompress(data);
-
-  const auto mtf_decoded = mtf_decode(mtf_encoded);
-
+  auto mtf_encoded = arithmetic.decompress(data);
+  auto mtf_decoded = mtf_decode(mtf_encoded);
   return inverse_bwt_transform(mtf_decoded);
 }
 

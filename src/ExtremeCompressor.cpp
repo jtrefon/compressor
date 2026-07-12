@@ -27,21 +27,16 @@ std::vector<uint8_t> ExtremeCompressor::compress(const std::vector<uint8_t>& dat
         return {};
     }
     
-    std::cout << "🚀 EXTREME COMPRESSION MODE - Maximum Ratio (Parallel)" << std::endl;
-    
     // Launch strategies in parallel
-    std::cout << "🔄 Launching 7 compression strategies in parallel..." << std::endl;
 
     auto f1 = std::async(std::launch::async, &ExtremeCompressor::applyBwtLz77Huffman, this, std::cref(data));
     auto f2 = std::async(std::launch::async, &ExtremeCompressor::applyLz77BwtHuffman, this, std::cref(data));
-    auto f3 = std::async(std::launch::async, &ExtremeCompressor::applyBwtHuffmanLz77, this, std::cref(data));
-    auto f4 = std::async(std::launch::async, &ExtremeCompressor::applyDoubleBwtHuffman, this, std::cref(data));
-    auto f5 = std::async(std::launch::async, &ExtremeCompressor::applyPreprocessBwtLz77Huffman, this, std::cref(data));
-    auto f6 = std::async(std::launch::async, [&data]() {
+    auto f3 = std::async(std::launch::async, &ExtremeCompressor::applyPreprocessBwtLz77Huffman, this, std::cref(data));
+    auto f4 = std::async(std::launch::async, [&data]() {
         OptimizedCompressor optimized;
         return optimized.compress(data);
     });
-    auto f7 = std::async(std::launch::async, [&data]() {
+    auto f5 = std::async(std::launch::async, [&data]() {
         BwtCompressor bwt;
         return bwt.compress(data);
     });
@@ -50,11 +45,9 @@ std::vector<uint8_t> ExtremeCompressor::compress(const std::vector<uint8_t>& dat
     std::vector<std::pair<std::vector<uint8_t>, std::string>> candidates;
     candidates.push_back({f1.get(), "BWT+LZ77+Huffman"});
     candidates.push_back({f2.get(), "LZ77+BWT+Huffman"});
-    candidates.push_back({f3.get(), "BWT+Huffman+LZ77"});
-    candidates.push_back({f4.get(), "DoubleBWT+Huffman"});
-    candidates.push_back({f5.get(), "Preprocess+BWT+LZ77+Huffman"});
-    candidates.push_back({f6.get(), "Optimized"});
-    candidates.push_back({f7.get(), "BWT"});
+    candidates.push_back({f3.get(), "Preprocess+BWT+LZ77+Huffman"});
+    candidates.push_back({f4.get(), "Optimized"});
+    candidates.push_back({f5.get(), "BWT"});
     
     // Find the best compression
     auto best_it = std::min_element(candidates.begin(), candidates.end(),
@@ -100,14 +93,12 @@ std::vector<uint8_t> ExtremeCompressor::decompress(const std::vector<uint8_t>& d
         switch (strategy_index) {
             case 0: return reverseBwtLz77Huffman(compressed_data);
             case 1: return reverseLz77BwtHuffman(compressed_data);
-            case 2: return reverseBwtHuffmanLz77(compressed_data);
-            case 3: return reverseDoubleBwtHuffman(compressed_data);
-            case 4: return reversePreprocessBwtLz77Huffman(compressed_data);
-            case 5: {
+            case 2: return reversePreprocessBwtLz77Huffman(compressed_data);
+            case 3: {
                 OptimizedCompressor optimized;
                 return optimized.decompress(compressed_data);
             }
-            case 6: {
+            case 4: {
                 BwtCompressor bwt;
                 return bwt.decompress(compressed_data);
             }

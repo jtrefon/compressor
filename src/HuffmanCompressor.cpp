@@ -382,27 +382,24 @@ std::vector<uint8_t> HuffmanCompressor::compress(
     
     // 4. Serialize the frequency map
     std::vector<uint8_t> result = serializeFrequencyMap(freqMap);
-    
-    // 5. Write the compressed data
-    std::vector<bool> encodedBits;
-    
-    // Pre-allocate enough space for encoded bits (rough estimate)
-    encodedBits.reserve(data.size() * 8); // Worst case: no compression
-    
-    // Encode each symbol
-    for (const auto& byte : data) {
-        const auto& code = codeMap[byte];
+
+    // 5. Write the compressed data. Use a byte-backed bit buffer
+    // (std::vector<uint8_t>) instead of std::vector<bool>: the bit-packed
+    // container's insertions are far slower, while the packing logic is
+    // identical and the output bytes are unchanged.
+    std::vector<uint8_t> encodedBits;
+    encodedBits.reserve(data.size() * 8);
+
+    for (const auto &byte : data) {
+        const auto &code = codeMap[byte];
         encodedBits.insert(encodedBits.end(), code.begin(), code.end());
     }
-    
-    // Convert bits to bytes (8 bits per byte)
+
     size_t fullByteCount = encodedBits.size() / 8;
     uint8_t remainingBits = encodedBits.size() % 8;
-    
-    // Add number of bits in the last byte (or 0 if perfectly aligned)
+
     result.push_back(remainingBits == 0 ? 0 : remainingBits);
-    
-    // Process full bytes
+
     for (size_t i = 0; i < fullByteCount; i++) {
         uint8_t byte = 0;
         for (size_t bit = 0; bit < 8; bit++) {
@@ -412,8 +409,7 @@ std::vector<uint8_t> HuffmanCompressor::compress(
         }
         result.push_back(byte);
     }
-    
-    // Process remaining bits (if any)
+
     if (remainingBits > 0) {
         uint8_t byte = 0;
         for (size_t bit = 0; bit < remainingBits; bit++) {
@@ -423,7 +419,7 @@ std::vector<uint8_t> HuffmanCompressor::compress(
         }
         result.push_back(byte);
     }
-    
+
     return result;
 }
 

@@ -22,10 +22,8 @@ std::vector<uint8_t> UltraCompressor::compress(const std::vector<uint8_t>& data)
         return {};
     }
  
-    std::cout << "🔄 Stage 1: BWT transform..." << std::endl;
     auto bwt_transformed = bwt_->transform(data);
- 
-    std::cout << "🔄 Stage 2: LZ77 on BWT..." << std::endl;
+
     auto lz77_compressed = lz77_->compress(bwt_transformed);
  
     // No outer Huffman for stability; LZ77 on BWT pipeline output round-trips robustly
