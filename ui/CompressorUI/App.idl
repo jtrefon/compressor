@@ -1,0 +1,8 @@
+namespace CompressorUI
+{
+    [default_interface]
+    unsealed runtimeclass App : Microsoft.UI.Xaml.Application
+    {
+        App();
+    }
+}

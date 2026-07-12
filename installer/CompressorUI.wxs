@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!--
+    WiX Toolset installer stub for Compressor 2.0 (WinUI 3 app).
+    Build:  candle.exe CompressorUI.wxs -dCompressorUI.TargetPath=ui\CompressorUI\x64\Release\CompressorUI.exe
+            light.exe CompressorUI.wixobj -o CompressorUI.msi
+    TODO M4: add .cza file association, Explorer shell (context-menu) extension
+            registration, Start Menu shortcut, and optional PATH entry.
+  -->
+  <Product Id="*" Name="Compressor 2.0" Manufacturer="Contoso"
+           Version="2.0.0" Language="1033" Codepage="1252"
+           UpgradeCode="{2B3C4D5E-6F7A-8B9C-0D1E-2F3A4B5C6D7E}">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Compressor is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="ProductFeature" Title="Compressor 2.0" Level="1">
+      <ComponentGroupRef Id="AppComponents" />
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="Compressor" />
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="AppComponents" Directory="INSTALLFOLDER">
+      <Component Id="CompressorUIExe" Guid="*">
+        <File Source="$(var.CompressorUI.TargetPath)" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    Compressor 2.0 - WinUI 3 (C++/WinRT) desktop app skeleton.
+
+    PREREQUISITES (not present in every dev environment):
+      * Visual Studio 2022 with the "Desktop development with C++" workload.
+      * Windows App SDK 1.6+ and WinUI 3 (installed via the VS workload or NuGet).
+      * Pin the PackageReference versions below to the SDK you have installed.
+
+    NOTE: This project is intentionally NOT part of the top-level CMake build
+    (the Windows App SDK is unavailable in the lib/CI build). Build it from
+    Visual Studio (or msbuild) once the prerequisites are installed.
+  -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration><Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration><Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1A2B3C4D-5E6F-7A8B-9C0D-1E2F3A4B5C6D}</ProjectGuid>
+    <RootNamespace>CompressorUI</RootNamespace>
+    <ProjectName>CompressorUI</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.19041.0</WindowsTargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <CppWinRTEnabled>true</CppWinRTEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <PropertyGroup>
+    <!-- Link CompressionLib (built by the CMake lib target). Finalize the path
+         and add compression.lib to AdditionalDependencies in M2. -->
+    <IncludePath>$(ProjectDir)..\..\include;$(IncludePath)</IncludePath>
+    <AdditionalLibraryDirectories>$(ProjectDir)..\..\build\src\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.*" />
+    <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Midl Include="App.idl" />
+    <Midl Include="MainWindow.idl" />
+    <Page Include="App.xaml" />
+    <Page Include="MainWindow.xaml" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationManifest Include="CompressorUI.exe.manifest" />
+    <AppxManifest Include="app.manifest" />
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
