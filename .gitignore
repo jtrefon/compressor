@@ -21,6 +21,11 @@ bin/
 # Doxygen output (often generated in build/ or separate dirs)
 # Assuming output is generated within build/, otherwise add specific output dirs
 # Example: docs/html/, docs/latex/
+docs/doxygen/
+
+# Test binaries and generated test metadata
+tests/compression_tests
+tests/compression_tests[1]_*.cmake
 
 # Editor/IDE files
 .vscode/

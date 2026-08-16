@@ -22,6 +22,7 @@
 #include <compression/ExtremeCompressor.hpp>
 #include <compression/OptimizedCompressor.hpp>
 #include <compression/ParallelCompressor.hpp>
+#include <compression/ArithmeticCompressor.hpp>
 #include <compression/SystemInfo.hpp>
 
 // --- Helper Functions --- 
@@ -75,6 +76,8 @@ std::unique_ptr<compression::ICompressor> createCompressor(compression::format::
             return std::make_unique<compression::ExtremeCompressor>();
         case compression::format::AlgorithmID::OPTIMIZED_COMPRESSOR:
             return std::make_unique<compression::OptimizedCompressor>();
+        case compression::format::AlgorithmID::ARITHMETIC_COMPRESSOR:
+            return std::make_unique<compression::ArithmeticCompressor>();
         default:
             throw std::invalid_argument("Unknown or unsupported compression algorithm ID: "
                                         + std::to_string(static_cast<uint8_t>(id)));
@@ -110,7 +113,7 @@ std::unique_ptr<compression::ICompressor> createCompressorForCompression(
 void printUsage(const char* appName) {
     std::cerr << "Usage: " << appName
               << " <compress|decompress> <strategy|ignored_on_decompress> <input_file> <output_file> [--threads N|--no-threads]\n"
-              << "Strategies: default(optimized), bwt, ultra, extreme, lz77, huffman, optimized\n";
+              << "Strategies: default(optimized), bwt, ultra, extreme, lz77, huffman, optimized, arithmetic\n";
 }
 
 int main(int argc, char* argv[]) {

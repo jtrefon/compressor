@@ -31,6 +31,7 @@ enum class AlgorithmID : uint8_t {
   ULTRA_COMPRESSOR = 5,
   EXTREME_COMPRESSOR = 6,
   OPTIMIZED_COMPRESSOR = 7,
+  ARITHMETIC_COMPRESSOR = 8,
   // Add future IDs here
   UNKNOWN = 255
 };
@@ -215,6 +216,8 @@ inline std::string algorithmIdToString(AlgorithmID id) {
     return "extreme";
   case AlgorithmID::OPTIMIZED_COMPRESSOR:
     return "optimized";
+  case AlgorithmID::ARITHMETIC_COMPRESSOR:
+    return "arithmetic";
   default:
     return "unknown";
   }
@@ -242,6 +245,8 @@ inline AlgorithmID stringToAlgorithmId(const std::string &name) {
     return AlgorithmID::EXTREME_COMPRESSOR;
   if (name == "optimized")
     return AlgorithmID::OPTIMIZED_COMPRESSOR;
+  if (name == "arithmetic")
+    return AlgorithmID::ARITHMETIC_COMPRESSOR;
   // Add mappings for future algorithms
   return AlgorithmID::UNKNOWN;
 }
