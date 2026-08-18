@@ -135,6 +135,13 @@ std::vector<uint8_t> OptimizedCompressor::compressRepetitiveData(
       rleData.push_back(static_cast<uint8_t>(count & 0xFF));
       rleData.push_back(static_cast<uint8_t>((count >> 8) & 0xFF));
       rleData.push_back(current);
+    } else if (current == 0xFF) {
+      // Escape a lone 0xFF literal so the decoder does not mistake it for a
+      // run header: [0xFF][0x00][0x00][value] (count 0 marks an escape)
+      rleData.push_back(0xFF);
+      rleData.push_back(0x00);
+      rleData.push_back(0x00);
+      rleData.push_back(0xFF);
     } else {
       // Encode as literal bytes
       rleData.push_back(current);
@@ -233,7 +240,12 @@ std::vector<uint8_t> OptimizedCompressor::decompressRepetitiveData(
       uint8_t value = huffmanDecompressed[i + 2];
       i += 3;
 
-      result.insert(result.end(), count, value);
+      if (count == 0) {
+        // Escaped literal 0xFF
+        result.push_back(value);
+      } else {
+        result.insert(result.end(), count, value);
+      }
     } else {
       // Literal byte
       result.push_back(current);

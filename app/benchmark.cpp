@@ -15,8 +15,6 @@
 // Include all compressor headers
 #include <compression/ArithmeticCompressor.hpp>
 #include <compression/BwtCompressor.hpp>
-#include <compression/EnhancedBwtCompressor.hpp>
-#include <compression/EnhancedCompressor.hpp>
 #include <compression/ExtremeCompressor.hpp>
 #include <compression/FileFormat.hpp>
 #include <compression/HuffmanCompressor.hpp>
@@ -63,12 +61,8 @@ createCompressor(compression::format::AlgorithmID id) {
 
 std::unique_ptr<compression::ICompressor>
 createCompressor(const std::string &name) {
-  if (name == "Enhanced") {
-    return std::make_unique<compression::EnhancedCompressor>();
-  } else if (name == "Arithmetic") {
+  if (name == "Arithmetic") {
     return std::make_unique<compression::ArithmeticCompressor>();
-  } else if (name == "EnhancedBWT") {
-    return std::make_unique<compression::EnhancedBwtCompressor>();
   } else if (name == "Optimized") {
     return std::make_unique<compression::OptimizedCompressor>();
   }

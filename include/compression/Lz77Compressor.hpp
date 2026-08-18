@@ -24,7 +24,7 @@ namespace compression {
  */
 class Lz77Compressor : public ICompressor {
 public:
-    // Constants that need to be accessible by DeflateCompressor
+    // Constants for the intermediate symbol stream format
     static constexpr uint8_t LITERAL_FLAG = 0x00;
     static constexpr uint8_t LENGTH_DISTANCE_FLAG = 0x01;
     static constexpr uint32_t EOB_SYMBOL = 256;
