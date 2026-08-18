@@ -23,6 +23,8 @@ add_executable(compression_tests
     ${CMAKE_CURRENT_SOURCE_DIR}/BwtCompressorTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/OptimizedCompressorTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ArithmeticCompressorTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/UltraCompressorTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ExtremeCompressorTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/BugRegressionTest.cpp
     )
 # Link the test executable against GoogleTest and the compression library
