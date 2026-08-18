@@ -1,71 +1,76 @@
 # Code Review Checklist
 
-You are a principal engineer conducting a code review. Your goal is to ensure the highest standards of code quality, maintainability, security, and architectural integrity. Review the code against these principles, which are designed to work in harmony.
+Checklist for reviewing changes to this C++ compression library. Work through
+the items below in order; the correctness and safety sections are the ones
+that have historically caught real bugs in this codebase.
 
 ---
 
-### 1. Code Quality & Clean Code
+### 1. Correctness
 
-- **Simplicity within Structure (SOLID, SRP & KISS):** All code must adhere to `SOLID` principles. Within that structure, implementations must be as simple as possible (`KISS`). A class should be the simplest possible implementation that correctly fulfills its Single Responsibility (`SRP`).
-- **Continuous Refactoring (The Boy Scout Rule):** Leave the code cleaner than you found it. If you encounter technical debt or an opportunity for improvement in the code you are working on, you are empowered and expected to fix it.
-- **Narrative Naming:** All identifiers (classes, methods, variables) must be chosen to be precisely and unambiguously self-documenting. The goal is for code to be read like a well-written narrative, not a riddle. Good names reveal their purpose and make the code's function obvious, dramatically reducing the need for comments that explain *what* the code does. Names should be descriptive of both their business function and their architectural layer where it adds clarity (e.g., `UserRepositoryPersistence`, `PricingStrategyFactory`).
-- **Conciseness:** Classes should be concise (ideally ≤200 lines). Methods should be short (ideally ≤10 lines) with minimal parameters (≤3).
-- **No Clutter (YAGNI):** No dead code, commented-out code, or unnecessary complexity. Do not implement features or abstractions that are not required by the current scope (`YAGNI`). Any code added must be for a clear and immediate purpose.
+- **Roundtrip with ratio, not just roundtrip:** a test that only checks
+  `decompress(compress(x)) == x` passes even if the compressor is a no-op.
+  Compressible inputs (text-like, repetitive) must also assert
+  `compressed.size() < data.size()`.
+- **Decision is stored, not re-guessed:** anything chosen during compression
+  (strategy, transform, method) must be written into the stream and read back
+  on decompression. Heuristics that re-derive the choice on decompress
+  (e.g. `detectBWTUsage`) silently corrupt data and must not be added.
+- **Format changes are versioned:** bump the format version or add a flags
+  byte when a pipeline changes; keep reading previous versions. Backward
+  compatibility is expected unless the old format was broken.
+- **Marker ambiguity:** any reserved byte used as a run/escape marker must be
+  escaped as a literal (see the 0xFF RLE bug in OptimizedCompressor). A lone
+  reserved byte mid-stream must roundtrip.
+- **Sentinel/rank collisions:** sentinel values used in sort keys (BWT
+  primary index, EOF markers) must not collide with real data bytes. This
+  bit us twice: `0` as out-of-range rank collides with real 0x00 bytes.
+- **Bounded indices:** every index read from (potentially untrusted)
+  compressed data must be validated before use (`primary_index < n`,
+  chunk offsets, symbol counts, match distances).
 
-### 2. Testing & Coverage
+### 2. Robustness / hostile input
 
-- **Coverage:** 100% automated test coverage of all significant business logic, decision points, and critical paths.
-- **Test Quality:** Tests must be deterministic, isolated, and meaningful (asserting behavior, not implementation details).
-- **Edge Cases:** All edge cases, error paths, and boundary conditions are thoroughly tested.
-- **Dependencies:** Mocks, stubs, and fakes are used appropriately. No real external dependencies in unit tests.
+- **Untrusted header fields are capped and validated before use:** chunk
+  counts, original sizes, and symbol counts come from the file. Validate
+  them before sizing thread pools, reserving buffers, or looping.
+- **CRC/checksum computed on compress is verified on decompress.**
+- **Decompression must not loop forever, OOB-read, or allocate absurdly** on
+  truncated or corrupted input; it must throw `std::runtime_error`.
+- **Library code has no console side effects:** no `std::cout`/`std::cerr`
+  in `src/`. Errors are exceptions only.
 
-### 3. Architecture & Design
+### 3. Concurrency
 
-- **Design Pattern-First Approach:** Before implementing a new feature, always consider established design patterns. Avoid reinventing the wheel and use proven, standardized solutions where applicable.
-- **Layering:** Strict adherence to the project's multi-layered architecture with no cross-layer pollution.
-- **Coupling & Cohesion:** Code must be extensible, loosely coupled, and follow dependency inversion principles.
-- **Dependencies:** No circular dependencies between components.
-- **APIs:** All public APIs must be clearly documented and versioned if necessary.
+- **Shared compressor instances must be safe to call from multiple threads.**
+  No mutable shared state during `compress()`/`decompress()`; run strategies
+  on local instances (`ExtremeCompressor` pattern) rather than shared members.
+- **Thread pools:** `ThreadPool(0)` throws; worker count derived from input
+  is bounded.
 
-### 4. Documentation & Maintainability
+### 4. Testing
 
-- **API & Implementation Comments:** Public APIs must be fully documented using language-standard formats that support automated documentation generation (e.g., XML comments in C#, Javadoc, JSDoc). Separately, complex internal business logic should have clear, concise comments explaining the "why," not just the "what."
-- **Project Documentation:** `README.md`, `CONTRIBUTING.md`, and architecture documents (including Architectural Decision Records - ADRs) are up-to-date and accurate.
-- **Standards:** All timestamps and logs must use ISO-8601 UTC format.
-- **Code Maintenance:** `TODO`s and `FIXME`s must be tracked in a work management system and justified.
+- New behavior needs a regression test in `tests/` (gtest), registered in
+  `tests/CMakeLists.txt`. The suite must run green with **zero** `DISABLED_`
+  tests.
+- Corruption tests for new decompression paths: flip a payload byte
+  mid-stream (not the trailing byte, which can hold dead padding bits) and
+  assert throw-or-differ.
+- Thread-count and chunk-boundary variation for anything parallel.
 
-### 5. Security & Compliance
+### 5. Hygiene
 
-- **Security Audit:** Code is audited for OWASP Top 10 vulnerabilities (e.g., injection, XSS, CSRF, SSRF).
-- **Secrets Management:** No hardcoded secrets, credentials, or sensitive data in code or configuration files. Use a secure secret management solution.
-- **Input Validation:** All user inputs and external data are validated and sanitized.
-- **Error Handling & Logging:** Proper error handling is implemented. Logs must not contain sensitive information.
-- **Vulnerability Checks:** Review for potential exploits, privilege escalation, and data leaks.
+- No dead code, stub functions, or `// ... existing code ...` leftovers.
+- No committed build artifacts: `Makefile*`, `CompressionLibConfig*.cmake`,
+  test binaries, `docs/doxygen/`.
+- No unresolved merge conflict markers (`<<<<<<<` / `=======` / `>>>>>>>`).
+- README/CHANGELOG reflect what the code actually does (strategy list,
+  benchmark behavior, test paths).
 
-### 6. Performance & Reliability
+### 6. Performance
 
-- **Efficiency:** Code is efficient, avoids unnecessary computation, and is optimized for latency and throughput.
-- **Resource Management:** No memory leaks, resource leaks, or unbounded resource consumption.
-- **Concurrency:** Asynchronous code is safe from race conditions and deadlocks.
-- **Observability:** The system is observable with adequate metrics, tracing, and logging in place.
-
-### 7. Consistency & Best Practices
-
-- **Conventions:** The codebase is consistent with project conventions and industry best practices.
-- **Modern Practices:** No deprecated APIs, libraries, or outdated patterns are used.
-- **Dependency Management:** All dependencies are up-to-date and vetted for security vulnerabilities.
-- **CI/CD:** CI/CD pipelines enforce linting, type-checking, and other quality gates.
-
-### 8. Developer Experience (DX) & Team Velocity
-
-- **Onboarding & Setup:** A new developer can get the project running locally and pass all tests within minutes. The process is fully documented and automated.
-- **Efficient Development Loop:** The time it takes to build, test, and preview a change is minimal.
-- **Contribution Guidelines:** A clear `CONTRIBUTING.md` file outlines the development workflow, branching strategy, and pull request process.
-- **Architectural Decision Records (ADRs):** Significant architectural decisions are documented, providing context on *why* the system is built the way it is.
-
----
-
-### Reviewer's Responsibility
-
-*   **Actionable Feedback:** For each issue found, provide actionable feedback and suggest concrete improvements.
-*   **Approval:** If the code meets all criteria, approve it with a summary of its strengths. 
+- No accidental O(n²) over whole inputs (the Hybrid `analyzeData` pattern).
+- No full-size intermediate buffers that scale with input (the old
+  byte-per-bit Huffman buffer) when a streaming pack is possible.
+- Benchmark ratios must be unchanged (or better) for existing strategies
+  when touching core compressors; verify with `./app/compression_benchmark --quick`.

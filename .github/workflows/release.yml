@@ -17,8 +17,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        submodules: recursive
 
     - name: Install dependencies (Linux)
       if: runner.os == 'Linux'
@@ -44,6 +42,11 @@ jobs:
       run: cmake --build build --config Release
       shell: bash
 
+    - name: Test (do not tag a broken release)
+      working-directory: ./build
+      run: ctest --output-on-failure
+      shell: bash
+
     - name: Install
       run: cmake --install build --config Release --prefix package
       shell: bash
@@ -52,11 +55,17 @@ jobs:
       run: tar -czf compressor-${{ runner.os }}.tar.gz -C package .
       shell: bash
 
+    - name: Compute checksums
+      run: shasum -a 256 compressor-${{ runner.os }}.tar.gz > compressor-${{ runner.os }}.tar.gz.sha256
+      shell: bash
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: compressor-${{ runner.os }}
-        path: compressor-${{ runner.os }}.tar.gz
+        path: |
+          compressor-${{ runner.os }}.tar.gz
+          compressor-${{ runner.os }}.tar.gz.sha256
 
   deploy:
     name: Upload Release Assets
@@ -72,6 +81,6 @@ jobs:
         path: dist
 
     - name: Publish assets
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
-        files: dist/**/compressor-*.tar.gz
+        files: dist/**/compressor-*.tar.gz*
