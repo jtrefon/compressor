@@ -56,7 +56,7 @@ jobs:
       shell: bash
 
     - name: Compute checksums
-      run: shasum -a 256 compressor-${{ runner.os }}.tar.gz > compressor-${{ runner.os }}.tar.gz.sha256
+      run: sha256sum compressor-${{ runner.os }}.tar.gz > compressor-${{ runner.os }}.tar.gz.sha256
       shell: bash
 
     - name: Upload artifact
