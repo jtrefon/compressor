@@ -72,10 +72,15 @@ ArithmeticCompressor::decompress(const std::vector<uint8_t> &data) const {
   if (originalSize == 0)
     return {};
 
+  // originalSize comes from an untrusted header; avoid reserving up to 4 GB
+  // before the payload is validated. The decoder grows the vector as needed.
   AdaptiveContextModel model;
   RangeDecoder decoder;
   std::vector<uint8_t> result;
-  result.reserve(originalSize);
+  const uint64_t MAX_RESERVE = 1ull << 30;
+  if (originalSize <= MAX_RESERVE) {
+    result.reserve(originalSize);
+  }
   decoder.start(data, offset);
   uint8_t context = 0;
 

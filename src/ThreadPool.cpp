@@ -1,8 +1,12 @@
 #include "compression/ThreadPool.hpp"
+#include <stdexcept>
 
 namespace compression {
 
 ThreadPool::ThreadPool(std::size_t threads) {
+    if (threads == 0) {
+        throw std::invalid_argument("ThreadPool requires at least one worker");
+    }
     for (std::size_t i = 0; i < threads; ++i) {
         workers_.emplace_back([this] { worker(); });
     }

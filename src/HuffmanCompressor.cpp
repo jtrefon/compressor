@@ -7,7 +7,6 @@
 #include <map>
 #include <queue>
 #include <iterator> // for std::back_inserter
-#include <iostream> // Added for std::cerr, std::endl
 
 namespace compression {
 
@@ -533,8 +532,9 @@ std::vector<uint8_t> HuffmanCompressor::decompress(
         
         return result;
     } catch (const std::exception& e) {
-        std::cerr << "Error during Huffman decompression: " << e.what() << std::endl;
-        throw; // Re-throw to maintain the expected behavior in tests
+        // Re-throw with context; no library-side console output
+        throw std::runtime_error(std::string("Huffman decompression failed: ") +
+                                 e.what());
     }
 }
 

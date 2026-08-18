@@ -78,21 +78,20 @@ std::vector<uint8_t> UltraCompressor::decompress(const std::vector<uint8_t>& dat
  
         if ((header & 0xFFFFFFF0u) == 0xFFFFFFF0u) {
             uint8_t strategy = static_cast<uint8_t>(header & 0x0F);
-            std::vector<uint8_t> payload(data.begin() + 4, data.end());
- 
-            switch (strategy) {
-                case 0: {
-                    auto lz77_decompressed = lz77_->decompress(payload);
-                    return bwt_->inverseTransform(lz77_decompressed);
+            // Strategy 0 is never wrapped (compress returns it raw), so a
+            // stream starting with 0xFFFFFFF0 is a raw LZ77 payload whose
+            // symbol count happens to collide — fall through to the raw path.
+            if (strategy != 0) {
+                std::vector<uint8_t> payload(data.begin() + 4, data.end());
+                switch (strategy) {
+                    case 1:
+                        return optimized_->decompress(payload);
+                    case 2:
+                        return bwt_->decompress(payload);
+                    default:
+                        throw std::runtime_error(
+                            "Unknown Ultra compression strategy");
                 }
-                case 1: {
-                    return optimized_->decompress(payload);
-                }
-                case 2: {
-                    return bwt_->decompress(payload);
-                }
-                default:
-                    throw std::runtime_error("Unknown Ultra compression strategy");
             }
         }
     }
