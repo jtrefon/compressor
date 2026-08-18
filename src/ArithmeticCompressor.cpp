@@ -189,25 +189,25 @@ uint8_t ArithmeticCompressor::AdaptiveContextModel::getSymbol(
   const auto &ctx = contexts_[context];
   total = ctx.total;
 
- // Binary lifting on Fenwick tree for O(log N) symbol lookup.
-    // Finds largest idx such that query(idx) <= count.
-    // Symbol is idx (0-based: idx=0 -> symbol 0, idx=1 -> symbol 1, ...).
-    int idx = 0;
-    int32_t accumulated = 0;
-    for (int bit_mask = 128; bit_mask > 0; bit_mask >>= 1) {
-      int tIdx = idx + bit_mask;
-      if (tIdx < 257 &&
-          accumulated + ctx.tree[static_cast<size_t>(tIdx)] <=
-              static_cast<int32_t>(count)) {
-        idx = tIdx;
-        accumulated +=
-            static_cast<int32_t>(ctx.tree[static_cast<size_t>(idx)]);
-      }
+  // Binary lifting on Fenwick tree for O(log N) symbol lookup.
+  // Finds largest idx such that query(idx) <= count.
+  // Symbol is idx (0-based: idx=0 -> symbol 0, idx=1 -> symbol 1, ...).
+  int idx = 0;
+  int32_t accumulated = 0;
+  for (int bit_mask = 128; bit_mask > 0; bit_mask >>= 1) {
+    int tIdx = idx + bit_mask;
+    if (tIdx < 257 &&
+        accumulated + ctx.tree[static_cast<size_t>(tIdx)] <=
+            static_cast<int32_t>(count)) {
+      idx = tIdx;
+      accumulated +=
+          static_cast<int32_t>(ctx.tree[static_cast<size_t>(idx)]);
     }
-    uint32_t symIdx = static_cast<uint32_t>(idx);
-    low = static_cast<uint32_t>(accumulated);
-    high = query(ctx, idx + 1);
-    return static_cast<uint8_t>(symIdx);
+  }
+  uint32_t symIdx = static_cast<uint32_t>(idx);
+  low = static_cast<uint32_t>(accumulated);
+  high = query(ctx, idx + 1);
+  return static_cast<uint8_t>(symIdx);
 }
 
 // --- Range Encoder (Witten-Neal-Cleary arithmetic coding, 32-bit) ---

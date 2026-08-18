@@ -14,6 +14,11 @@ A high-performance file compression library implemented in C++ that provides mul
   - **Huffman Coding**: Statistical compression using variable-length codes
   - **LZ77**: Dictionary-based compression using sliding window technique
   - **Deflate**: Combined LZ77 and Huffman coding (similar to gzip/zlib)
+  - **BWT**: Burrows–Wheeler Transform with MTF and arithmetic coding backend
+  - **Arithmetic Coding**: Adaptive order-1 range coder approaching the entropy limit
+  - **Ultra / Extreme**: BWT-based pipelines with LZ77 stages for maximum ratio
+  - **Optimized**: BWT + arithmetic pipeline (the default strategy)
+  - **Hybrid / Enhanced**: Experimental multi-stage pipelines
 
 - Optimized implementations:
   - Fast hash-based string matching for LZ77
@@ -145,8 +150,11 @@ int main() {
 ### Command-line Utility
 
 ```bash
-# Compress a file using the LZ77 algorithm
-./app/compress_app compress lz77 input.txt output.compressed
+# Compress a file using the BWT strategy
+./app/compress_app compress bwt input.txt output.compressed
+
+# Compress with arithmetic coding
+./app/compress_app compress arithmetic input.txt output.compressed
 
 # Decompress a file (strategy argument is ignored)
 ./app/compress_app decompress ignored output.compressed restored.txt
@@ -157,6 +165,9 @@ int main() {
 # Disable multithreading
 ./app/compress_app compress lz77 input.txt output.compressed --no-threads
 ```
+
+Available strategies: `default` (optimized), `optimized`, `bwt`, `ultra`, `extreme`,
+`lz77`, `huffman`, `arithmetic`.
 
 ## API Documentation
 

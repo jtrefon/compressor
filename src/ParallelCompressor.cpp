@@ -1,5 +1,6 @@
 #include "compression/ParallelCompressor.hpp"
 
+#include "compression/ArithmeticCompressor.hpp"
 #include "compression/BwtCompressor.hpp"
 #include "compression/ExtremeCompressor.hpp"
 #include "compression/HuffmanCompressor.hpp"
@@ -32,6 +33,8 @@ std::unique_ptr<ICompressor> createCompressorById(format::AlgorithmID id) {
     return std::make_unique<ExtremeCompressor>();
   case AlgorithmID::OPTIMIZED_COMPRESSOR:
     return std::make_unique<OptimizedCompressor>();
+  case AlgorithmID::ARITHMETIC_COMPRESSOR:
+    return std::make_unique<ArithmeticCompressor>();
   case AlgorithmID::UNKNOWN:
     return std::make_unique<NullCompressor>();
   default:
