@@ -109,7 +109,9 @@ cd build
 ./app/compression_benchmark
 ```
 
-The benchmark results will be displayed in the console and also written to a file named `BENCHMARKS.md` in the project root directory.
+The benchmark results are displayed in the console for each algorithm and
+file. The `--quick` flag runs only the four core algorithms (Huffman, LZ77,
+BWT, Optimized) for faster iteration.
 
 The benchmark:
 - Tests all implemented compression algorithms

@@ -63,7 +63,6 @@ endif()
 # Install public headers
 install(DIRECTORY include/compression DESTINATION ${INSTALL_INCLUDE_DIR})
 
-# Install CMake config files (generated in src/CMakeLists.txt)
-# (Placeholder - actual generation happens in src/CMakeLists.txt)
+# CMake package config files are generated and installed in src/CMakeLists.txt
 
 message(STATUS "Install rules added.") 
