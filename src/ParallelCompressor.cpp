@@ -128,12 +128,20 @@ ParallelCompressor::decompress(const std::vector<uint8_t> &data) {
     throw std::runtime_error("Input too small for header");
   }
 
-  ThreadPool pool(header.chunkCount);
-  std::vector<std::future<std::vector<uint8_t>>> futures(header.chunkCount);
-  std::vector<std::vector<uint8_t>> results(header.chunkCount);
+  // The chunk count comes from an untrusted header; validate before using it
+  // to size the thread pool or allocate result buffers.
+  const std::size_t MAX_CHUNKS = 1024;
+  std::size_t chunkCount = header.chunkCount;
+  if (chunkCount == 0 || chunkCount > MAX_CHUNKS) {
+    throw std::runtime_error("Invalid chunk count in header");
+  }
+
+  ThreadPool pool(chunkCount);
+  std::vector<std::future<std::vector<uint8_t>>> futures(chunkCount);
+  std::vector<std::vector<uint8_t>> results(chunkCount);
 
   std::size_t offset = headerSize;
-  for (uint32_t i = 0; i < header.chunkCount; ++i) {
+  for (uint32_t i = 0; i < chunkCount; ++i) {
     uint32_t sz = header.compressedSizes[i];
     if (offset + sz > data.size()) {
       throw std::runtime_error("Truncated chunk data");
@@ -149,11 +157,22 @@ ParallelCompressor::decompress(const std::vector<uint8_t> &data) {
   }
 
   std::vector<uint8_t> output;
-  output.reserve(header.originalSize);
-  for (uint32_t i = 0; i < header.chunkCount; ++i) {
+  // originalSize is untrusted; avoid an unbounded reserve on corrupt headers.
+  const uint64_t MAX_RESERVE = 1ull << 30;
+  if (header.originalSize <= MAX_RESERVE) {
+    output.reserve(static_cast<std::size_t>(header.originalSize));
+  }
+  for (uint32_t i = 0; i < chunkCount; ++i) {
     results[i] = futures[i].get();
     output.insert(output.end(), results[i].begin(), results[i].end());
   }
+
+  // The checksum was computed on compress; verify it so chunk corruption or a
+  // tampered header cannot pass silently.
+  if (utils::crc32Calculator.calculate(output) != header.originalChecksum) {
+    throw std::runtime_error("Checksum mismatch: data corrupted");
+  }
+
   return output;
 }
 

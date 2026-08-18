@@ -334,16 +334,26 @@ TEST_F(Lz77CompressorTest, DecompressInvalidDistanceThrows) {
     EXPECT_THROW(compressor.decompress(compressed), std::runtime_error);
 }
 
-TEST_F(Lz77CompressorTest, DISABLED_HandlesLongRepeatedSequence) {
-    // ... existing code ...
-} 
-
-TEST_F(Lz77CompressorTest, DISABLED_InvalidFormat) {
+TEST_F(Lz77CompressorTest, InvalidFormat) {
     compression::Lz77Compressor compressor;
-    std::vector<uint8_t> invalidData = { 
-        0x80, // Match flag set
-        0x01, 0x00, // Distance 1
-        // Missing length byte
+    // Well-formed header (1 symbol) whose flag byte claims a match, but the
+    // match data is missing entirely.
+    std::vector<uint8_t> invalidData = {
+        0x01, 0x00, 0x00, 0x00, // 1 symbol
+        0x01,                   // flag: bit 0 = match
+        // Missing length/distance bytes
     };
     EXPECT_THROW(compressor.decompress(invalidData), std::runtime_error);
-} 
+
+    // Header claims 2 symbols but no flag byte follows.
+    std::vector<uint8_t> truncatedData = {0x02, 0x00, 0x00, 0x00};
+    EXPECT_THROW(compressor.decompress(truncatedData), std::runtime_error);
+
+    // Match distance that exceeds produced output.
+    std::vector<uint8_t> badDistance = {
+        0x01, 0x00, 0x00, 0x00, // 1 symbol
+        0x01,                   // flag: bit 0 = match
+        0x00, 0x05, 0x00,       // length 3, distance 6 > 0 produced
+    };
+    EXPECT_THROW(compressor.decompress(badDistance), std::runtime_error);
+}

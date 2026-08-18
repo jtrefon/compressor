@@ -8,30 +8,20 @@ target_include_directories(compression
         ${CMAKE_CURRENT_SOURCE_DIR} # Needed for internal headers if any
 )
 
-# Placeholder for source files - we'll add actual source files here later
 target_sources(compression PRIVATE
     NullCompressor.cpp
     RleCompressor.cpp
     HuffmanCompressor.cpp
     Lz77Compressor.cpp
-    DeflateCompressor.cpp
     BwtCompressor.cpp
     ThreadPool.cpp
     ParallelCompressor.cpp
     SystemInfo.cpp
-    EnhancedCompressor.cpp
     ArithmeticCompressor.cpp
-    EnhancedBwtCompressor.cpp
     OptimizedCompressor.cpp
-    HybridCompressor.cpp
     UltraCompressor.cpp
     ExtremeCompressor.cpp
-#     some_compression_algorithm.cpp
 )
-
-# Example of linking dependencies if needed in the future
-# target_link_libraries(compression PRIVATE SomeDependency) 
-
 # --- Installation --- 
 
 # Install the library target itself

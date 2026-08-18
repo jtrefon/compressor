@@ -5,46 +5,74 @@ on:
   push:
     branches:
       - "main"
-      - "feature/**" # Trigger on pushes to main and branches like feature/xxx
+      - "feature/**"
   pull_request:
     branches: [ "main" ]
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest # Use a standard Linux environment
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        submodules: 'recursive' # Ensure submodules like GoogleTest are checked out
 
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential cmake
 
+    - name: "Guard: no unresolved merge conflicts or disabled tests"
+      run: |
+        if rg -n '^<<<<<<< |^=======$|^>>>>>>> ' --glob '!build/**' .; then
+          echo "::error::Unresolved merge conflict markers found" && exit 1
+        fi
+        rg -n 'DISABLED_|This is a stub function for now|TODO' --glob '!build/**' --glob '*.cpp' --glob '*.hpp' . && echo "::warning::Disabled tests, stubs or TODOs present" || true
+
     - name: Configure CMake
       run: |
         cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
-      # -S . specifies the source directory
-      # -B build specifies the build directory
-      # CMAKE_BUILD_TYPE=Release for optimized build
-      # BUILD_SHARED_LIBS=ON (optional, adjust as needed)
 
     - name: Build project
-      run: cmake --build build --config Release
+      run: cmake --build build --config Release -j2
 
     - name: Run tests
-      working-directory: ./build # Run tests from the build directory
-      run: ctest --output-on-failure --verbose
+      working-directory: ./build
+      run: ctest --output-on-failure
 
-    - name: Run benchmark
-      working-directory: ./build # Run benchmark from the build directory
-      run: ./app/compression_benchmark
+    - name: Run benchmark and fail on algorithm errors
+      working-directory: ./build
+      run: |
+        set -o pipefail
+        ./app/compression_benchmark --quick 2> bench.err > bench.out || { cat bench.err; exit 1; }
+        if rg -i "error:" bench.err; then
+          echo "::error::Benchmark reported algorithm failures"
+          exit 1
+        fi
 
-    - name: Upload benchmark results
-      uses: actions/upload-artifact@v4
-      with:
-        name: benchmark-results
-        path: BENCHMARKS.md # Path relative to workspace root 
+  sanitizers:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake
+
+    - name: Configure CMake with sanitizers
+      run: |
+        cmake -S . -B build-asan -DCMAKE_BUILD_TYPE=Debug \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer"
+
+    - name: Build
+      run: cmake --build build-asan -j2
+
+    - name: Run tests under ASan/UBSan
+      working-directory: ./build-asan
+      run: ctest --output-on-failure
+      env:
+        ASAN_OPTIONS: detect_leaks=1

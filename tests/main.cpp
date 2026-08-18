@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <compression/BwtCompressor.hpp>
 #include <compression/NullCompressor.hpp>
-#include <compression/dummy.hpp>
 #include <cstdint>
 #include <gtest/gtest.h>
 #include <iterator>
@@ -32,12 +31,6 @@ TEST(HelloTest, BasicAssertions) {
   EXPECT_STRNE("hello", "world");
   // Expect equality.
   EXPECT_EQ(7 * 6, 42);
-}
-
-TEST(CompressionLibTest, DummyFunctionTest) {
-  // This test doesn't assert anything about the output,
-  // but confirms the function can be called.
-  ASSERT_NO_THROW(compression::dummy_function());
 }
 
 // Test fixture for NullCompressor tests

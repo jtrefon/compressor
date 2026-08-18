@@ -14,6 +14,12 @@ bin/
 *.dll
 *.exe
 
+# CMake-generated files (committed accidentally in the past)
+Makefile
+**/Makefile
+src/CompressionLibConfig.cmake
+src/CompressionLibConfigVersion.cmake
+
 # Compiled object files
 *.o
 *.obj

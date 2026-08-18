@@ -7,7 +7,6 @@
 #include <map>
 #include <queue>
 #include <iterator> // for std::back_inserter
-#include <iostream> // Added for std::cerr, std::endl
 
 namespace compression {
 
@@ -383,41 +382,33 @@ std::vector<uint8_t> HuffmanCompressor::compress(
     // 4. Serialize the frequency map
     std::vector<uint8_t> result = serializeFrequencyMap(freqMap);
 
-    // 5. Write the compressed data. Use a byte-backed bit buffer
-    // (std::vector<uint8_t>) instead of std::vector<bool>: the bit-packed
-    // container's insertions are far slower, while the packing logic is
-    // identical and the output bytes are unchanged.
-    std::vector<uint8_t> encodedBits;
-    encodedBits.reserve(data.size() * 8);
-
+    // 5. Write the compressed data, packing code bits directly into the
+    // output. This avoids a transient byte-per-bit buffer that reached ~8x
+    // the encoded size on large inputs. The output is byte-identical to the
+    // previous two-phase packing.
+    std::size_t totalBits = 0;
     for (const auto &byte : data) {
-        const auto &code = codeMap[byte];
-        encodedBits.insert(encodedBits.end(), code.begin(), code.end());
+      totalBits += codeMap[byte].size();
     }
+    uint8_t remainingBits = static_cast<uint8_t>(totalBits % 8);
+    result.push_back(remainingBits);
 
-    size_t fullByteCount = encodedBits.size() / 8;
-    uint8_t remainingBits = encodedBits.size() % 8;
-
-    result.push_back(remainingBits == 0 ? 0 : remainingBits);
-
-    for (size_t i = 0; i < fullByteCount; i++) {
-        uint8_t byte = 0;
-        for (size_t bit = 0; bit < 8; bit++) {
-            if (encodedBits[i * 8 + bit]) {
-                byte |= (1 << (7 - bit));
-            }
+    uint8_t acc = 0;
+    unsigned bitPos = 0;
+    for (const auto &byte : data) {
+      for (bool bit : codeMap[byte]) {
+        if (bit) {
+          acc |= static_cast<uint8_t>(1u << (7 - bitPos));
         }
-        result.push_back(byte);
+        if (++bitPos == 8) {
+          result.push_back(acc);
+          acc = 0;
+          bitPos = 0;
+        }
+      }
     }
-
-    if (remainingBits > 0) {
-        uint8_t byte = 0;
-        for (size_t bit = 0; bit < remainingBits; bit++) {
-            if (encodedBits[fullByteCount * 8 + bit]) {
-                byte |= (1 << (7 - bit));
-            }
-        }
-        result.push_back(byte);
+    if (bitPos > 0) {
+      result.push_back(acc);
     }
 
     return result;
@@ -533,8 +524,9 @@ std::vector<uint8_t> HuffmanCompressor::decompress(
         
         return result;
     } catch (const std::exception& e) {
-        std::cerr << "Error during Huffman decompression: " << e.what() << std::endl;
-        throw; // Re-throw to maintain the expected behavior in tests
+        // Re-throw with context; no library-side console output
+        throw std::runtime_error(std::string("Huffman decompression failed: ") +
+                                 e.what());
     }
 }
 

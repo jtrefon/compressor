@@ -157,3 +157,28 @@ TEST_F(OptimizedCompressorTest, VerifyStrategySelection) {
   auto decomp3 = compressor.decompress(comp3);
   EXPECT_EQ(diverse, decomp3);
 }
+
+TEST_F(OptimizedCompressorTest, InvalidMethodByteRejected) {
+  // A corrupt method byte must be rejected, not misrouted.
+  auto data = std::vector<uint8_t>(100, 'A');
+  auto compressed = compressor.compress(data);
+  ASSERT_FALSE(compressed.empty());
+  compressed[0] = 0x7F;
+  EXPECT_THROW(compressor.decompress(compressed), std::runtime_error);
+}
+
+TEST_F(OptimizedCompressorTest, CorruptedPayloadRejected) {
+  // Flip a byte mid-payload; decompression must throw or return different data.
+  auto data = std::vector<uint8_t>(5000, 'x');
+  auto compressed = compressor.compress(data);
+  ASSERT_FALSE(compressed.empty());
+  compressed[compressed.size() / 2] ^= 0x01;
+  bool threw = false;
+  std::vector<uint8_t> decompressed;
+  try {
+    decompressed = compressor.decompress(compressed);
+  } catch (const std::exception &) {
+    threw = true;
+  }
+  EXPECT_TRUE(threw || decompressed != data);
+}

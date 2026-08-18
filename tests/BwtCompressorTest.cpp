@@ -81,3 +81,15 @@ TEST_F(BwtCompressorTest, DecompressInvalidDataBadIndex) {
     
     EXPECT_THROW(compressor.decompress(compressed), std::runtime_error);
 } 
+TEST_F(BwtCompressorTest, TextCompresses) {
+  // Regression guard: BWT on compressible text must actually shrink it.
+  std::vector<uint8_t> data;
+  data.reserve(20000);
+  const char* words[] = {"the", "quick", "brown", "fox", "jumps", "over"};
+  for (int i = 0; i < 4000; ++i) {
+    for (const char* w = words[i % 6]; *w; ++w) data.push_back(*w);
+    data.push_back(' ');
+  }
+  auto compressed = compressor.compress(data);
+  EXPECT_LT(compressed.size(), data.size());
+}

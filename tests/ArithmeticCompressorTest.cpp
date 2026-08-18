@@ -109,3 +109,28 @@ TEST_F(ArithmeticCompressorTest, LargeData) {
     FAIL() << "Data mismatch full check";
   }
 }
+
+TEST_F(ArithmeticCompressorTest, All256Symbols) {
+  // Regression guard: all 256 symbols in one stream (entry-count header
+  // overflow).
+  std::vector<uint8_t> data;
+  data.reserve(512);
+  for (int r = 0; r < 2; ++r) {
+    for (int i = 0; i < 256; ++i) data.push_back(static_cast<uint8_t>(i));
+  }
+  auto compressed = compressor.compress(data);
+  auto decompressed = compressor.decompress(compressed);
+  EXPECT_EQ(data, decompressed);
+}
+
+TEST_F(ArithmeticCompressorTest, CorruptedPayloadRejected) {
+  std::vector<uint8_t> data(1000, 'x');
+  auto compressed = compressor.compress(data);
+  ASSERT_FALSE(compressed.empty());
+  compressed[compressed.size() / 2] ^= 0x01;
+  EXPECT_THROW(compressor.decompress(compressed), std::runtime_error);
+}
+
+TEST_F(ArithmeticCompressorTest, TruncatedHeaderRejected) {
+  EXPECT_THROW(compressor.decompress({0x01, 0x02, 0x03}), std::runtime_error);
+}

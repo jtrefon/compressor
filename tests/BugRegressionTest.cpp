@@ -126,6 +126,22 @@ TEST_F(BugRegressionTest, OptimizedRleSingle0xFF) {
   EXPECT_EQ(data, decompressed);
 }
 
+// Bug fix 5b: OptimizedCompressor RLE with mid-stream 0xFF literal, where the
+// RLE method actually wins (10k 'A' + 0xFF + 10k 'B'). A lone 0xFF literal
+// used to be written raw and then misinterpreted as a run header on decode.
+TEST_F(BugRegressionTest, OptimizedRleMidData0xFF) {
+  std::vector<uint8_t> data(10000, 'A');
+  data.push_back(0xFF);
+  data.insert(data.end(), 10000, 'B');
+
+  auto optimized = std::make_unique<OptimizedCompressor>();
+  auto compressed = optimized->compress(data);
+  ASSERT_FALSE(compressed.empty());
+  ASSERT_EQ(0x01, compressed[0]) << "test must exercise the RLE path";
+  auto decompressed = optimized->decompress(compressed);
+  EXPECT_EQ(data, decompressed);
+}
+
 // Bug fix 6: BWT with all 0xFF bytes
 TEST_F(BugRegressionTest, BwtAll0xFF) {
   BwtCompressor bwt;

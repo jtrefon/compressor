@@ -13,12 +13,11 @@ A high-performance file compression library implemented in C++ that provides mul
   - **RLE (Run-Length Encoding)**: Simple compression for data with repeated patterns
   - **Huffman Coding**: Statistical compression using variable-length codes
   - **LZ77**: Dictionary-based compression using sliding window technique
-  - **Deflate**: Combined LZ77 and Huffman coding (similar to gzip/zlib)
+  - **Deflate-style**: LZ77 + Huffman variant built into the Optimized strategy
   - **BWT**: Burrows–Wheeler Transform with MTF and arithmetic coding backend
   - **Arithmetic Coding**: Adaptive order-1 range coder approaching the entropy limit
   - **Ultra / Extreme**: BWT-based pipelines with LZ77 stages for maximum ratio
-  - **Optimized**: BWT + arithmetic pipeline (the default strategy)
-  - **Hybrid / Enhanced**: Experimental multi-stage pipelines
+  - **Optimized**: Multi-method pipeline that picks the best strategy (the default)
 
 - Optimized implementations:
   - Fast hash-based string matching for LZ77
@@ -96,7 +95,10 @@ Available test categories:
 - `RleCompressorTest.*`
 - `HuffmanCompressorTest.*`
 - `Lz77CompressorTest.*`
-- `DeflateCompressorTest.*`
+- `BwtCompressorTest.*`
+- `OptimizedCompressorTest.*`
+- `ArithmeticCompressorTest.*`
+- `BugRegressionTest.*`
 
 ## Running Benchmarks
 
@@ -107,7 +109,9 @@ cd build
 ./app/compression_benchmark
 ```
 
-The benchmark results will be displayed in the console and also written to a file named `BENCHMARKS.md` in the project root directory.
+The benchmark results are displayed in the console for each algorithm and
+file. The `--quick` flag runs only the four core algorithms (Huffman, LZ77,
+BWT, Optimized) for faster iteration.
 
 The benchmark:
 - Tests all implemented compression algorithms

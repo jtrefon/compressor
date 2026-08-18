@@ -134,7 +134,7 @@ Lz77Compressor::Match Lz77Compressor::findBestMatchAt(
         size_t distance = pos - candidatePos;
         
         // Skip if the distance is invalid or too large to encode effectively
-        if (distance < 1 || distance > 32768) {
+        if (distance < 1 || distance > windowSize_) {
             continue;
         }
         
@@ -244,7 +244,7 @@ std::vector<Lz77Compressor::Lz77Symbol> Lz77Compressor::compressToSymbols(const 
         Match currentMatch = findBestMatchAt(data, currentPos, hashTable);
         
         // Check if we have a good match
-        if (currentMatch.length >= minMatchLength_ && currentMatch.length > 3) {
+        if (currentMatch.length >= minMatchLength_) {
             // For lazy matching, look ahead to see if next position has a better match
             if (!useGreedyParsing_ && currentPos + 1 < data.size()) {
                 Match nextMatch = findBestMatchAt(data, currentPos + 1, hashTable);
