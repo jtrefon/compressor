@@ -22,10 +22,11 @@
 #include <compression/Lz77Compressor.hpp>
 #include <compression/NullCompressor.hpp>
 #include <compression/OptimizedCompressor.hpp>
-#include <compression/ParallelCompressor.hpp>
-#include <compression/RleCompressor.hpp>
 #include <compression/SystemInfo.hpp>
+#include <compression/ThreadPool.hpp>
 #include <compression/UltraCompressor.hpp>
+#include <compression/codec/CodecRegistry.hpp>
+#include <compression/codec/ParallelCodecDecorator.hpp>
 
 // Platform-specific defines for popen/pclose
 #ifdef _WIN32
@@ -33,45 +34,22 @@
 #define pclose _pclose
 #endif
 
-// Factory helpers to create compressors by ID or name
+// Factory helpers to create compressors by ID or name.
+// CodecRegistry is the single source of truth (see codec/CodecRegistry.hpp).
+
 std::unique_ptr<compression::ICompressor>
 createCompressor(compression::format::AlgorithmID id) {
-  using namespace compression;
-  switch (id) {
-  case format::AlgorithmID::RLE_COMPRESSOR:
-    return std::make_unique<RleCompressor>();
-  case format::AlgorithmID::NULL_COMPRESSOR:
-    return std::make_unique<NullCompressor>();
-  case format::AlgorithmID::HUFFMAN_COMPRESSOR:
-    return std::make_unique<HuffmanCompressor>();
-  case format::AlgorithmID::LZ77_COMPRESSOR:
-    return std::make_unique<Lz77Compressor>(32768, 3, 258, false, true, true);
-  case format::AlgorithmID::BWT_COMPRESSOR:
-    return std::make_unique<BwtCompressor>();
-  case format::AlgorithmID::ULTRA_COMPRESSOR:
-    return std::make_unique<UltraCompressor>();
-  case format::AlgorithmID::EXTREME_COMPRESSOR:
-    return std::make_unique<ExtremeCompressor>();
-  case format::AlgorithmID::OPTIMIZED_COMPRESSOR:
-    return std::make_unique<OptimizedCompressor>();
-  default:
-    throw std::invalid_argument("Unknown compression strategy");
-  }
+  return compression::codec::CodecRegistry::instance().create(id);
 }
 
 std::unique_ptr<compression::ICompressor>
 createCompressor(const std::string &name) {
   if (name == "Arithmetic") {
-    return std::make_unique<compression::ArithmeticCompressor>();
+    return compression::codec::CodecRegistry::instance().create("arithmetic");
   } else if (name == "Optimized") {
-    return std::make_unique<compression::OptimizedCompressor>();
+    return compression::codec::CodecRegistry::instance().create("optimized");
   }
-
-  auto id = compression::format::stringToAlgorithmId(name);
-  if (id == compression::format::AlgorithmID::UNKNOWN) {
-    throw std::invalid_argument("Unknown compression strategy " + name);
-  }
-  return createCompressor(id);
+  return compression::codec::CodecRegistry::instance().create(name);
 }
 
 // --- Helper Functions ---
@@ -123,7 +101,9 @@ BenchmarkResult runBenchmark(const std::string &name,
   std::vector<uint8_t> compressedData;
   try {
     auto startCompress = std::chrono::high_resolution_clock::now();
-    compression::ParallelCompressor pc(std::move(base), algoId, threads);
+    compression::ThreadPool pool(std::max<std::size_t>(threads, 1));
+    compression::codec::ParallelCodecDecorator pc(std::move(base), algoId, &pool,
+                                                  threads);
     compressedData = pc.compress(originalData);
     auto endCompress = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> compressDuration =
@@ -142,8 +122,10 @@ BenchmarkResult runBenchmark(const std::string &name,
   if (result.success) {
     try {
       auto startDecompress = std::chrono::high_resolution_clock::now();
-      compression::ParallelCompressor pcDec(createCompressor(algoId), algoId,
-                                            threads);
+      compression::ThreadPool poolDec(std::max<std::size_t>(threads, 1));
+      compression::codec::ParallelCodecDecorator pcDec(createCompressor(algoId),
+                                                       algoId, &poolDec,
+                                                       threads);
       std::vector<uint8_t> decompressedData = pcDec.decompress(compressedData);
       auto endDecompress = std::chrono::high_resolution_clock::now();
       std::chrono::duration<double, std::milli> decompressDuration =

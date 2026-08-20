@@ -13,6 +13,10 @@ ThreadPool::ThreadPool(std::size_t threads) {
 }
 
 ThreadPool::~ThreadPool() {
+    shutdown();
+}
+
+void ThreadPool::shutdown() {
     {
         std::unique_lock<std::mutex> lock(mutex_);
         stop_ = true;
@@ -23,6 +27,18 @@ ThreadPool::~ThreadPool() {
             t.join();
         }
     }
+    workers_.clear();
+}
+
+void ThreadPool::execute(std::function<void()> task) {
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        if (stop_) {
+            throw std::runtime_error("ThreadPool: cannot execute after shutdown");
+        }
+        tasks_.emplace(std::move(task));
+    }
+    cv_.notify_one();
 }
 
 

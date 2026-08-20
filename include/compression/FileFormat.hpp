@@ -32,6 +32,8 @@ enum class AlgorithmID : uint8_t {
   EXTREME_COMPRESSOR = 6,
   OPTIMIZED_COMPRESSOR = 7,
   ARITHMETIC_COMPRESSOR = 8,
+  PIPELINE_BWT_COMPRESSOR = 9, // BWT+MTF -> RLE -> Arithmetic (pipeline codec)
+  ANS_COMPRESSOR = 10,         // static rANS entropy coder (pipeline codec)
   // Add future IDs here
   UNKNOWN = 255
 };
@@ -62,136 +64,26 @@ struct FileHeader {
 };
 
 // --- Serialization / Deserialization ---
+// Implemented out-of-line (src/format/FileFormat.cpp) on top of the
+// FrameRegistry; byte layout is unchanged (little-endian, no padding).
 
 /**
  * @brief Serializes the header data into a byte vector.
  * @param header The header data to serialize.
  * @return A vector of bytes representing the serialized header.
  */
-inline std::vector<uint8_t> serializeHeader(const FileHeader &header) {
-  std::vector<uint8_t> buffer(BASE_HEADER_SIZE +
-                              header.compressedSizes.size() * sizeof(uint32_t));
-  size_t offset = 0;
-
-  // 1. Magic Number
-  std::copy(MAGIC_NUMBER.begin(), MAGIC_NUMBER.end(), buffer.begin() + offset);
-  offset += MAGIC_NUMBER.size();
-
-  // 2. Format Version
-  buffer[offset++] = header.formatVersion;
-
-  // 3. Algorithm ID
-  buffer[offset++] = static_cast<uint8_t>(header.algorithmId);
-
-  // 4. Original Size (little-endian)
-  for (int i = 0; i < 8; ++i) {
-    buffer[offset++] =
-        static_cast<uint8_t>((header.originalSize >> (i * 8)) & 0xFF);
-  }
-
-  // 5. Original Checksum (little-endian)
-  for (int i = 0; i < 4; ++i) {
-    buffer[offset++] =
-        static_cast<uint8_t>((header.originalChecksum >> (i * 8)) & 0xFF);
-  }
-
-  // 6. Chunk count
-  for (int i = 0; i < 4; ++i) {
-    buffer[offset++] =
-        static_cast<uint8_t>((header.chunkCount >> (i * 8)) & 0xFF);
-  }
-
-  // 7. Chunk size
-  for (int i = 0; i < 4; ++i) {
-    buffer[offset++] =
-        static_cast<uint8_t>((header.chunkSize >> (i * 8)) & 0xFF);
-  }
-
-  // 8. Compressed sizes for each chunk
-  for (uint32_t size : header.compressedSizes) {
-    for (int i = 0; i < 4; ++i) {
-      buffer[offset++] = static_cast<uint8_t>((size >> (i * 8)) & 0xFF);
-    }
-  }
-
-  return buffer;
-}
+std::vector<uint8_t> serializeHeader(const FileHeader &header);
 
 /**
  * @brief Deserializes header data from a byte vector.
  * @param buffer The byte vector containing the serialized header (must be at
  * least HEADER_SIZE bytes).
  * @return The deserialized FileHeader.
- * @throws std::runtime_error if magic number or version is incorrect, or buffer
- * is too small.
+ * @throws InvalidFormatError if the magic number is incorrect, or the buffer
+ * is too small; UnsupportedVersionError if the format version is unknown;
+ * CorruptDataError if the chunk metadata is malformed.
  */
-inline FileHeader deserializeHeader(const std::vector<uint8_t> &buffer) {
-  if (buffer.size() < BASE_HEADER_SIZE) {
-    throw std::runtime_error("Buffer too small to contain file header.");
-  }
-
-  size_t offset = 0;
-  FileHeader header;
-
-  // 1. Verify Magic Number
-  if (!std::equal(MAGIC_NUMBER.begin(), MAGIC_NUMBER.end(),
-                  buffer.begin() + offset)) {
-    throw std::runtime_error(
-        "Invalid magic number. Not a recognized compressed file.");
-  }
-  offset += MAGIC_NUMBER.size();
-
-  // 2. Read and Verify Format Version
-  header.formatVersion = buffer[offset++];
-  if (header.formatVersion != FORMAT_VERSION) {
-    throw std::runtime_error("Unsupported format version: " +
-                             std::to_string(header.formatVersion));
-  }
-
-  // 3. Read Algorithm ID
-  header.algorithmId = static_cast<AlgorithmID>(buffer[offset++]);
-
-  // 4. Read Original Size (assuming little-endian storage)
-  header.originalSize = 0;
-  for (int i = 0; i < 8; ++i) {
-    header.originalSize |= (static_cast<uint64_t>(buffer[offset++]) << (i * 8));
-  }
-
-  // 5. Read Original Checksum (assuming little-endian storage)
-  header.originalChecksum = 0;
-  for (int i = 0; i < 4; ++i) {
-    header.originalChecksum |=
-        (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
-  }
-
-  // 6. Read chunk count
-  header.chunkCount = 0;
-  for (int i = 0; i < 4; ++i) {
-    header.chunkCount |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
-  }
-
-  // 7. Read chunk size
-  header.chunkSize = 0;
-  for (int i = 0; i < 4; ++i) {
-    header.chunkSize |= (static_cast<uint32_t>(buffer[offset++]) << (i * 8));
-  }
-
-  // 8. Read compressed sizes
-  if (buffer.size() <
-      BASE_HEADER_SIZE + static_cast<size_t>(header.chunkCount) * 4) {
-    throw std::runtime_error("Buffer too small for chunk metadata");
-  }
-  header.compressedSizes.resize(header.chunkCount);
-  for (uint32_t i = 0; i < header.chunkCount; ++i) {
-    uint32_t size = 0;
-    for (int j = 0; j < 4; ++j) {
-      size |= (static_cast<uint32_t>(buffer[offset++]) << (j * 8));
-    }
-    header.compressedSizes[i] = size;
-  }
-
-  return header;
-}
+FileHeader deserializeHeader(const std::vector<uint8_t> &buffer);
 
 /**
  * @brief Maps AlgorithmID enum to a string representation.
@@ -218,6 +110,10 @@ inline std::string algorithmIdToString(AlgorithmID id) {
     return "optimized";
   case AlgorithmID::ARITHMETIC_COMPRESSOR:
     return "arithmetic";
+  case AlgorithmID::PIPELINE_BWT_COMPRESSOR:
+    return "bwt2";
+  case AlgorithmID::ANS_COMPRESSOR:
+    return "ans";
   default:
     return "unknown";
   }
@@ -247,6 +143,10 @@ inline AlgorithmID stringToAlgorithmId(const std::string &name) {
     return AlgorithmID::OPTIMIZED_COMPRESSOR;
   if (name == "arithmetic")
     return AlgorithmID::ARITHMETIC_COMPRESSOR;
+  if (name == "bwt2")
+    return AlgorithmID::PIPELINE_BWT_COMPRESSOR;
+  if (name == "ans")
+    return AlgorithmID::ANS_COMPRESSOR;
   // Add mappings for future algorithms
   return AlgorithmID::UNKNOWN;
 }
