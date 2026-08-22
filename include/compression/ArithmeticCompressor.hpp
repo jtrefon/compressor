@@ -112,6 +112,9 @@ private:
     static constexpr uint32_t HALF_ = 0x80000000u;
     static constexpr uint32_t QUARTER_ = 0x40000000u;
     static constexpr uint32_t THREE_QUARTERS_ = 0xC0000000u;
+    // Bytes a correct stream may read past the end before being declared
+    // truncated (see readBit for the measurement).
+    static constexpr size_t kSlackBytes = 4;
 
     const std::vector<uint8_t> *input_ = nullptr;
     size_t *inputPos_ = nullptr;
@@ -120,6 +123,7 @@ private:
     uint32_t code_ = 0;
     uint8_t bitBuffer_ = 0;
     int bitCount_ = 0;
+    size_t slackBytes_ = 0;
 
     int readBit();
     void normalize();

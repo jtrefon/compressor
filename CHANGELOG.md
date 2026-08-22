@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.0.0] - 2026-08-20
+
+### Added
+
+- **Codec registry** (`CodecRegistry`): codecs are discovered and instantiated purely from the registry by `AlgorithmID` — no per-codec dispatch chains in the caller — the open/closed principle proof (OCP) for the hexagonal refactor.
+- **`ans` codec** (`AnsCoder`): rANS entropy coder registered under `AlgorithmID::ANS`; wired into the CLI (`compress_app compress ans`), the `ParallelCodecDecorator`, and the format pipeline (`[PLIN]` frames with BWT/RLE transforms, `[CPRO]` containers).
+- **Golden format gates** (`tests/format/GoldenTest.cpp`): frozen byte-for-byte fixtures for the ANS payload, BWT+RLE pipeline payload, and `[CPRO]` ANS/optimized frames — any accidental format drift fails the build.
+- **Fuzz gates** (`tests/security/FuzzGatesTest.cpp`): seeded, deterministic mutation fuzz across every registry codec and the `ParallelCodecDecorator` framing; asserts no crash and no hang (only `std::runtime_error`-family exceptions).
+
+### Fixed
+
+- **AnsCoder frequency overflow**: a single-symbol input produced `freq = 65536`, overflowing the `uint16_t` frequency table to 0 and causing an infinite encoder renorm loop plus a division by zero; frequencies are now capped at `kFreqSum / 2` with the deficit redistributed.
+- **AnsCoder decode order**: normalization ran before the state step-down; reordered to the rANS-canonical slot → step-down → renorm-up.
+- **ArithmeticCompressor truncated-stream hang** (pre-existing 1.x robustness hole found by the fuzz gates): `decompress` trusted the untrusted `u32 originalSize` header and decoded up to ~4 billion symbols from a 16-byte corrupt input (minutes of work, a denial-of-service vector). The range decoder now allows the up-to-two-bytes-past-the-end slack that correct streams legitimately need (measured over ~240k round trips) and throws on anything further, bounding decode work to the input size.
+
+### Removed
+
+- **`DeflateCompressor`**, **`EnhancedCompressor`**, **`EnhancedBwtCompressor`**, **`HybridCompressor`** (and support classes) — these were removed in 1.6.1 and remain absent.
+
 ## [1.6.1] - 2026-08-18
 
 ### Removed

@@ -15,13 +15,34 @@ target_sources(compression PRIVATE
     Lz77Compressor.cpp
     BwtCompressor.cpp
     ThreadPool.cpp
-    ParallelCompressor.cpp
-    SystemInfo.cpp
     ArithmeticCompressor.cpp
     OptimizedCompressor.cpp
     UltraCompressor.cpp
     ExtremeCompressor.cpp
+    core/ByteSource.cpp
+    codec/CodecRegistry.cpp
+    codec/ParallelCodecDecorator.cpp
+    codec/pipeline/Pipeline.cpp
+    codec/pipeline/AnsCoder.cpp
+    codec/decorator/Decorators.cpp
+    format/FrameRegistry.cpp
+    format/FileFormat.cpp
+    app/EventBus.cpp
+    app/CompressionService.cpp
+    app/Command.cpp
+    app/ArchiveService.cpp
+    archive/ArchiveWriter.cpp
+    archive/ArchiveReader.cpp
 )
+
+# --- Platform adapters: exactly one TU per OS, zero ifdefs in domain code ---
+if(WIN32)
+    target_sources(compression PRIVATE platform/SystemInfo_windows.cpp)
+elseif(APPLE)
+    target_sources(compression PRIVATE platform/SystemInfo_darwin.cpp)
+else()
+    target_sources(compression PRIVATE platform/SystemInfo_linux.cpp)
+endif()
 # --- Installation --- 
 
 # Install the library target itself

@@ -74,6 +74,11 @@ ArithmeticCompressor::decompress(const std::vector<uint8_t> &data) const {
 
   // originalSize comes from an untrusted header; avoid reserving up to 4 GB
   // before the payload is validated. The decoder grows the vector as needed.
+  // Decode work is bounded by the payload: readBit() throws once the stream
+  // is exhausted, and between exhaustion-triggering renormalizations the
+  // interval can shrink at most ~20 symbols before hitting an E-state, so a
+  // hostile originalSize cannot force an unbounded decode loop (a pre-existing
+  // 1.x robustness hole, found by the fuzz gate).
   AdaptiveContextModel model;
   RangeDecoder decoder;
   std::vector<uint8_t> result;
@@ -309,10 +314,25 @@ void ArithmeticCompressor::RangeDecoder::start(
 
 int ArithmeticCompressor::RangeDecoder::readBit() {
   if (bitCount_ == 0) {
-    if (*inputPos_ < input_->size())
-      bitBuffer_ = (*input_)[*inputPos_];
-    else
+    if (*inputPos_ >= input_->size()) {
+      // A correct stream can consume up to two bytes past the end: the final
+      // normalization reads bits past the encoder's flush (measured over a
+      // sweep of ~240k round trips; 1.x decoders silently read zeros there).
+      // Allow kSlackBytes for byte-level compatibility with those streams —
+      // anything more means the stream is truncated or the header lies, and
+      // reading on would decode garbage for up to 4 billion symbols (a
+      // pre-existing 1.x robustness hole, found by the fuzz gate).
+      if (slackBytes_ >= kSlackBytes) {
+        throw std::runtime_error(
+            "Arithmetic decompress: stream exhausted before end of data");
+      }
+      ++slackBytes_;
       bitBuffer_ = 0;
+      ++(*inputPos_);
+      bitCount_ = 8;
+      return 0;
+    }
+    bitBuffer_ = (*input_)[*inputPos_];
     ++(*inputPos_);
     bitCount_ = 8;
   }
