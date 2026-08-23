@@ -12,15 +12,11 @@
 
 ## The `v2.0.0` convention
 
-`v2.0.0` is **reserved** for the full UI deployment milestone. Until then the
-engine releases on the 1.x line (patch-level bumps are the norm while the
-engine hardens). At the deployment milestone, in one coordinated release:
-
-- `compressionlib` tags `v2.0.0`
-- `compressor-macos` tags `v1.0.0`
-- `compressor-windows` tags `v1.0.0`
-
-Each CHANGELOG references the others.
+Versioning is **purely semantic** — no feature-milestone tagging. `v2.0.0`
+happens **only when compatibility breaks** (file formats or the installed
+public API). It is not tied to any UI deployment milestone; the UI
+repositories version independently on their own lines. Each MAJOR bump's
+CHANGELOG documents exactly what breaks and what migrations are required.
 
 ## Guarantees within a MAJOR line
 

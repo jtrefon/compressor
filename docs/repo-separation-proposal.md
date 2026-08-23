@@ -13,8 +13,8 @@ CompressionLib C++ library, the reference CLI, the `.cza` archive engine, and
 all quality gates. The macOS and Windows UIs are built in **two new separate
 repositories** (`compressor-macos`, `compressor-windows`) that consume the
 engine as a versioned, pinned dependency — never as code in this tree. The
-engine repo keeps its own version line (1.x); the `v2.0.0` tag stays reserved
-for the coordinated UI-deployment milestone.
+engine repo keeps its own version line (1.x); versioning is purely semantic
+(`v2.0.0` only when compatibility breaks).
 
 ---
 
@@ -28,10 +28,10 @@ for the coordinated UI-deployment milestone.
   UIs move fast (features, app-store cycles). One repo forces one cadence.
 - **Ownership of risk**: signing/notarization, sandboxing, app packaging, and
   interop wrappers are UI concerns; they must not pollute the engine's gates.
-- **The `v2.0.0` convention**: the user reserves `v2.0.0` for full UI
-  deployment. Separate version lines make this natural: the engine tags
-  `v1.x` now; `v2.0.0` is cut on the engine **at the moment the UIs deploy**,
-  pinned by both app repos.
+- **Purely semantic versioning**: MAJOR bumps happen only on compatibility
+  breaks; MINOR adds features; PATCH fixes. The engine tags `v1.x` now;
+  `v2.0.0` comes only when formats or the public API break. UI repos version
+  independently.
 
 ## 2. Clean termination of this repository as the engine
 
@@ -92,10 +92,9 @@ is the UI-deployment milestone, not the engine refactor.
   stay frozen (enforced by the golden gates).
 - **MAJOR bump** = format/API break. **MINOR** = new codec/feature (like
   `ans` in 1.7.0). **PATCH** = fixes only.
-- **The `v2.0.0` milestone**: the engine does **not** tag `2.0.0` until the
-  UI-deployment milestone. At that point, in one coordinated release:
-  engine tags `v2.0.0`; `compressor-macos` tags `v1.0.0`; `compressor-windows`
-  tags `v1.0.0`. All three CHANGELOGs reference each other.
+- **Semver only**: the engine tags `2.0.0` **only** when compatibility
+  breaks (format or API); otherwise it stays on 1.x. Each UI repo versions
+  independently on its own line.
 - **Pin policy for UI repos**: `FetchContent` pinned to an exact tag (never a
   branch), or the installed package at an exact version. Pins move only via
   an intentional bump reviewed against the engine CHANGELOG.
@@ -164,7 +163,7 @@ at the interop boundary, so the contract below is the porting checklist.
 | 4 | Release checklist appended to `docs/architecture-proposal-2.0.md` or its own `docs/RELEASE.md` | engine | merged PR |
 | 5 | Create `compressor-macos` and `compressor-windows` repos (private), scaffold from `examples/consumer` | new repos | two repos, CI green |
 | 6 | UI repos pin `v1.7.0`; porting contract tests added per UI | new repos | interop tests green |
-| 7 | (Later) coordinated `v2.0.0` / `v1.0.0` / `v1.0.0` release | all three | UI deployment |
+| 7 | (Later) `v2.0.0` on the engine only when compatibility breaks | engine | semver |
 
 ## 6. Decision points for the owner
 
