@@ -21,10 +21,20 @@ message(STATUS "CMake Config Dir: ${INSTALL_CMAKE_DIR}")
 # Enable testing
 enable_testing()
 
+# Consumable-package options: when CompressionLib is pulled in via
+# FetchContent/add_subdirectory, apps and tests stay OFF by default so
+# consumers get the library only.
+option(COMPRESSIONLIB_BUILD_APPS "Build CLI and benchmark apps" OFF)
+option(COMPRESSIONLIB_BUILD_TESTS "Build unit tests" OFF)
+
 # Add subdirectories
 add_subdirectory(src)
-add_subdirectory(app)
-add_subdirectory(tests)
+if(COMPRESSIONLIB_BUILD_APPS)
+  add_subdirectory(app)
+endif()
+if(COMPRESSIONLIB_BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
 
 # --- Documentation (Doxygen) --- 
 
