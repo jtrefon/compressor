@@ -35,8 +35,7 @@ jobs:
       run: choco install cmake doxygen.install graphviz -y
 
     - name: Configure
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
-      -DCOMPRESSIONLIB_BUILD_APPS=ON -DCOMPRESSIONLIB_BUILD_TESTS=ON
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCOMPRESSIONLIB_BUILD_APPS=ON -DCOMPRESSIONLIB_BUILD_TESTS=ON
       shell: bash
 
     - name: Build
