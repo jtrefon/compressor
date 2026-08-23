@@ -1,5 +1,9 @@
 add_library(compression)
 
+# Namespaced alias so consumers can use the same target name in
+# FetchContent/add_subdirectory mode as in the installed package.
+add_library(CompressionLib::compression ALIAS compression)
+
 target_include_directories(compression 
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
