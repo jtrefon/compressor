@@ -1,0 +1,7 @@
+CompressionLib
+Copyright (c) 2026 jtrefon (https://github.com/jtrefon)
+
+This product includes software developed by jtrefon.
+
+Additional attributions:
+- Tests use GoogleTest (https://github.com/google/googletest), BSD-3-Clause.

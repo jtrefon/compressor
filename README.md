@@ -2,9 +2,17 @@
 
 [![Build and Test](https://github.com/jtrefon/compressor/actions/workflows/build-test.yml/badge.svg)](https://github.com/jtrefon/compressor/actions/workflows/build-test.yml)
 [![Release](https://github.com/jtrefon/compressor/actions/workflows/release.yml/badge.svg)](https://github.com/jtrefon/compressor/actions/workflows/release.yml)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 
 A high-performance file compression library implemented in C++ that provides multiple compression algorithms with a focus on achieving excellent compression ratios for files at rest.
+
+## Scope
+
+This repository is the **engine**: the CompressionLib library, its reference
+CLI (`compress_app`), the `.cza` archive engine, quality gates, and release
+packaging. Desktop UIs consume it as a pinned dependency from separate
+repositories — see [the separation proposal](docs/repo-separation-proposal.md)
+and [the porting guide](docs/PORTING.md).
 
 ## Features
 
@@ -206,13 +214,7 @@ Please ensure that your code follows the existing style, includes appropriate te
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 (GPLv3) - see the LICENSE file for details.
-
-The GPLv3 is a strong copyleft license that ensures the software and its derivatives remain free and open source. This means you can:
-
-- Use the software for any purpose
-- Study how the software works and modify it
-- Redistribute the software
-- Improve the software and release your improvements to the public
-
-Any modifications or software that incorporates this code must also be released under the GPLv3.
+This project is licensed under the Apache License 2.0 — a permissive license
+that keeps attribution (see LICENSE and NOTICE) while maximizing adoption:
+use it, modify it, link it into proprietary or open-source products, and
+redistribute it, provided the license text and NOTICE are preserved.
