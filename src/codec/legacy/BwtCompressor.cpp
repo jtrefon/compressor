@@ -1,6 +1,6 @@
 #include <algorithm>
-#include <compression/ArithmeticCompressor.hpp>
-#include <compression/BwtCompressor.hpp>
+#include <compression/codec/legacy/ArithmeticCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
 #include <cstdint>
 #include <iostream>
 #include <numeric>

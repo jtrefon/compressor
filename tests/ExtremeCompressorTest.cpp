@@ -1,4 +1,4 @@
-#include <compression/ExtremeCompressor.hpp>
+#include <compression/codec/legacy/ExtremeCompressor.hpp>
 #include <gtest/gtest.h>
 #include <random>
 #include <string>

@@ -1,4 +1,4 @@
-#include <compression/RleCompressor.hpp>
+#include <compression/codec/legacy/RleCompressor.hpp>
 #include <cstdint>
 #include <gtest/gtest.h>
 #include <vector>

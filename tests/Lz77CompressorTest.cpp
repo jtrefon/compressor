@@ -1,6 +1,6 @@
 // tests/Lz77CompressorTest.cpp
 #include <gtest/gtest.h>
-#include <compression/Lz77Compressor.hpp>
+#include <compression/codec/legacy/Lz77Compressor.hpp>
 #include <vector>
 #include <string>
 #include <algorithm>

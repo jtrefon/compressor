@@ -1,7 +1,7 @@
 #include <compression/codec/CodecRegistry.hpp>
 
-#include <compression/BwtCompressor.hpp>
-#include <compression/RleCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
+#include <compression/codec/legacy/RleCompressor.hpp>
 #include <compression/core/Errors.hpp>
 
 #include <gtest/gtest.h>

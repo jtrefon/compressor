@@ -180,13 +180,13 @@ TEST(CompressionServiceTest, FileRoundTrip) {
 }
 
 TEST(CompressionServiceTest, PublishesOperationEvents) {
-  auto bus = std::make_shared<app::EventBus>();
-  class Listener final : public app::IEventListener {
+  auto bus = std::make_shared<events::EventBus>();
+  class Listener final : public events::IEventListener {
   public:
-    void onEvent(const app::CompressionEvent &event) override {
+    void onEvent(const events::CompressionEvent &event) override {
       types_.push_back(event.type);
     }
-    std::vector<app::EventType> types_;
+    std::vector<events::EventType> types_;
   };
   auto listener = std::make_shared<Listener>();
   bus->subscribe(listener);
@@ -199,8 +199,8 @@ TEST(CompressionServiceTest, PublishesOperationEvents) {
   bool sawStarted = false;
   bool sawCompleted = false;
   for (auto t : listener->types_) {
-    sawStarted = sawStarted || t == app::EventType::OperationStarted;
-    sawCompleted = sawCompleted || t == app::EventType::OperationCompleted;
+    sawStarted = sawStarted || t == events::EventType::OperationStarted;
+    sawCompleted = sawCompleted || t == events::EventType::OperationCompleted;
   }
   EXPECT_TRUE(sawStarted);
   EXPECT_TRUE(sawCompleted);

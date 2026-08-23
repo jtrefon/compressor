@@ -1,8 +1,8 @@
 #include <compression/codec/decorator/Decorators.hpp>
 
-#include <compression/NullCompressor.hpp>
-#include <compression/RleCompressor.hpp>
-#include <compression/app/EventBus.hpp>
+#include <compression/codec/legacy/NullCompressor.hpp>
+#include <compression/codec/legacy/RleCompressor.hpp>
+#include <compression/events/EventBus.hpp>
 #include <compression/core/Errors.hpp>
 
 #include <gtest/gtest.h>
@@ -63,10 +63,10 @@ TEST(ChecksummedCodecTest, TooShortRejected) {
 }
 
 TEST(ProgressCodecTest, PublishesEvents) {
-  auto bus = std::make_shared<app::EventBus>();
-  class Listener final : public app::IEventListener {
+  auto bus = std::make_shared<events::EventBus>();
+  class Listener final : public events::IEventListener {
   public:
-    void onEvent(const app::CompressionEvent &event) override {
+    void onEvent(const events::CompressionEvent &event) override {
       ++count;
     }
     int count = 0;
@@ -81,10 +81,10 @@ TEST(ProgressCodecTest, PublishesEvents) {
 }
 
 TEST(DecoratorCompositionTest, ChecksumThenProgress) {
-  auto bus = std::make_shared<app::EventBus>();
-  class Listener final : public app::IEventListener {
+  auto bus = std::make_shared<events::EventBus>();
+  class Listener final : public events::IEventListener {
   public:
-    void onEvent(const app::CompressionEvent &event) override { ++count; }
+    void onEvent(const events::CompressionEvent &event) override { ++count; }
     int count = 0;
   };
   auto listener = std::make_shared<Listener>();

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <compression/app/CompressionService.hpp>
-#include <compression/app/EventBus.hpp>
+#include <compression/events/EventBus.hpp>
 #include <compression/archive/Archive.hpp>
 
 #include <chrono>
@@ -30,7 +30,7 @@ struct ArchiveEntrySource {
  */
 class ArchiveService {
 public:
-  explicit ArchiveService(std::shared_ptr<app::EventBus> events = nullptr);
+  explicit ArchiveService(std::shared_ptr<events::EventBus> events = nullptr);
 
   /**
    * @brief Creates an archive at @p outPath from @p entries.
@@ -60,13 +60,13 @@ public:
   std::vector<archive::BlockVerifyResult>
   verify(const std::filesystem::path &archivePath);
 
-  std::shared_ptr<app::EventBus> events() const { return events_; }
+  std::shared_ptr<events::EventBus> events() const { return events_; }
 
 private:
-  void publish(app::EventType type, uint64_t in, uint64_t out,
+  void publish(events::EventType type, uint64_t in, uint64_t out,
                uint8_t progressPct) const;
 
-  std::shared_ptr<app::EventBus> events_;
+  std::shared_ptr<events::EventBus> events_;
 };
 
 } // namespace compression

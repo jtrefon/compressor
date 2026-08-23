@@ -1,8 +1,8 @@
-#include <compression/ArithmeticCompressor.hpp>
-#include <compression/BwtCompressor.hpp>
-#include <compression/Lz77Compressor.hpp>
-#include <compression/ExtremeCompressor.hpp>
-#include <compression/OptimizedCompressor.hpp>
+#include <compression/codec/legacy/ArithmeticCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
+#include <compression/codec/legacy/Lz77Compressor.hpp>
+#include <compression/codec/legacy/ExtremeCompressor.hpp>
+#include <compression/codec/legacy/OptimizedCompressor.hpp>
 #include <gtest/gtest.h>
 #include <random>
 #include <vector>

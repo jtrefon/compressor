@@ -104,18 +104,18 @@ format::AlgorithmID resolveStrategy(const std::string &name) {
 }
 
 // Event sink: renders progress events from the facade to the console.
-class ProgressPrinter final : public app::IEventListener {
+class ProgressPrinter final : public events::IEventListener {
 public:
-  void onEvent(const app::CompressionEvent &event) override {
+  void onEvent(const events::CompressionEvent &event) override {
     switch (event.type) {
-    case app::EventType::OperationStarted:
+    case events::EventType::OperationStarted:
       std::cout << "  Progress: 0%" << std::flush;
       break;
-    case app::EventType::ChunkProgress:
+    case events::EventType::ChunkProgress:
       std::cout << "\r  Progress: " << static_cast<int>(event.progressPct)
                 << "%" << std::flush;
       break;
-    case app::EventType::OperationCompleted:
+    case events::EventType::OperationCompleted:
       std::cout << "\r  Progress: " << static_cast<int>(event.progressPct)
                 << "%" << std::endl;
       break;
@@ -153,7 +153,7 @@ int main(int argc, char *argv[]) {
   const CliOptions &cli = *parsed;
 
   try {
-    auto bus = std::make_shared<app::EventBus>();
+    auto bus = std::make_shared<events::EventBus>();
     auto progress = std::make_shared<ProgressPrinter>();
     bus->subscribe(progress);
     CompressionService service(bus);

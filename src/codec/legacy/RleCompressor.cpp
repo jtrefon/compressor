@@ -1,4 +1,4 @@
-#include "compression/RleCompressor.hpp"
+#include "compression/codec/legacy/RleCompressor.hpp"
 #include <stdexcept>
 
 namespace compression {

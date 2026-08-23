@@ -1,4 +1,4 @@
-#include "compression/HuffmanCompressor.hpp"
+#include "compression/codec/legacy/HuffmanCompressor.hpp"
 #include <bitset>
 #include <algorithm>
 #include <stdexcept>

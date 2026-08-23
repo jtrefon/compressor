@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ICompressor.hpp"
+#include <compression/ICompressor.hpp>
 #include <vector>
 #include <map>
 #include <queue>

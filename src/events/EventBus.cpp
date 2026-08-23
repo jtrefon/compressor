@@ -1,9 +1,9 @@
-#include <compression/app/EventBus.hpp>
+#include <compression/events/EventBus.hpp>
 
 #include <algorithm>
 
 namespace compression {
-namespace app {
+namespace events {
 
 void EventBus::subscribe(std::weak_ptr<IEventListener> listener) {
   std::lock_guard<std::mutex> lock(mutex_);
@@ -34,5 +34,5 @@ std::size_t EventBus::subscriberCount() const {
                     }));
 }
 
-} // namespace app
+} // namespace events
 } // namespace compression

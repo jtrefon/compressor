@@ -1,5 +1,9 @@
 include(FetchContent)
 
+# Never install GoogleTest alongside the library (it leaks its own install
+# rules into the package otherwise).
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+
 # Fetch GoogleTest
 FetchContent_Declare(
     googletest
@@ -38,7 +42,7 @@ add_executable(compression_tests
     ${CMAKE_CURRENT_SOURCE_DIR}/format/FrameTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/format/GoldenTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/security/FuzzGatesTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/app/EventBusTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/events/EventBusTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/app/CompressionServiceTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/app/CommandTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/archive/ArchiveTest.cpp

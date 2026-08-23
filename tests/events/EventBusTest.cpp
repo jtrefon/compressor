@@ -1,4 +1,4 @@
-#include <compression/app/EventBus.hpp>
+#include <compression/events/EventBus.hpp>
 
 #include <gtest/gtest.h>
 
@@ -7,7 +7,7 @@
 #include <thread>
 #include <vector>
 
-using namespace compression::app;
+using namespace compression::events;
 
 namespace {
 

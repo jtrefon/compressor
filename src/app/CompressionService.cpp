@@ -35,14 +35,14 @@ std::vector<uint8_t> readAll(core::IByteSource &source) {
 
 } // namespace
 
-CompressionService::CompressionService(std::shared_ptr<app::EventBus> events)
+CompressionService::CompressionService(std::shared_ptr<events::EventBus> events)
     : events_(std::move(events)) {}
 
-void CompressionService::publish(app::EventType type, format::AlgorithmID codec,
+void CompressionService::publish(events::EventType type, format::AlgorithmID codec,
                                  uint64_t in, uint64_t out,
                                  uint8_t progressPct) const {
   if (events_) {
-    events_->publish(app::CompressionEvent{type, codec, in, out, progressPct});
+    events_->publish(events::CompressionEvent{type, codec, in, out, progressPct});
   }
 }
 
@@ -53,8 +53,8 @@ CompressResult CompressionService::compress(core::ByteView data,
   const auto start = steady_clock::now();
 
   const uint32_t crc = utils::crc32Calculator.calculate(data.data(), data.size());
-  publish(app::EventType::OperationStarted, options.codec, data.size(), 0, 0);
-  publish(app::EventType::CodecSelected, options.codec, data.size(), 0, 0);
+  publish(events::EventType::OperationStarted, options.codec, data.size(), 0, 0);
+  publish(events::EventType::CodecSelected, options.codec, data.size(), 0, 0);
 
   auto codec = codec::CodecRegistry::instance().create(options.codec);
   const std::size_t threads =
@@ -73,7 +73,7 @@ CompressResult CompressionService::compress(core::ByteView data,
   }
 
   out.write(core::ByteView(framed));
-  publish(app::EventType::OperationCompleted, options.codec, data.size(),
+  publish(events::EventType::OperationCompleted, options.codec, data.size(),
           framed.size(), 100);
 
   CompressResult result;
@@ -106,7 +106,7 @@ ExtractResult CompressionService::decompress(core::ByteView data,
   out.write(core::ByteView(original));
   const uint32_t crc = utils::crc32Calculator.calculate(original.data(),
                                                         original.size());
-  publish(app::EventType::OperationCompleted, format::AlgorithmID::UNKNOWN,
+  publish(events::EventType::OperationCompleted, format::AlgorithmID::UNKNOWN,
           data.size(), original.size(), 100);
 
   ExtractResult result;

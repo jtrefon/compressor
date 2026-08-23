@@ -1,4 +1,4 @@
-#include "compression/NullCompressor.hpp"
+#include "compression/codec/legacy/NullCompressor.hpp"
 
 namespace compression {
 

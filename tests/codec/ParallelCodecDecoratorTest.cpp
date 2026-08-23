@@ -1,9 +1,9 @@
 #include <compression/codec/ParallelCodecDecorator.hpp>
 
-#include <compression/BwtCompressor.hpp>
-#include <compression/NullCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
+#include <compression/codec/legacy/NullCompressor.hpp>
 #include <compression/ThreadPool.hpp>
-#include <compression/app/EventBus.hpp>
+#include <compression/events/EventBus.hpp>
 #include <compression/core/Errors.hpp>
 
 #include <gtest/gtest.h>
@@ -84,11 +84,11 @@ TEST(ParallelCodecDecoratorTest, EmptyData) {
 }
 
 TEST(ParallelCodecDecoratorTest, PublishesPerChunkEvents) {
-  auto bus = std::make_shared<app::EventBus>();
-  class Listener final : public app::IEventListener {
+  auto bus = std::make_shared<events::EventBus>();
+  class Listener final : public events::IEventListener {
   public:
-    void onEvent(const app::CompressionEvent &event) override {
-      if (event.type == app::EventType::ChunkProgress) {
+    void onEvent(const events::CompressionEvent &event) override {
+      if (event.type == events::EventType::ChunkProgress) {
         ++chunkEvents;
       }
     }

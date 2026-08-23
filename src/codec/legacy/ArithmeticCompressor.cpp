@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <cmath>
-#include <compression/ArithmeticCompressor.hpp>
+#include <compression/codec/legacy/ArithmeticCompressor.hpp>
 #include <iostream>
 #include <stdexcept>
 #include <vector>

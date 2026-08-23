@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <compression/BwtCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
 #include <vector>
 #include <string>
 #include <cstdint>

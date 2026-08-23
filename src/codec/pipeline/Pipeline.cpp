@@ -1,8 +1,8 @@
 #include <compression/codec/pipeline/AnsCoder.hpp>
 #include <compression/codec/pipeline/Pipeline.hpp>
 
-#include <compression/ArithmeticCompressor.hpp>
-#include <compression/BwtCompressor.hpp>
+#include <compression/codec/legacy/ArithmeticCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
 #include <compression/core/BinaryIO.hpp>
 #include <compression/core/Errors.hpp>
 
