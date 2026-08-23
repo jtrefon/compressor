@@ -48,4 +48,4 @@ Testing/
 
 # External dependencies fetched by CMake
 _deps/
-external/ 
+external/ aqtinstall.log
