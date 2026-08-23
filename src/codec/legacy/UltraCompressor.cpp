@@ -1,7 +1,7 @@
-#include <compression/UltraCompressor.hpp>
-#include <compression/BwtCompressor.hpp>
-#include <compression/Lz77Compressor.hpp>
-#include <compression/OptimizedCompressor.hpp>
+#include <compression/codec/legacy/UltraCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
+#include <compression/codec/legacy/Lz77Compressor.hpp>
+#include <compression/codec/legacy/OptimizedCompressor.hpp>
 #include <vector>
 #include <iostream>
 #include <stdexcept>

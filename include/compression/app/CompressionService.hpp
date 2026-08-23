@@ -1,7 +1,7 @@
 #pragma once
 
 #include <compression/FileFormat.hpp>
-#include <compression/app/EventBus.hpp>
+#include <compression/events/EventBus.hpp>
 #include <compression/core/ByteSource.hpp>
 
 #include <chrono>
@@ -47,12 +47,12 @@ struct ExtractResult {
  * @brief Facade: the single stable surface CLI and UI clients call.
  *
  * Owns no state beyond an optional event bus; all codec creation goes through
- * CodecRegistry, all framing through ParallelCompressor. Results are returned
- * as value objects — never printed here.
+ * CodecRegistry, all framing through ParallelCodecDecorator. Results are
+ * returned as value objects — never printed here.
  */
 class CompressionService {
 public:
-  explicit CompressionService(std::shared_ptr<app::EventBus> events = nullptr);
+  explicit CompressionService(std::shared_ptr<events::EventBus> events = nullptr);
 
   // File-level operations.
   CompressResult compressFile(const std::filesystem::path &in,
@@ -66,13 +66,13 @@ public:
                           const CompressionOptions &options = {});
   ExtractResult decompress(core::ByteView data, core::IByteSink &out);
 
-  std::shared_ptr<app::EventBus> events() const { return events_; }
+  std::shared_ptr<events::EventBus> events() const { return events_; }
 
 private:
-  void publish(app::EventType type, format::AlgorithmID codec, uint64_t in,
+  void publish(events::EventType type, format::AlgorithmID codec, uint64_t in,
                uint64_t out, uint8_t progressPct) const;
 
-  std::shared_ptr<app::EventBus> events_;
+  std::shared_ptr<events::EventBus> events_;
 };
 
 } // namespace compression

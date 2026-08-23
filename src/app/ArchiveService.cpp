@@ -10,13 +10,13 @@
 
 namespace compression {
 
-ArchiveService::ArchiveService(std::shared_ptr<app::EventBus> events)
+ArchiveService::ArchiveService(std::shared_ptr<events::EventBus> events)
     : events_(std::move(events)) {}
 
-void ArchiveService::publish(app::EventType type, uint64_t in, uint64_t out,
+void ArchiveService::publish(events::EventType type, uint64_t in, uint64_t out,
                              uint8_t progressPct) const {
   if (events_) {
-    events_->publish(app::CompressionEvent{type, format::AlgorithmID::UNKNOWN,
+    events_->publish(events::CompressionEvent{type, format::AlgorithmID::UNKNOWN,
                                            in, out, progressPct});
   }
 }
@@ -29,12 +29,12 @@ void ArchiveService::create(const std::filesystem::path &outPath,
 
   core::FileByteSink sink(outPath);
   archive::ArchiveWriter writer(sink, options);
-  publish(app::EventType::OperationStarted, 0, 0, 0);
+  publish(events::EventType::OperationStarted, 0, 0, 0);
   for (const ArchiveEntrySource &entry : entries) {
     writer.addEntry(entry.name, core::ByteView(entry.data), entry.mtime);
   }
   writer.finalize();
-  publish(app::EventType::OperationCompleted, 0, sink.size(), 100);
+  publish(events::EventType::OperationCompleted, 0, sink.size(), 100);
   (void)start;
 }
 

@@ -31,21 +31,21 @@ std::unique_ptr<ICompressor> makeCodec(format::AlgorithmID id) {
 ParallelCodecDecorator::ParallelCodecDecorator(
     std::unique_ptr<ICompressor> base, format::AlgorithmID algoId,
     core::IExecutor *executor, std::size_t chunkCount,
-    std::shared_ptr<app::EventBus> events)
+    std::shared_ptr<events::EventBus> events)
     : base_(std::move(base)), algoId_(algoId), executor_(executor),
       chunkCount_(chunkCount), events_(std::move(events)) {}
 
-void ParallelCodecDecorator::publish(app::EventType type,
+void ParallelCodecDecorator::publish(events::EventType type,
                                      format::AlgorithmID codec, uint64_t in,
                                      uint64_t out, uint8_t progressPct) const {
   if (events_) {
-    events_->publish(app::CompressionEvent{type, codec, in, out, progressPct});
+    events_->publish(events::CompressionEvent{type, codec, in, out, progressPct});
   }
 }
 
 std::vector<uint8_t>
 ParallelCodecDecorator::compress(const std::vector<uint8_t> &data) const {
-  publish(app::EventType::OperationStarted, algoId_, data.size(), 0, 0);
+  publish(events::EventType::OperationStarted, algoId_, data.size(), 0, 0);
 
   const std::size_t chunkCount =
       (chunkCount_ == 0) ? std::max<std::size_t>(getHardwareThreads(), 1)
@@ -65,7 +65,7 @@ ParallelCodecDecorator::compress(const std::vector<uint8_t> &data) const {
     output.reserve(headerBytes.size() + compressed.size());
     output.insert(output.end(), headerBytes.begin(), headerBytes.end());
     output.insert(output.end(), compressed.begin(), compressed.end());
-    publish(app::EventType::OperationCompleted, algoId_, data.size(),
+    publish(events::EventType::OperationCompleted, algoId_, data.size(),
             output.size(), 100);
     return output;
   }
@@ -100,7 +100,7 @@ ParallelCodecDecorator::compress(const std::vector<uint8_t> &data) const {
   for (std::size_t i = 0; i < n; ++i) {
     results[i] = futures[i].get();
     sizes[i] = static_cast<uint32_t>(results[i].size());
-    publish(app::EventType::ChunkProgress, algoId_, rawChunkSizes[i],
+    publish(events::EventType::ChunkProgress, algoId_, rawChunkSizes[i],
             results[i].size(),
             static_cast<uint8_t>((i + 1) * 100 / n));
   }
@@ -122,7 +122,7 @@ ParallelCodecDecorator::compress(const std::vector<uint8_t> &data) const {
   for (const auto &r : results) {
     output.insert(output.end(), r.begin(), r.end());
   }
-  publish(app::EventType::OperationCompleted, algoId_, data.size(),
+  publish(events::EventType::OperationCompleted, algoId_, data.size(),
           output.size(), 100);
   return output;
 }
@@ -172,7 +172,7 @@ ParallelCodecDecorator::decompress(const std::vector<uint8_t> &data) const {
     }
     for (uint32_t i = 0; i < chunkCount; ++i) {
       results[i] = futures[i].get();
-      publish(app::EventType::ChunkProgress, header.algorithmId, 0,
+      publish(events::EventType::ChunkProgress, header.algorithmId, 0,
               results[i].size(),
               static_cast<uint8_t>((i + 1) * 100 / chunkCount));
     }
@@ -187,7 +187,7 @@ ParallelCodecDecorator::decompress(const std::vector<uint8_t> &data) const {
   if (utils::crc32Calculator.calculate(output) != header.originalChecksum) {
     throw core::CorruptDataError("Checksum mismatch: data corrupted");
   }
-  publish(app::EventType::OperationCompleted, header.algorithmId, data.size(),
+  publish(events::EventType::OperationCompleted, header.algorithmId, data.size(),
           output.size(), 100);
   return output;
 }

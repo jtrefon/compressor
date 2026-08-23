@@ -1,8 +1,8 @@
-#include <compression/ExtremeCompressor.hpp>
-#include <compression/BwtCompressor.hpp>
-#include <compression/HuffmanCompressor.hpp>
-#include <compression/Lz77Compressor.hpp>
-#include <compression/OptimizedCompressor.hpp>
+#include <compression/codec/legacy/ExtremeCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
+#include <compression/codec/legacy/HuffmanCompressor.hpp>
+#include <compression/codec/legacy/Lz77Compressor.hpp>
+#include <compression/codec/legacy/OptimizedCompressor.hpp>
 #include <algorithm>
 #include <vector>
 #include <future>

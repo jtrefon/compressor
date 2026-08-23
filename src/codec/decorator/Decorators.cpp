@@ -69,29 +69,29 @@ std::vector<uint8_t> ChecksummedCodec::decompress(const std::vector<uint8_t> &da
 // --- ProgressCodec ---
 
 ProgressCodec::ProgressCodec(std::unique_ptr<ICompressor> inner,
-                             std::shared_ptr<app::EventBus> events)
+                             std::shared_ptr<events::EventBus> events)
     : inner_(std::move(inner)), events_(std::move(events)) {}
 
-void ProgressCodec::publish(app::EventType type, uint64_t in, uint64_t out,
+void ProgressCodec::publish(events::EventType type, uint64_t in, uint64_t out,
                             uint8_t progressPct) const {
   if (events_) {
-    events_->publish(app::CompressionEvent{type,
+    events_->publish(events::CompressionEvent{type,
                                            format::AlgorithmID::UNKNOWN, in,
                                            out, progressPct});
   }
 }
 
 std::vector<uint8_t> ProgressCodec::compress(const std::vector<uint8_t> &data) const {
-  publish(app::EventType::OperationStarted, data.size(), 0, 0);
+  publish(events::EventType::OperationStarted, data.size(), 0, 0);
   std::vector<uint8_t> result = inner_->compress(data);
-  publish(app::EventType::OperationCompleted, data.size(), result.size(), 100);
+  publish(events::EventType::OperationCompleted, data.size(), result.size(), 100);
   return result;
 }
 
 std::vector<uint8_t> ProgressCodec::decompress(const std::vector<uint8_t> &data) const {
-  publish(app::EventType::OperationStarted, data.size(), 0, 0);
+  publish(events::EventType::OperationStarted, data.size(), 0, 0);
   std::vector<uint8_t> result = inner_->decompress(data);
-  publish(app::EventType::OperationCompleted, data.size(), result.size(), 100);
+  publish(events::EventType::OperationCompleted, data.size(), result.size(), 100);
   return result;
 }
 

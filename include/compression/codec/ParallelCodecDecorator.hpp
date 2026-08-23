@@ -1,7 +1,7 @@
 #pragma once
 
 #include <compression/ICompressor.hpp>
-#include <compression/app/EventBus.hpp>
+#include <compression/events/EventBus.hpp>
 #include <compression/core/Executor.hpp>
 
 #include <cstdint>
@@ -33,20 +33,20 @@ public:
                          format::AlgorithmID algoId,
                          core::IExecutor *executor,
                          std::size_t chunkCount = 0,
-                         std::shared_ptr<app::EventBus> events = nullptr);
+                         std::shared_ptr<events::EventBus> events = nullptr);
 
   std::vector<uint8_t> compress(const std::vector<uint8_t> &data) const override;
   std::vector<uint8_t> decompress(const std::vector<uint8_t> &data) const override;
 
 private:
-  void publish(app::EventType type, format::AlgorithmID codec, uint64_t in,
+  void publish(events::EventType type, format::AlgorithmID codec, uint64_t in,
                uint64_t out, uint8_t progressPct) const;
 
   mutable std::unique_ptr<ICompressor> base_;
   format::AlgorithmID algoId_;
   core::IExecutor *executor_;
   std::size_t chunkCount_;
-  std::shared_ptr<app::EventBus> events_;
+  std::shared_ptr<events::EventBus> events_;
 };
 
 } // namespace codec

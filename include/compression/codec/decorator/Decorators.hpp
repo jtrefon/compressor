@@ -1,7 +1,7 @@
 #pragma once
 
 #include <compression/ICompressor.hpp>
-#include <compression/app/EventBus.hpp>
+#include <compression/events/EventBus.hpp>
 
 #include <chrono>
 #include <cstdint>
@@ -50,17 +50,17 @@ private:
 class ProgressCodec final : public ICompressor {
 public:
   ProgressCodec(std::unique_ptr<ICompressor> inner,
-                std::shared_ptr<app::EventBus> events);
+                std::shared_ptr<events::EventBus> events);
 
   std::vector<uint8_t> compress(const std::vector<uint8_t> &data) const override;
   std::vector<uint8_t> decompress(const std::vector<uint8_t> &data) const override;
 
 private:
-  void publish(app::EventType type, uint64_t in, uint64_t out,
+  void publish(events::EventType type, uint64_t in, uint64_t out,
                uint8_t progressPct) const;
 
   mutable std::unique_ptr<ICompressor> inner_;
-  std::shared_ptr<app::EventBus> events_;
+  std::shared_ptr<events::EventBus> events_;
 };
 
 } // namespace decorator

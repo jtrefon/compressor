@@ -1,4 +1,4 @@
-#include <compression/Lz77Compressor.hpp>
+#include <compression/codec/legacy/Lz77Compressor.hpp>
 #include <stdexcept>
 #include <algorithm>
 #include <cstring>

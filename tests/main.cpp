@@ -1,6 +1,6 @@
 #include <algorithm>
-#include <compression/BwtCompressor.hpp>
-#include <compression/NullCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
+#include <compression/codec/legacy/NullCompressor.hpp>
 #include <cstdint>
 #include <gtest/gtest.h>
 #include <iterator>

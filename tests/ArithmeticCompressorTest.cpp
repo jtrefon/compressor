@@ -1,4 +1,4 @@
-#include <compression/ArithmeticCompressor.hpp>
+#include <compression/codec/legacy/ArithmeticCompressor.hpp>
 #include <gtest/gtest.h>
 #include <random>
 #include <string>

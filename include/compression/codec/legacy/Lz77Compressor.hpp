@@ -3,7 +3,7 @@
 
 #include <cstddef> // Include for size_t
 
-#include "ICompressor.hpp"
+#include <compression/ICompressor.hpp>
 #include <vector>
 #include <cstdint> // For uint types
 #include <unordered_map> // For hash table optimization

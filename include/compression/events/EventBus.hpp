@@ -8,13 +8,13 @@
 #include <vector>
 
 namespace compression {
-namespace app {
+namespace events {
 
 /**
  * @brief Categories of events emitted during compression operations.
  *
- * Coarse operation-level events are emitted by CompressionService today;
- * per-block and per-stage events arrive with the M5 decorator pipeline.
+ * Emitted by the engine layers (CodecRegistry-selected codecs, the parallel
+ * decorator, the facades); consumed by adapters (CLI, UI, benchmark).
  */
 enum class EventType {
   OperationStarted,
@@ -69,5 +69,5 @@ private:
   std::vector<std::weak_ptr<IEventListener>> listeners_;
 };
 
-} // namespace app
+} // namespace events
 } // namespace compression

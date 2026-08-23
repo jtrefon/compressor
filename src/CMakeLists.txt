@@ -9,16 +9,16 @@ target_include_directories(compression
 )
 
 target_sources(compression PRIVATE
-    NullCompressor.cpp
-    RleCompressor.cpp
-    HuffmanCompressor.cpp
-    Lz77Compressor.cpp
-    BwtCompressor.cpp
+    codec/legacy/NullCompressor.cpp
+    codec/legacy/RleCompressor.cpp
+    codec/legacy/HuffmanCompressor.cpp
+    codec/legacy/Lz77Compressor.cpp
+    codec/legacy/BwtCompressor.cpp
     ThreadPool.cpp
-    ArithmeticCompressor.cpp
-    OptimizedCompressor.cpp
-    UltraCompressor.cpp
-    ExtremeCompressor.cpp
+    codec/legacy/ArithmeticCompressor.cpp
+    codec/legacy/OptimizedCompressor.cpp
+    codec/legacy/UltraCompressor.cpp
+    codec/legacy/ExtremeCompressor.cpp
     core/ByteSource.cpp
     codec/CodecRegistry.cpp
     codec/ParallelCodecDecorator.cpp
@@ -27,7 +27,7 @@ target_sources(compression PRIVATE
     codec/decorator/Decorators.cpp
     format/FrameRegistry.cpp
     format/FileFormat.cpp
-    app/EventBus.cpp
+    events/EventBus.cpp
     app/CompressionService.cpp
     app/Command.cpp
     app/ArchiveService.cpp
@@ -85,17 +85,4 @@ install(EXPORT CompressionLibTargets
     FILE CompressionLibTargets.cmake
     NAMESPACE CompressionLib::
     DESTINATION ${INSTALL_CMAKE_DIR}
-)
-
-# --- Optional: Build as Shared Library (Uncomment if desired) --- 
-# set_property(TARGET compression PROPERTY POSITION_INDEPENDENT_CODE ON)
-# add_library(compression_shared SHARED $<TARGET_OBJECTS:compression>)
-# set_target_properties(compression_shared PROPERTIES 
-#     VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
-#     SOVERSION ${PROJECT_VERSION_MAJOR}
-# )
-# install(TARGETS compression_shared
-#     EXPORT CompressionLibTargets
-#     LIBRARY DESTINATION ${INSTALL_LIB_DIR}
-#     RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-# ) 
+) 

@@ -13,18 +13,18 @@
 #include <vector>
 
 // Include all compressor headers
-#include <compression/ArithmeticCompressor.hpp>
-#include <compression/BwtCompressor.hpp>
-#include <compression/ExtremeCompressor.hpp>
+#include <compression/codec/legacy/ArithmeticCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
+#include <compression/codec/legacy/ExtremeCompressor.hpp>
 #include <compression/FileFormat.hpp>
-#include <compression/HuffmanCompressor.hpp>
+#include <compression/codec/legacy/HuffmanCompressor.hpp>
 #include <compression/ICompressor.hpp>
-#include <compression/Lz77Compressor.hpp>
-#include <compression/NullCompressor.hpp>
-#include <compression/OptimizedCompressor.hpp>
+#include <compression/codec/legacy/Lz77Compressor.hpp>
+#include <compression/codec/legacy/NullCompressor.hpp>
+#include <compression/codec/legacy/OptimizedCompressor.hpp>
 #include <compression/SystemInfo.hpp>
 #include <compression/ThreadPool.hpp>
-#include <compression/UltraCompressor.hpp>
+#include <compression/codec/legacy/UltraCompressor.hpp>
 #include <compression/codec/CodecRegistry.hpp>
 #include <compression/codec/ParallelCodecDecorator.hpp>
 

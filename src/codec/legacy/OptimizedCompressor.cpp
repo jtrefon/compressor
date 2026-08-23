@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <cmath>
-#include <compression/BwtCompressor.hpp>
-#include <compression/HuffmanCompressor.hpp>
-#include <compression/Lz77Compressor.hpp>
-#include <compression/OptimizedCompressor.hpp>
+#include <compression/codec/legacy/BwtCompressor.hpp>
+#include <compression/codec/legacy/HuffmanCompressor.hpp>
+#include <compression/codec/legacy/Lz77Compressor.hpp>
+#include <compression/codec/legacy/OptimizedCompressor.hpp>
 #include <map>
 #include <string>
 

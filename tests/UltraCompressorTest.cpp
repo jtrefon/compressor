@@ -1,4 +1,4 @@
-#include <compression/UltraCompressor.hpp>
+#include <compression/codec/legacy/UltraCompressor.hpp>
 #include <gtest/gtest.h>
 #include <random>
 #include <string>

@@ -1,4 +1,4 @@
-#include <compression/OptimizedCompressor.hpp>
+#include <compression/codec/legacy/OptimizedCompressor.hpp>
 #include <cstdint>
 #include <gtest/gtest.h>
 #include <vector>
